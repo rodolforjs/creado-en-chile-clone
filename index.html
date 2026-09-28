@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Creado en Chile | Regalos con diseño e identidad local</title>
+<meta name="description" content="Encuentra productos y regalos de marcas chilenas seleccionadas. Diseño, artesanía, moda, cuidado personal, gourmet, decoración y más. Compra varias marcas y pagas un solo envío.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Announcement bar -->
+<div class="announcement-bar">
+  <div class="wrapper announcement-bar__slider">
+    <div class="announcement-bar__item">ENVÍO GRATIS por compras sobre $60.000</div>
+    <div class="announcement-bar__item">Regalos en 3 horas · <a href="#">ver aquí</a></div>
+    <div class="announcement-bar__item">6 a 12 cuotas sin interés</div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="wrapper site-header__inner">
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+
+    <a href="#" class="site-header__logo">Creado en<span>Chile</span></a>
+
+    <nav class="main-nav" aria-label="Navegación principal">
+      <a href="#ofertas">Ofertas</a>
+      <a href="#envio-express">Envío Express</a>
+      <a href="#guia-regalos">Guía de Regalos</a>
+      <a href="#marcas">Marcas</a>
+      <a href="#novedades">Novedades</a>
+    </nav>
+
+    <div class="header-actions">
+      <button aria-label="Buscar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button aria-label="Cuenta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+      </button>
+      <button aria-label="Carrito" class="cart-count" data-count="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L4 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile nav drawer -->
+<div class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav__top">
+    <span class="site-header__logo">Creado en<span>Chile</span></span>
+    <button class="mobile-nav__close" id="navClose" aria-label="Cerrar menú">&times;</button>
+  </div>
+  <ul>
+    <li><a href="#ofertas">Ofertas</a></li>
+    <li><a href="#envio-express">Envío Express</a></li>
+    <li><a href="#guia-regalos">Guía de Regalos</a></li>
+    <li><a href="#marcas">Marcas</a></li>
+    <li><a href="#novedades">Novedades</a></li>
+  </ul>
+</div>
+
+<main>
+
+  <!-- Hero / Slideshow -->
+  <section class="hero" id="inicio">
+    <img src="assets/img/hero.jpg" alt="Selección de regalos y productos de marcas chilenas">
+    <div class="hero__content">
+      <p class="eyebrow hero__eyebrow">Diseño e identidad local</p>
+      <h1 class="hero__title">Regalos con historia, hechos en Chile</h1>
+      <div class="hero__actions">
+        <a href="#novedades" class="btn btn--primary">Ver novedades</a>
+        <a href="#marcas" class="btn btn--white">Conoce las marcas</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Price range pills -->
+  <section class="section" id="guia-regalos">
+    <div class="wrapper">
+      <div class="section__head">
+        <h2 class="section__title">Guía de regalos</h2>
+      </div>
+      <div class="pill-row">
+        <a class="pill" href="#">Menos de $10.000</a>
+        <a class="pill" href="#">$10.000 a $25.000</a>
+        <a class="pill" href="#">$25.000 a $35.000</a>
+        <a class="pill" href="#">$35.000 a $50.000</a>
+        <a class="pill" href="#">$50.000 a $75.000</a>
+        <a class="pill" href="#">$75.000 a $100.000</a>
+        <a class="pill" href="#">+ $100.000</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Category scroller -->
+  <section class="section section--tinted">
+    <div class="wrapper">
+      <div class="section__head">
+        <h2 class="section__title">Explora por categoría</h2>
+      </div>
+      <div class="category-scroller">
+        <div class="category-item">
+          <div class="category-item__img"><img src="assets/img/product-1.jpg" alt="Mantelería"></div>
+          <p class="category-item__label">Mantelería</p>
+        </div>
+        <div class="category-item">
+          <div class="category-item__img"><img src="assets/img/product-2.jpg" alt="Vasos de gallo"></div>
+          <p class="category-item__label">Vasos de Gallo</p>
+        </div>
+        <div class="category-item">
+          <div class="category-item__img"><img src="assets/img/product-3.jpg" alt="Cerámica gres"></div>
+          <p class="category-item__label">Cerámica Gres</p>
+        </div>
+        <div class="category-item">
+          <div class="category-item__img"><img src="assets/img/product-4.jpg" alt="Pañuelos"></div>
+          <p class="category-item__label">Pañuelos</p>
+        </div>
+        <div class="category-item">
+          <div class="category-item__img"><img src="assets/img/product-5.jpg" alt="Libros de flora y fauna"></div>
+          <p class="category-item__label">Flora y Fauna</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ofertas grid -->
+  <section class="section" id="ofertas">
+    <div class="wrapper">
+      <div class="section__head">
+        <h2 class="section__title">Ofertas: sólo esta semana</h2>
+        <a href="#" class="section__link">Ver más</a>
+      </div>
+      <div class="product-grid">
+        <article class="product-card">
+          <div class="product-card__image">
+            <span class="product-card__badge">-20%</span>
+            <img src="assets/img/product-1.jpg" alt="Room Spray Limón de Pica y Verbena">
+            <span class="product-card__quick">Compra rápida</span>
+          </div>
+          <h3 class="product-card__title">Room Spray Limón de Pica y Verbena 500 ml</h3>
+          <p class="product-card__price"><span>$14.390</span><del>$17.990</del></p>
+        </article>
+        <article class="product-card">
+          <div class="product-card__image">
+            <span class="product-card__badge">-20%</span>
+            <img src="assets/img/product-2.jpg" alt="Room Spray Acai y Mandarina">
+            <span class="product-card__quick">Compra rápida</span>
+          </div>
+          <h3 class="product-card__title">Room Spray Acai y Mandarina 500 ml</h3>
+          <p class="product-card__price"><span>$14.390</span><del>$17.990</del></p>
+        </article>
+        <article class="product-card">
+          <div class="product-card__image">
+            <span class="product-card__badge">-20%</span>
+            <img src="assets/img/product-3.jpg" alt="Room Spray Quillay y Maderas Nativas">
+            <span class="product-card__quick">Compra rápida</span>
+          </div>
+          <h3 class="product-card__title">Room Spray Quillay y Maderas Nativas 450 ml</h3>
+          <p class="product-card__price"><span>$14.390</span><del>$17.990</del></p>
+        </article>
+        <article class="product-card">
+          <div class="product-card__image">
+            <span class="product-card__badge">-20%</span>
+            <img src="assets/img/product-4.jpg" alt="Tabla Mañío Aconcagua">
+            <span class="product-card__quick">Compra rápida</span>
+          </div>
+          <h3 class="product-card__title">Tabla Mañío Aconcagua 14x25 cm</h3>
+          <p class="product-card__price"><span>$7.190</span></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Marquee -->
+  <div class="marquee">
+    <div class="marquee__track">
+      <span>— Compra varias marcas en un solo despacho —</span>
+      <span>— Conoce nuestras tiendas —</span>
+      <span>— Compra varias marcas en un solo despacho —</span>
+      <span>— Conoce nuestras tiendas —</span>
+    </div>
+  </div>
+
+  <!-- Promo banner -->
+  <section class="section">
+    <div class="wrapper">
+      <div class="promo-banner">
+        <p class="eyebrow">Productos con diseño e identidad local</p>
+        <h2>Más de 500 marcas chilenas en un solo lugar</h2>
+        <a href="#" class="btn btn--primary">Descubre más</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Image with text: corporate gifts -->
+  <section class="section">
+    <div class="wrapper">
+      <div class="split-banner">
+        <div class="split-banner__image">
+          <img src="assets/img/corporate.jpg" alt="Regalos corporativos con productos chilenos">
+        </div>
+        <div class="split-banner__content">
+          <p class="eyebrow">Para empresas</p>
+          <h2>Regalos corporativos</h2>
+          <p>Sorprende a tu equipo o clientes con regalos únicos, hechos por marcas chilenas.</p>
+          <a href="#" class="btn btn--white">Cotiza aquí</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Novedades -->
+  <section class="section" id="novedades">
+    <div class="wrapper">
+      <div class="section__head">
+        <h2 class="section__title">Novedades exclusivas</h2>
+        <a href="#" class="section__link">Ver productos</a>
+      </div>
+      <div class="product-grid">
+        <article class="product-card">
+          <div class="product-card__image">
+            <img src="assets/img/product-5.jpg" alt="Mouse Pad Ciudades de Chile | Valparaíso">
+            <span class="product-card__quick">Compra rápida</span>
+          </div>
+          <h3 class="product-card__title">Mouse Pad Ciudades de Chile | Valparaíso</h3>
+          <p class="product-card__price"><span>$9.990</span></p>
+        </article>
+        <article class="product-card">
+          <div class="product-card__image">
+            <img src="assets/img/product-6.jpg" alt="Calcetines Largos Algodón - Selknam Tanu">
+            <span class="product-card__quick">Compra rápida</span>
+          </div>
+          <h3 class="product-card__title">Calcetines Largos Algodón - Selknam Tanu</h3>
+          <p class="product-card__price"><span>$8.500</span></p>
+        </article>
+        <article class="product-card">
+          <div class="product-card__image">
+            <img src="assets/img/product-7.jpg" alt="Tabla de Vidrio para Cortar - Colección Suculentas">
+            <span class="product-card__quick">Compra rápida</span>
+          </div>
+          <h3 class="product-card__title">Tabla de Vidrio para Cortar 20x28 cm | Suculentas</h3>
+          <p class="product-card__price"><span>$12.990</span></p>
+        </article>
+        <article class="product-card">
+          <div class="product-card__image">
+            <img src="assets/img/product-8.jpg" alt="Aves Chilenas de Fieltro - Chucao">
+            <span class="product-card__quick">Compra rápida</span>
+          </div>
+          <h3 class="product-card__title">Aves Chilenas de Fieltro - Chucao</h3>
+          <p class="product-card__price"><span>$11.500</span></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Icons row -->
+  <section class="section section--tinted">
+    <div class="wrapper icons-row">
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+        <p class="icon-item__title">Diseño e identidad local</p>
+        <p class="icon-item__desc">Miles de productos de marcas chilenas</p>
+      </div>
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 7h13l4 4v6h-4"/><circle cx="7" cy="17" r="2"/><circle cx="16" cy="17" r="2"/></svg>
+        <p class="icon-item__title">Pagas un sólo envío</p>
+        <p class="icon-item__desc">Aunque compres de varias marcas</p>
+      </div>
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z"/><path d="M12 8v4l3 2"/></svg>
+        <p class="icon-item__title">Envío express</p>
+        <p class="icon-item__desc">Regalos en pocas horas</p>
+      </div>
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 21s-7-4.5-9-9a5 5 0 019-3 5 5 0 019 3c-2 4.5-9 9-9 9z"/></svg>
+        <p class="icon-item__title">Apoyo a marcas locales</p>
+        <p class="icon-item__desc">Difusión para emprendedores chilenos</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Envío express collection -->
+  <section class="section" id="envio-express">
+    <div class="wrapper">
+      <div class="section__head">
+        <h2 class="section__title">Regalos con envío express</h2>
+        <a href="#" class="section__link">Ver productos</a>
+      </div>
+      <div class="product-grid">
+        <article class="product-card">
+          <div class="product-card__image">
+            <img src="assets/img/product-1.jpg" alt="Chupones de Manjar - Malla 25 unidades">
+            <span class="product-card__quick">Compra rápida</span>
+          </div>
+          <h3 class="product-card__title">Chupones de Manjar - Malla (25 unids)</h3>
+          <p class="product-card__price"><span>$6.990</span></p>
+        </article>
+        <article class="product-card">
+          <div class="product-card__image">
+            <img src="assets/img/product-2.jpg" alt="Bolsa de regalo">
+            <span class="product-card__quick">Compra rápida</span>
+          </div>
+          <h3 class="product-card__title">Bolsa Regalo · Para Regalo</h3>
+          <p class="product-card__price"><span>$2.990</span></p>
+        </article>
+        <article class="product-card">
+          <div class="product-card__image">
+            <img src="assets/img/product-3.jpg" alt="Manjar en barra 27 gramos caja 15 unidades">
+            <span class="product-card__quick">Compra rápida</span>
+          </div>
+          <h3 class="product-card__title">Manjar en Barra 27grs - Caja 15unids</h3>
+          <p class="product-card__price"><span>$9.990</span></p>
+        </article>
+        <article class="product-card">
+          <div class="product-card__image">
+            <img src="assets/img/product-4.jpg" alt="6 vasos de gallo 320 ml">
+            <span class="product-card__quick">Compra rápida</span>
+          </div>
+          <h3 class="product-card__title">6 Vasos de Gallo 320 ml</h3>
+          <p class="product-card__price"><span>$15.990</span></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="section">
+    <div class="wrapper">
+      <div class="newsletter">
+        <p class="eyebrow">Comunidad</p>
+        <h2>Sé parte de nuestra comunidad</h2>
+        <p class="newsletter__discount">Recibe un 10% de descuento en tu primera compra</p>
+        <p>Además de ofertas únicas, lanzamientos y nuevas historias semana a semana.</p>
+        <form id="newsletterForm">
+          <label for="newsletterEmail" class="visually-hidden">Correo electrónico</label>
+          <input type="email" id="newsletterEmail" placeholder="Tu correo electrónico" required>
+          <button type="submit" class="btn btn--primary">Suscribirme</button>
+        </form>
+        <p class="newsletter__msg" id="newsletterMsg"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About / Why buy -->
+  <section class="section">
+    <div class="wrapper about-section">
+      <div class="about-section__images">
+        <img src="assets/img/about-1.jpg" alt="Talleres de marcas chilenas">
+        <img src="assets/img/about-2.jpg" alt="Productos artesanales chilenos">
+      </div>
+      <div class="about-section__text">
+        <p class="eyebrow">Nuestra historia</p>
+        <h2>¿Por qué comprar en Creado en Chile?</h2>
+        <p>Reunimos a cientos de marcas y emprendedores chilenos en un solo lugar, para que encuentres regalos con diseño, identidad y origen local, sin complicarte con múltiples despachos.</p>
+        <a href="#" class="btn btn--outline">Conoce nuestra historia</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Brands -->
+  <section class="section section--tinted" id="marcas">
+    <div class="wrapper">
+      <div class="section__head">
+        <h2 class="section__title">Conoce nuestras marcas exclusivas</h2>
+      </div>
+      <div class="brands-scroller">
+        <span class="brand-pill">Mayna</span>
+        <span class="brand-pill">Hued Hued</span>
+        <span class="brand-pill">Alma Chilena</span>
+        <span class="brand-pill">Ulmmo</span>
+        <span class="brand-pill">Esencia Andina</span>
+        <span class="brand-pill">Llena de Gracia</span>
+        <span class="brand-pill">Creado x</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog / Q&A -->
+  <section class="section">
+    <div class="wrapper">
+      <div class="section__head">
+        <p class="eyebrow" style="width:100%;">5 preguntas a...</p>
+      </div>
+      <div class="blog-grid">
+        <a class="blog-card" href="#">
+          <div class="blog-card__image"><img src="assets/img/blog-1.jpg" alt="5 preguntas a Alexis Moreno"></div>
+          <p class="blog-card__title">5 preguntas a Alexis Moreno</p>
+        </a>
+        <a class="blog-card" href="#">
+          <div class="blog-card__image"><img src="assets/img/blog-2.jpg" alt="5 preguntas a Arturo Fermandois"></div>
+          <p class="blog-card__title">5 Preguntas a Arturo Fermandois</p>
+        </a>
+        <a class="blog-card" href="#">
+          <div class="blog-card__image"><img src="assets/img/blog-3.jpg" alt="5 preguntas a Andrea Tessa"></div>
+          <p class="blog-card__title">5 Preguntas a Andrea Tessa</p>
+        </a>
+        <a class="blog-card" href="#">
+          <div class="blog-card__image"><img src="assets/img/blog-4.jpg" alt="5 preguntas a Catalina Sclabos"></div>
+          <p class="blog-card__title">5 Preguntas a Catalina Sclabos</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3>Categorías</h3>
+        <ul>
+          <li><a href="#ofertas">Ofertas</a></li>
+          <li><a href="#envio-express">Envío Express</a></li>
+          <li><a href="#guia-regalos">Guía de Regalos</a></li>
+          <li><a href="#marcas">Marcas</a></li>
+          <li><a href="#">+ Vendido</a></li>
+          <li><a href="#">Por precio</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Explora</h3>
+        <ul>
+          <li><a href="#novedades">Novedades</a></li>
+          <li><a href="#">Mujer</a></li>
+          <li><a href="#">Hombre</a></li>
+          <li><a href="#">Casa y Jardín</a></li>
+          <li><a href="#">Mesa, Cocina, Quincho</a></li>
+          <li><a href="#">Gourmet</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Info</h3>
+        <ul>
+          <li><a href="#">Tiendas y horarios</a></li>
+          <li><a href="#">Contacto</a></li>
+          <li><a href="#">Cambios y devoluciones</a></li>
+          <li><a href="#">Nosotros</a></li>
+          <li><a href="#">Ventas corporativas</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Políticas</h3>
+        <ul>
+          <li><a href="#">Términos y condiciones</a></li>
+          <li><a href="#">Inscribe tu marca a nuestra BB.DD</a></li>
+          <li><a href="#">Políticas, cambios y formas de pago</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> Creado en Chile</span>
+      <span>Réplica de práctica frontend — sin fines comerciales</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
