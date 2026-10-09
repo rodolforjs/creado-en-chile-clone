@@ -1,16 +1,18 @@
-# Creado en Chile — Clon de práctica (solo inicio)
+# Creado en Chile — Réplica del inicio (práctica)
 
-Réplica de práctica del frontend del **inicio** de [creadoenchile.cl](https://creadoenchile.cl/), hecha con HTML, CSS y JavaScript puro (sin frameworks ni build step).
+Réplica de práctica del **inicio** de [creadoenchile.cl](https://creadoenchile.cl/) en HTML, CSS y JavaScript puros. Objetivo: igualar estructura, medidas y flujo del original. Lo que no tenemos (fotos, logo, productos extra) se reemplaza por **placeholders del mismo tamaño y forma**.
 
-Es un ejercicio de estudio de maquetación: misma estructura de secciones, paleta de colores, tipografías y radios de borde que el sitio original. Las fotos de producto son placeholders genéricos (no son las fotografías reales del sitio) y no incluye funcionalidad de tienda (carrito, checkout, backend).
+Medidas verificadas contra el sitio real a 1440, 820 y 390 px (alturas de cada sección dentro de ±3 px, salvo una tarjeta móvil; ver `docs/mapa-sitio.md`). No hay carrito real, checkout ni backend: el carro y el newsletter funcionan solo en el navegador.
+
+Incluye barra de anuncios con ticker, header con desplegables, header compacto al hacer scroll, drawer móvil, búsqueda, hero con puntos, botones por precio, listas de colecciones, tarjetas con compra rápida, marquee, fila de íconos, newsletter, marcas con carrusel, blog, footer, WhatsApp flotante y popup del 10%.
 
 ## Estructura
 
 ```
 index.html      # Marcado de todas las secciones del inicio
 styles.css      # Tokens (color/tipografía/espaciado) + estilos de cada sección
-script.js       # Menú móvil, rotación del announcement bar, formulario newsletter
-assets/img/     # Imágenes placeholder
+script.js       # Header, drawers, hero, carruseles, popup, carro de demostración
+assets/img/     # Fotos de la primera versión (ya no se usan; el inicio usa placeholders)
 ```
 
 ## Ver en local

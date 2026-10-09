@@ -7,462 +7,452 @@
 <meta name="description" content="Encuentra productos y regalos de marcas chilenas seleccionadas. Diseño, artesanía, moda, cuidado personal, gourmet, decoración y más. Compra varias marcas y pagas un solo envío.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=Space+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Rubik:wght@500;600&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- Announcement bar -->
-<div class="announcement-bar">
-  <div class="wrapper announcement-bar__slider">
-    <div class="announcement-bar__item">ENVÍO GRATIS por compras sobre $60.000</div>
-    <div class="announcement-bar__item">Regalos en 3 horas · <a href="#">ver aquí</a></div>
-    <div class="announcement-bar__item">6 a 12 cuotas sin interés</div>
-  </div>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 26 26"><circle cx="11" cy="11" r="7.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M16.8 16.8 23 23" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"/></symbol>
+  <symbol id="i-user" viewBox="0 0 26 26"><circle cx="13" cy="13" r="10.5" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="13" cy="10.5" r="3.6" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M6.2 20.4c1.4-3 4-4.4 6.8-4.4s5.4 1.4 6.8 4.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 26 26"><path d="M2 3.5h3.6l2.4 12.2h12.2l2.3-8.6H6.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.6" cy="21" r="1.7" fill="currentColor"/><circle cx="18.4" cy="21" r="1.7" fill="currentColor"/></symbol>
+  <symbol id="i-burger" viewBox="0 0 26 26"><path d="M2 6.5h22M2 13h22M2 19.5h22" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"/></symbol>
+  <symbol id="i-close" viewBox="0 0 26 26"><path d="M5 5l16 16M21 5 5 21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" fill="none"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 13 13"><path d="M1 6.5h10M7 2.5l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chev-r" viewBox="0 0 6 10"><path d="M1 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chev-l" viewBox="0 0 6 10"><path d="M5 1 1 5l4 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-insta" viewBox="0 0 30 30"><rect x="3" y="3" width="24" height="24" rx="7" fill="#fff"/><circle cx="15" cy="15" r="5.6" fill="none" stroke="#000" stroke-width="2.4"/><circle cx="21.6" cy="8.4" r="1.6" fill="#000"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 32 32"><path fill="currentColor" d="M16.04 4C9.4 4 4 9.38 4 16.01c0 2.12.55 4.19 1.6 6.01L4 28l6.14-1.57a12 12 0 0 0 5.9 1.5h.01c6.63 0 12.02-5.4 12.02-12.02A11.96 11.96 0 0 0 16.04 4Zm0 21.9h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.64.93.97-3.55-.24-.37a9.9 9.9 0 0 1-1.52-5.3c0-5.47 4.46-9.93 9.94-9.93a9.87 9.87 0 0 1 9.92 9.94c0 5.48-4.46 9.87-9.92 9.87Zm5.44-7.4c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48a9 9 0 0 1-1.66-2.07c-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.08 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35Z"/></symbol>
+  <symbol id="coin-3h" viewBox="0 0 60 60"><circle cx="30" cy="30" r="30" fill="#000"/><path d="M33 9 21 31h8l-3 13 13-22h-8z" fill="#f4d03f"/><text x="30" y="52" text-anchor="middle" font-family="Work Sans,sans-serif" font-weight="700" font-size="8.5" fill="#fff">3 HORAS</text></symbol>
+</svg>
+
+<a class="skip-link" href="#main">Ir directamente al contenido</a>
+
+<!-- Barra de anuncios -->
+<div class="announcement" role="region" aria-label="Anuncios">
+  <div class="ticker ticker--ann"><div class="ticker__track"><span class="tk__item"><strong>ENVÍO GRATIS</strong> X compras sobre $60.000</span><span class="tk__item">Regalos en 3 horas <a href="/collections/express-en-3-horas">aquí</a></span><span class="tk__item">6 a 12 cuotas sin interés</span><span class="tk__item"><strong>ENVÍO GRATIS</strong> X compras sobre $60.000</span><span class="tk__item">Regalos en 3 horas <a href="/collections/express-en-3-horas">aquí</a></span><span class="tk__item">6 a 12 cuotas sin interés</span><span class="tk__item"><strong>ENVÍO GRATIS</strong> X compras sobre $60.000</span><span class="tk__item">Regalos en 3 horas <a href="/collections/express-en-3-horas">aquí</a></span><span class="tk__item">6 a 12 cuotas sin interés</span><span class="tk__item"><strong>ENVÍO GRATIS</strong> X compras sobre $60.000</span><span class="tk__item">Regalos en 3 horas <a href="/collections/express-en-3-horas">aquí</a></span><span class="tk__item">6 a 12 cuotas sin interés</span></div></div>
 </div>
 
 <!-- Header -->
-<header class="site-header">
-  <div class="wrapper site-header__inner">
-    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
-      <span></span><span></span><span></span>
-    </button>
-
-    <a href="#" class="site-header__logo">Creado en<span>Chile</span></a>
-
-    <nav class="main-nav" aria-label="Navegación principal">
-      <a href="#ofertas">Ofertas</a>
-      <a href="#envio-express">Envío Express</a>
-      <a href="#guia-regalos">Guía de Regalos</a>
-      <a href="#marcas">Marcas</a>
-      <a href="#novedades">Novedades</a>
-    </nav>
-
-    <div class="header-actions">
-      <button aria-label="Buscar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </button>
-      <button aria-label="Cuenta">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
-      </button>
-      <button aria-label="Carrito" class="cart-count" data-count="0">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L4 3H2"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
-      </button>
+<div class="header-wrap" id="headerWrap">
+  <header class="site-header" id="siteHeader">
+    <div class="wrapper site-header__inner">
+      <button class="header-burger" type="button" data-drawer-open="navDrawer" aria-label="Abrir menú de navegación"><svg aria-hidden="true"><use href="#i-burger"/></svg></button>
+      <h1 class="logo"><a class="logo__link" href="/" aria-label="Creado en Chile"><span class="logo__mark" data-ph="Logo 100×100"><b>CREADO</b><b>EN CHILE</b><i>www.creadoenchile.cl</i></span></a></h1>
+      <nav class="nav" aria-label="Navegación principal">
+        <ul class="nav__list">
+          <li class="nav__item"><a class="nav__link" href="/collections/en-oferta">Ofertas</a></li>
+          <li class="nav__item nav__item--dd"><a class="nav__link" href="/collections/express-en-3-horas">Express<svg class="nav__chev" aria-hidden="true"><use href="#i-chev"/></svg></a><ul class="dd dd--wide"><li class="dd__row"><a href="/collections/express-hombre">Express Hombre</a></li><li class="dd__row"><a href="/collections/expres-mujer">Express Mujer</a></li><li class="dd__row"><a href="/collections/express-infantil">Express Infantil</a></li><li class="dd__row"><a href="/collections/express-en-3-horas">Todo Express</a></li></ul></li>
+          <li class="nav__item"><a class="nav__link" href="/pages/marcas-creado-en-chile">Marcas</a></li>
+          <li class="nav__item"><a class="nav__link" href="/collections/lo-mas-vendido">+ Vendidos</a></li>
+          <li class="nav__item nav__item--dd"><a class="nav__link" href="#">Por precio<svg class="nav__chev" aria-hidden="true"><use href="#i-chev"/></svg></a><ul class="dd dd--price"><li class="dd__row"><a href="/collections/6-0-menos-de-10-000">Regalos de menos de $10.000</a></li><li class="dd__row"><a href="/collections/6-1-de-10-000-a-25-1">Regalos entre $10.000 y $25.000</a></li><li class="dd__row"><a href="/collections/6-1-de-25-000-a-35-000">Regalos entre $25.000 y $35.000</a></li><li class="dd__row"><a href="/collections/6-3-de-35-000-a-50-000">Regalos entre $35.000 y $50.000</a></li><li class="dd__row"><a href="/collections/6-4-de-50-000-a-75-000">Regalos entre $50.000 y $75.000</a></li><li class="dd__row"><a href="/collections/6-5-de-75-000-a-100-000">Regalos entre $75.000 y $100.000</a></li><li class="dd__row"><a href="/collections/regalos-de-mas-de-100-000">Regalos + $100.000</a></li></ul></li>
+          <li class="nav__item nav__item--dd"><a class="nav__link" href="#">Categorías<svg class="nav__chev" aria-hidden="true"><use href="#i-chev"/></svg></a><ul class="dd dd--cats"><li class="dd__row"><a href="/collections/casa-y-jardin"><svg aria-hidden="true"><use href="#i-chev-l"/></svg>Casa y Jardín</a><ul class="dd__fly"><li><a href="/collections/iluminacion-y-muebles">Iluminación y muebles</a></li><li><a href="/collections/textil">Cojines y Textil Cama</a></li><li><a href="/collections/objetos-de-decoracion">Objetos de decoración</a></li><li><a href="/collections/bano">Baño</a></li><li><a href="/collections/deco-muro-2">Deco Muro</a></li><li><a href="/collections/siempre-organizado-copia">Escritorio y Organización</a></li><li><a href="/collections/exterior-y-jardin">Exterior y Jardín</a></li></ul></li><li class="dd__row"><a href="/collections/mesa-y-cocina"><svg aria-hidden="true"><use href="#i-chev-l"/></svg>Mesa y Cocina</a><ul class="dd__fly"><li><a href="/collections/tazas-tazones-vasos-y-jarros">Tazas, tazones, vasos y jarros</a></li><li><a href="/collections/platos-fuentes-y-alcuzas">Platos, fuentes y alcuzas</a></li><li><a href="/collections/ceramica-gres-1">Cerámica Gres</a></li><li><a href="/collections/manteleria-textil">Mantelería Textil y Sintra</a></li><li><a href="/collections/manteleria-papel">Mantelería Papel</a></li><li><a href="/collections/posavasos-1">Posavasos</a></li><li><a href="/collections/complementos-mesa">Complementos Mesa</a></li><li><a href="/collections/complementos-cocina">Complementos Cocina</a></li><li><a href="/collections/quincho-y-parrilla">Quincho y parrilla</a></li><li><a href="/collections/bar-1">Bar</a></li></ul></li><li class="dd__row"><a href="/collections/hombre"><svg aria-hidden="true"><use href="#i-chev-l"/></svg>Hombre</a><ul class="dd__fly"><li><a href="/collections/quincho-y-parrilla">Parrilleros</a></li><li><a href="/collections/escritorio-y-oficina">Escritorio y Oficina</a></li><li><a href="/collections/libros-fotografia-y-arquitectura-copia">Libros y Juegos de Mesa</a></li><li><a href="/collections/vestuario-hombre-1">Vestuario</a></li><li><a href="/collections/accesorios-hombre-1">Accesorios</a></li><li><a href="/collections/botellas-y-bandanas-hombre">Botellas y Bandanas</a></li></ul></li><li class="dd__row"><a href="/collections/mujer"><svg aria-hidden="true"><use href="#i-chev-l"/></svg>Mujer</a><ul class="dd__fly"><li><a href="/collections/joyas-1">Joyas</a></li><li><a href="/collections/accesorios-mujer-1">Accesorios Mujer</a></li><li><a href="/collections/vestuario-mujer-1">Vestuario Mujer</a></li></ul></li><li class="dd__row"><a href="/collections/infantil-1"><svg aria-hidden="true"><use href="#i-chev-l"/></svg>Infantil</a><ul class="dd__fly"><li><a href="/collections/deco-infantil">Deco infantil</a></li><li><a href="/collections/jugueteria">Juguetería</a></li><li><a href="/collections/ropa-y-accesorios">Ropa y accesorios</a></li><li><a href="/collections/bebes">Bebés</a></li><li><a href="/collections/libros-infantiles-1">Libros Infantiles</a></li></ul></li><li class="dd__row"><a href="/collections/gourmet"><svg aria-hidden="true"><use href="#i-chev-l"/></svg>Gourmet</a><ul class="dd__fly"><li><a href="/collections/salado-y-aperitivo-1">Salado y aperitivo</a></li><li><a href="/collections/dulces-y-snack">Dulces y snack</a></li><li><a href="/collections/te-e-infusiones">Infusiones y Té</a></li><li><a href="/collections/alinos-y-especias-1">Aliños y especias</a></li></ul></li><li class="dd__row"><a href="/collections/belleza-1"><svg aria-hidden="true"><use href="#i-chev-l"/></svg>Belleza</a><ul class="dd__fly"><li><a href="/collections/facial">Cremas, Aceites y Tónicos</a></li><li><a href="/collections/jabones">Jabones</a></li><li><a href="/collections/aromaterapia-y-perfumes">Aromaterapia y perfumes</a></li></ul></li><li class="dd__row"><a href="/collections/tiempo-libre"><svg aria-hidden="true"><use href="#i-chev-l"/></svg>Tiempo Libre</a><ul class="dd__fly"><li><a href="/collections/libros-arte-y-cultura">Libros Fotografía, Arte y Cultura</a></li><li><a href="/collections/souvenirs-y-recuerdos-de-chile">Souvenirs de Chile</a></li><li><a href="/collections/pic-nic-y-outdoor">Picnic y outdoor</a></li><li><a href="/collections/juegos-de-mesa">Juegos de mesa</a></li><li><a href="/collections/manualidades-1">Manualidades</a></li><li><a href="/collections/papeleria">Papelería</a></li></ul></li></ul></li>
+          <li class="nav__item"><a class="nav__link" href="/pages/nuestras-tiendas">Tiendas</a></li>
+          <li class="nav__item"><a class="nav__link" href="/collections/novedades">Novedades</a></li>
+          <li class="nav__item"><a class="nav__link" href="/pages/encuentra-el-regalo-que-estas-buscando">Guía de regalos</a></li>
+        </ul>
+      </nav>
+      <div class="header-icons">
+        <button class="icon-btn" type="button" id="searchToggle" aria-label="Abrir barra de búsqueda" aria-expanded="false"><svg aria-hidden="true"><use href="#i-search"/></svg></button>
+        <a class="icon-btn icon-btn--account" href="/account" aria-label="Mi cuenta"><svg aria-hidden="true"><use href="#i-user"/></svg></a>
+        <button class="icon-btn" type="button" id="cartToggle" data-drawer-open="cartDrawer" aria-label="Carro"><svg aria-hidden="true"><use href="#i-cart"/></svg><span class="cart-count" id="cartCount" hidden>0</span></button>
+      </div>
     </div>
-  </div>
-</header>
-
-<!-- Mobile nav drawer -->
-<div class="mobile-nav" id="mobileNav">
-  <div class="mobile-nav__top">
-    <span class="site-header__logo">Creado en<span>Chile</span></span>
-    <button class="mobile-nav__close" id="navClose" aria-label="Cerrar menú">&times;</button>
-  </div>
-  <ul>
-    <li><a href="#ofertas">Ofertas</a></li>
-    <li><a href="#envio-express">Envío Express</a></li>
-    <li><a href="#guia-regalos">Guía de Regalos</a></li>
-    <li><a href="#marcas">Marcas</a></li>
-    <li><a href="#novedades">Novedades</a></li>
-  </ul>
+    <div class="search-pop" id="searchPop" hidden>
+      <form class="search-pop__form" action="/search" method="get" role="search">
+        <label class="search-pop__label" for="searchInput"><svg aria-hidden="true"><use href="#i-search"/></svg><span class="visually-hidden">Buscar productos en nuestro sitio</span></label>
+        <input class="search-pop__input" id="searchInput" name="q" type="search" autocomplete="off">
+        <button class="search-pop__close" type="button" id="searchClose" aria-label="Cerrar"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+      </form>
+      <div class="search-pop__popular">
+        <p class="search-pop__heading">Términos de búsqueda sugeridos</p>
+        <a class="search-pop__link" href="/collections/lomasnuevo">Lo más nuevo</a>
+      </div>
+    </div>
+  </header>
 </div>
 
-<main>
+<!-- Drawer de navegación (móvil / tablet) -->
+<div class="drawer drawer--left" id="navDrawer" aria-hidden="true">
+  <div class="drawer__header">
+    <a class="drawer__logo" href="/" aria-label="Creado en Chile"><span class="logo__mark logo__mark--sm" data-ph="Logo 60×60"><b>CREADO</b><b>EN CHILE</b></span></a>
+    <button class="drawer__close" type="button" data-drawer-close aria-label="Cerrar menú"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+  </div>
+  <ul class="mnav"><li class="mnav__item"><a class="mnav__link mnav__link--l1" href="/collections/en-oferta">Ofertas</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l1" href="/collections/express-en-3-horas">Envio Express</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l1" href="/pages/encuentra-el-regalo-que-estas-buscando">Guía de Regalos</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l1" href="/pages/marcas-creado-en-chile">Marcas</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l1" href="/collections/lo-mas-vendido">+ Vendido</a></li><li class="mnav__item mnav__item--has"><a class="mnav__link mnav__link--l1" href="#">Por precio</a><button class="mnav__toggle" type="button" aria-expanded="false" aria-label="Ver más"><svg aria-hidden="true"><use href="#i-chev"/></svg></button><div class="mnav__sub"><ul><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/6-0-menos-de-10-000">REGALOS DE MENOS DE $10.000</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/6-1-de-10-000-a-25-1">REGALOS ENTRE $10.000 Y $25.000</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/6-1-de-25-000-a-35-000">REGALOS ENTRE $25.000 Y $35.000</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/6-3-de-35-000-a-50-000">REGALOS ENTRE $35.000 Y $50.000</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/6-4-de-50-000-a-75-000">REGALOS ENTRE $50.000 Y $75.000</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/6-5-de-75-000-a-100-000">REGALOS ENTRE $75.000 Y $100.000</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/regalos-de-mas-de-100-000">REGALOS + $100.000</a></li></ul></div></li><li class="mnav__item"><a class="mnav__link mnav__link--l1" href="/collections/novedades">Novedades</a></li><li class="mnav__item mnav__item--has"><a class="mnav__link mnav__link--l1" href="/collections/mujer">Mujer</a><button class="mnav__toggle" type="button" aria-expanded="false" aria-label="Ver más"><svg aria-hidden="true"><use href="#i-chev"/></svg></button><div class="mnav__sub"><ul><li class="mnav__item mnav__item--has"><a class="mnav__link mnav__link--l2" href="/collections/joyas-1">Joyas</a><button class="mnav__toggle" type="button" aria-expanded="false" aria-label="Ver más"><svg aria-hidden="true"><use href="#i-chev"/></svg></button><div class="mnav__sub"><ul><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/collares-1">Collares</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/pulseras-1">Pulseras</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/aros-1">Aros</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/anillos-2">Anillos</a></li></ul></div></li><li class="mnav__item mnav__item--has"><a class="mnav__link mnav__link--l2" href="/collections/accesorios-mujer-1">Accesorios Mujer</a><button class="mnav__toggle" type="button" aria-expanded="false" aria-label="Ver más"><svg aria-hidden="true"><use href="#i-chev"/></svg></button><div class="mnav__sub"><ul><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/bufandas-1">Bufandas</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/panuelos">Pañuelos</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/carteras-y-bolsos-1">Carteras y Bolsos</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/billeteras-y-tarjeteros">Billeteras y Tarjeteros</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/estuches-y-neceser">Estuches y Neceser</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/anteojos-y-relojes">Anteojos y Relojes</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/calcetines">Calcetines</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/bandanas">Bandanas</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/totebags">Totebags</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/straps-y-llaveros-copia">Llaveros</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/jockeys-y-collets">Gorros, Cintillos y Collets</a></li></ul></div></li><li class="mnav__item mnav__item--has"><a class="mnav__link mnav__link--l2" href="/collections/vestuario-mujer-1">Vestuario Mujer</a><button class="mnav__toggle" type="button" aria-expanded="false" aria-label="Ver más"><svg aria-hidden="true"><use href="#i-chev"/></svg></button><div class="mnav__sub"><ul><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/pijamas-y-pantuflas">Pijamas y Pantuflas</a></li></ul></div></li></ul></div></li><li class="mnav__item mnav__item--has"><a class="mnav__link mnav__link--l1" href="/collections/hombre">Hombre</a><button class="mnav__toggle" type="button" aria-expanded="false" aria-label="Ver más"><svg aria-hidden="true"><use href="#i-chev"/></svg></button><div class="mnav__sub"><ul><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/quincho-y-parrilla">Parrilleros</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/escritorio-y-oficina">Escritorio y Oficina</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/libros-fotografia-y-arquitectura-copia">Libros y Juegos de Mesa</a></li><li class="mnav__item mnav__item--has"><a class="mnav__link mnav__link--l2" href="/collections/vestuario-hombre-1">Vestuario</a><button class="mnav__toggle" type="button" aria-expanded="false" aria-label="Ver más"><svg aria-hidden="true"><use href="#i-chev"/></svg></button><div class="mnav__sub"><ul><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/ponchos-copia">Ponchos</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/pantuflas-hombre">Pantuflas y Pijamas</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/poleras">Poleras y polerones</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/calcetines-hombre">Calcetines</a></li></ul></div></li><li class="mnav__item mnav__item--has"><a class="mnav__link mnav__link--l2" href="/collections/accesorios-hombre-1">Accesorios</a><button class="mnav__toggle" type="button" aria-expanded="false" aria-label="Ver más"><svg aria-hidden="true"><use href="#i-chev"/></svg></button><div class="mnav__sub"><ul><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/bufandas-copia">Bufandas</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/cinturones-hombre">Cinturones</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/neceser-1">Neceser</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/gorros-y-jockey">Gorros y jockeys</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/bolsos-ulmmo-copia">Bolsos de viaje</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/billeteras-y-portadocumentos">Billeteras y portadocumentos</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l3" href="/collections/straps-y-llaveros-copia">Llaveros, Parches y Pines</a></li></ul></div></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/botellas-y-bandanas-hombre">Botellas y Bandanas</a></li></ul></div></li><li class="mnav__item mnav__item--has"><a class="mnav__link mnav__link--l1" href="/collections/casa-y-jardin">Casa y Jardin</a><button class="mnav__toggle" type="button" aria-expanded="false" aria-label="Ver más"><svg aria-hidden="true"><use href="#i-chev"/></svg></button><div class="mnav__sub"><ul><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/iluminacion-y-muebles">Iluminación y muebles</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/textil">Cojines y Textil Cama</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/objetos-de-decoracion">Objetos de decoración</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/bano">Baño</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/deco-muro-2">Deco Muro</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/siempre-organizado-copia">Escritorio y Organización</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/exterior-y-jardin">Exterior y Jardín</a></li></ul></div></li><li class="mnav__item mnav__item--has"><a class="mnav__link mnav__link--l1" href="/collections/mesa-y-cocina">Mesa, Cocina, Quincho</a><button class="mnav__toggle" type="button" aria-expanded="false" aria-label="Ver más"><svg aria-hidden="true"><use href="#i-chev"/></svg></button><div class="mnav__sub"><ul><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/tazas-tazones-vasos-y-jarros">Tazas, tazones, vasos y jarros</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/platos-fuentes-y-alcuzas">Platos, fuentes y alcuzas</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/ceramica-gres-1">Cerámica Gres</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/manteleria-textil">Mantelería Textil y Sintra</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/manteleria-papel">Mantelería Papel</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/posavasos-1">Posavasos</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/complementos-mesa">Complementos Mesa</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/complementos-cocina">Complementos Cocina</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/quincho-y-parrilla">Quincho y parrilla</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/bar-1">Bar</a></li></ul></div></li><li class="mnav__item mnav__item--has"><a class="mnav__link mnav__link--l1" href="/collections/tiempo-libre">Entretención y Souvenirs</a><button class="mnav__toggle" type="button" aria-expanded="false" aria-label="Ver más"><svg aria-hidden="true"><use href="#i-chev"/></svg></button><div class="mnav__sub"><ul><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/libros-arte-y-cultura">Libros Fotografía, Arte y Cultura</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/souvenirs-y-recuerdos-de-chile">Souvenirs de Chile</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/pic-nic-y-outdoor">Picnic y outdoor</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/juegos-de-mesa">Juegos de mesa</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/manualidades-1">Manualidades</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/papeleria">Papelería</a></li></ul></div></li><li class="mnav__item mnav__item--has"><a class="mnav__link mnav__link--l1" href="/collections/belleza-1">Belleza y Bienestar</a><button class="mnav__toggle" type="button" aria-expanded="false" aria-label="Ver más"><svg aria-hidden="true"><use href="#i-chev"/></svg></button><div class="mnav__sub"><ul><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/facial">Cremas, Aceites y Tónicos</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/jabones">Jabones</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/aromaterapia-y-perfumes">Aromaterapia y perfumes</a></li></ul></div></li><li class="mnav__item mnav__item--has"><a class="mnav__link mnav__link--l1" href="/collections/gourmet">Gourmet</a><button class="mnav__toggle" type="button" aria-expanded="false" aria-label="Ver más"><svg aria-hidden="true"><use href="#i-chev"/></svg></button><div class="mnav__sub"><ul><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/salado-y-aperitivo-1">Salado y aperitivo</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/dulces-y-snack">Dulces y snack</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/te-e-infusiones">Infusiones y Té</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/alinos-y-especias-1">Aliños y especias</a></li></ul></div></li><li class="mnav__item mnav__item--has"><a class="mnav__link mnav__link--l1" href="/collections/infantil-1">Infantil</a><button class="mnav__toggle" type="button" aria-expanded="false" aria-label="Ver más"><svg aria-hidden="true"><use href="#i-chev"/></svg></button><div class="mnav__sub"><ul><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/deco-infantil">Deco infantil</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/jugueteria">Juguetería</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/ropa-y-accesorios">Ropa y accesorios</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/bebes">Bebés</a></li><li class="mnav__item"><a class="mnav__link mnav__link--l2" href="/collections/libros-infantiles-1">Libros Infantiles</a></li></ul></div></li></ul>
+</div>
 
-  <!-- Hero / Slideshow -->
-  <section class="hero" id="inicio">
-    <img src="assets/img/hero.jpg" alt="Selección de regalos y productos de marcas chilenas">
-    <div class="hero__content">
-      <p class="eyebrow hero__eyebrow">Diseño e identidad local</p>
-      <h1 class="hero__title">Regalos con historia, hechos en Chile</h1>
-      <div class="hero__actions">
-        <a href="#novedades" class="btn btn--primary">Ver novedades</a>
-        <a href="#marcas" class="btn btn--white">Conoce las marcas</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Price range pills -->
-  <section class="section" id="guia-regalos">
-    <div class="wrapper">
-      <div class="section__head">
-        <h2 class="section__title">Guía de regalos</h2>
-      </div>
-      <div class="pill-row">
-        <a class="pill" href="#">Menos de $10.000</a>
-        <a class="pill" href="#">$10.000 a $25.000</a>
-        <a class="pill" href="#">$25.000 a $35.000</a>
-        <a class="pill" href="#">$35.000 a $50.000</a>
-        <a class="pill" href="#">$50.000 a $75.000</a>
-        <a class="pill" href="#">$75.000 a $100.000</a>
-        <a class="pill" href="#">+ $100.000</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Category scroller -->
-  <section class="section section--tinted">
-    <div class="wrapper">
-      <div class="section__head">
-        <h2 class="section__title">Explora por categoría</h2>
-      </div>
-      <div class="category-scroller">
-        <div class="category-item">
-          <div class="category-item__img"><img src="assets/img/product-1.jpg" alt="Mantelería"></div>
-          <p class="category-item__label">Mantelería</p>
-        </div>
-        <div class="category-item">
-          <div class="category-item__img"><img src="assets/img/product-2.jpg" alt="Vasos de gallo"></div>
-          <p class="category-item__label">Vasos de Gallo</p>
-        </div>
-        <div class="category-item">
-          <div class="category-item__img"><img src="assets/img/product-3.jpg" alt="Cerámica gres"></div>
-          <p class="category-item__label">Cerámica Gres</p>
-        </div>
-        <div class="category-item">
-          <div class="category-item__img"><img src="assets/img/product-4.jpg" alt="Pañuelos"></div>
-          <p class="category-item__label">Pañuelos</p>
-        </div>
-        <div class="category-item">
-          <div class="category-item__img"><img src="assets/img/product-5.jpg" alt="Libros de flora y fauna"></div>
-          <p class="category-item__label">Flora y Fauna</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Ofertas grid -->
-  <section class="section" id="ofertas">
-    <div class="wrapper">
-      <div class="section__head">
-        <h2 class="section__title">Ofertas: sólo esta semana</h2>
-        <a href="#" class="section__link">Ver más</a>
-      </div>
-      <div class="product-grid">
-        <article class="product-card">
-          <div class="product-card__image">
-            <span class="product-card__badge">-20%</span>
-            <img src="assets/img/product-1.jpg" alt="Room Spray Limón de Pica y Verbena">
-            <span class="product-card__quick">Compra rápida</span>
-          </div>
-          <h3 class="product-card__title">Room Spray Limón de Pica y Verbena 500 ml</h3>
-          <p class="product-card__price"><span>$14.390</span><del>$17.990</del></p>
-        </article>
-        <article class="product-card">
-          <div class="product-card__image">
-            <span class="product-card__badge">-20%</span>
-            <img src="assets/img/product-2.jpg" alt="Room Spray Acai y Mandarina">
-            <span class="product-card__quick">Compra rápida</span>
-          </div>
-          <h3 class="product-card__title">Room Spray Acai y Mandarina 500 ml</h3>
-          <p class="product-card__price"><span>$14.390</span><del>$17.990</del></p>
-        </article>
-        <article class="product-card">
-          <div class="product-card__image">
-            <span class="product-card__badge">-20%</span>
-            <img src="assets/img/product-3.jpg" alt="Room Spray Quillay y Maderas Nativas">
-            <span class="product-card__quick">Compra rápida</span>
-          </div>
-          <h3 class="product-card__title">Room Spray Quillay y Maderas Nativas 450 ml</h3>
-          <p class="product-card__price"><span>$14.390</span><del>$17.990</del></p>
-        </article>
-        <article class="product-card">
-          <div class="product-card__image">
-            <span class="product-card__badge">-20%</span>
-            <img src="assets/img/product-4.jpg" alt="Tabla Mañío Aconcagua">
-            <span class="product-card__quick">Compra rápida</span>
-          </div>
-          <h3 class="product-card__title">Tabla Mañío Aconcagua 14x25 cm</h3>
-          <p class="product-card__price"><span>$7.190</span></p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- Marquee -->
-  <div class="marquee">
-    <div class="marquee__track">
-      <span>— Compra varias marcas en un solo despacho —</span>
-      <span>— Conoce nuestras tiendas —</span>
-      <span>— Compra varias marcas en un solo despacho —</span>
-      <span>— Conoce nuestras tiendas —</span>
+<!-- Drawer de carro -->
+<div class="drawer drawer--right" id="cartDrawer" aria-hidden="true">
+  <div class="drawer__header">
+    <p class="drawer__title">Tu carrito</p>
+    <button class="drawer__close" type="button" data-drawer-close aria-label="Cerrar carro"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+  </div>
+  <div class="cart" id="cartBody">
+    <p class="cart__empty" id="cartEmpty">Tu carrito está vacío.</p>
+    <ul class="cart__list" id="cartList"></ul>
+    <div class="cart__footer" id="cartFooter" hidden>
+      <p class="cart__subtotal"><span>Subtotal</span><strong id="cartTotal">$0</strong></p>
+      <p class="cart__note">Envío gratis sobre $60.000.</p>
+      <a class="btn btn--solid btn--block" href="/checkout">Ir a pagar</a>
     </div>
   </div>
+</div>
+<div class="scrim" id="scrim" hidden></div>
 
-  <!-- Promo banner -->
-  <section class="section">
-    <div class="wrapper">
-      <div class="promo-banner">
-        <p class="eyebrow">Productos con diseño e identidad local</p>
-        <h2>Más de 500 marcas chilenas en un solo lugar</h2>
-        <a href="#" class="btn btn--primary">Descubre más</a>
+<main id="main">
+
+<!-- H1 SEO -->
+<div class="seo-h1"><h1>El mejor regalo con diseño e identidad local</h1></div>
+
+<!-- Hero -->
+<section class="hero" aria-roledescription="carrusel" aria-label="Destacados">
+  <div class="hero__viewport">
+    <div class="hero__track" id="heroTrack">
+      <div class="hero__slide" aria-roledescription="diapositiva"><a class="hero__link" href="/collections/express-en-3-horas" aria-label="Express en 3 horas"></a><div class="ph ph--hero" data-ph="Hero 1 · 4100×2536" ></div></div>
+      <div class="hero__slide" aria-roledescription="diapositiva"><a class="hero__link" href="/collections/flores" aria-label="Flores"></a><div class="ph ph--hero ph--tone2" data-ph="Hero 2 · 4100×2763" ></div></div>
+      <div class="hero__slide" aria-roledescription="diapositiva"><a class="hero__link" href="/collections/nuevas-velas" aria-label="Nuevas velas"></a><div class="ph ph--hero" data-ph="Hero 3 · 4100×2763" ></div></div>
+    </div>
+  </div>
+  <div class="dots" id="heroDots" role="tablist" aria-label="Diapositivas">
+    <button class="dot is-selected" type="button" role="tab" aria-label="Diapositiva 1"></button>
+    <button class="dot" type="button" role="tab" aria-label="Diapositiva 2"></button>
+    <button class="dot" type="button" role="tab" aria-label="Diapositiva 3"></button>
+  </div>
+</section>
+
+<!-- Botones por precio -->
+<section class="price-btns" aria-label="Regalos por precio">
+  <div class="wrapper"><div class="price-btns__row"><div class="pbtn"><a class="pbtn__link" href="/collections/cyber-regalos-entre-10-000-y-25-000"><span class="pbtn__title">Regalos Entre $10.000 y $25.000</span><svg class="pbtn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a></div><div class="pbtn"><a class="pbtn__link" href="/collections/cyber-regalos-entre-25-000-y-35-000"><span class="pbtn__title">Regalos entre $25.000 y $35.000</span><svg class="pbtn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a></div><div class="pbtn"><a class="pbtn__link" href="/collections/cyber-regalos-entre-35-000-y-50-000"><span class="pbtn__title">Regalos Entre $35.000 y $50.000</span><svg class="pbtn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a></div><div class="pbtn"><a class="pbtn__link" href="/collections/cyber-regalos-entre-50-000-y-75-000"><span class="pbtn__title">Regalos Entre $50.000 y $75.000</span><svg class="pbtn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a></div><div class="pbtn"><a class="pbtn__link" href="/collections/cyber-regalos-entre-75-000-y-100-000"><span class="pbtn__title">Regalos Entre $75.000 y $100.000</span><svg class="pbtn__arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a></div></div></div>
+</section>
+
+<!-- Lista de colecciones 1 -->
+<section class="cl cl--tone">
+  <div class="wrapper"><div class="cl__grid"><div class="lci"><a class="lci__link" href="/collections/nuevos-aromas-esencia-andina"><div class="lci__image"><div class="ph ph--tone2" data-ph="Colección 1 315×315" ></div></div><div class="lci__content"><span class="lci__title">Nuevos Aromas - Esencia Andina</span></div></a></div><div class="lci"><a class="lci__link" href="/collections/vasos-de-gallo"><div class="lci__image"><div class="ph ph--tone2" data-ph="Colección 2 315×315" ></div></div><div class="lci__content"><span class="lci__title">Vasos de Gallo</span></div></a></div><div class="lci"><a class="lci__link" href="/collections/ruanas-lana-merino"><div class="lci__image"><div class="ph ph--tone2" data-ph="Colección 3 315×315" ></div></div><div class="lci__content"><span class="lci__title">-</span></div></a></div><div class="lci"><a class="lci__link" href="/collections/ceramica-gres-1"><div class="lci__image"><div class="ph ph--tone2" data-ph="Colección 4 315×315" ></div></div><div class="lci__content"><span class="lci__title">Cerámica Gres</span></div></a></div><div class="lci"><a class="lci__link" href="/collections/regalos-de-matrimonio"><div class="lci__image"><div class="ph ph--tone2" data-ph="Colección 5 315×315" ></div></div><div class="lci__content"><span class="lci__title">-</span></div></a></div><div class="lci"><a class="lci__link" href="/collections/iluminacion-y-muebles"><div class="lci__image"><div class="ph ph--tone2" data-ph="Colección 6 315×315" ></div></div><div class="lci__content"><span class="lci__title">-</span></div></a></div><div class="lci"><a class="lci__link" href="/collections/posavasos-1"><div class="lci__image"><div class="ph ph--tone2" data-ph="Colección 7 315×315" ></div></div><div class="lci__content"><span class="lci__title">Posavasos</span></div></a></div><div class="lci"><a class="lci__link" href="#!"><div class="lci__image"><div class="ph ph--tone2" data-ph="Colección 8 315×315" ></div></div><div class="lci__content"><span class="lci__title">https://creadoenchile.cl/pages/regalos-corporativos</span></div></a></div></div></div>
+</section>
+
+<!-- Ofertas -->
+<section class="fc fc--offers">
+  <div class="wrapper">
+    <div class="fc__head fc__head--center">
+      <a class="fc__heading" href="/collections/ofertas-de-la-semana"><h2>OFERTAS: SÓLO ESTA SEMANA</h2></a>
+      <div class="fc__btn"><a class="btn btn--solid btn--md" href="/collections/ofertas-de-la-semana">VER MÁS</a></div>
+    </div>
+    <div class="fc__row fc__row--scroll"><article class="pgi">
+  <div class="pgi__image">
+    <a class="pgi__media" href="/products/room-spray-acai-y-mandarina-450-ml-vidrio" aria-label="Room Spray Acai y Mandarina 500 ml vidrio"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
+    <div class="pgi__badge"><span class="badge badge--sale">20%</span></div><svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
+    <button class="pgi__quick" type="button" data-quick-add data-title="Room Spray Acai y Mandarina 500 ml vidrio" data-price="$14,390" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+  </div>
+  <div class="pgi__info">
+    <a class="pgi__title" href="/products/room-spray-acai-y-mandarina-450-ml-vidrio">Room Spray Acai y Mandarina 500 ml vidrio</a>
+    <a class="pgi__price" href="/products/room-spray-acai-y-mandarina-450-ml-vidrio"><span class="pgi__price-new">$14,390</span> <s>$17,990</s></a>
+  </div>
+</article><article class="pgi">
+  <div class="pgi__image">
+    <a class="pgi__media" href="/products/room-spray-quillay-y-maderas-nativas-450-ml-vidrio" aria-label="Room Spray Quillay y Maderas Nativas 450 ml vidrio"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
+    <div class="pgi__badge"><span class="badge badge--sale">20%</span></div><svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
+    <button class="pgi__quick" type="button" data-quick-add data-title="Room Spray Quillay y Maderas Nativas 450 ml vidrio" data-price="$14,390" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+  </div>
+  <div class="pgi__info">
+    <a class="pgi__title" href="/products/room-spray-quillay-y-maderas-nativas-450-ml-vidrio">Room Spray Quillay y Maderas Nativas 450 ml vidrio</a>
+    <a class="pgi__price" href="/products/room-spray-quillay-y-maderas-nativas-450-ml-vidrio"><span class="pgi__price-new">$14,390</span> <s>$17,990</s></a>
+  </div>
+</article><article class="pgi">
+  <div class="pgi__image">
+    <a class="pgi__media" href="/products/tabla-manio-aconcagua-14x25-cm" aria-label="Tabla Mañío Aconcagua 14x25 cm"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
+    <div class="pgi__badge"><span class="badge badge--sale">40%</span></div><svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
+    <button class="pgi__quick" type="button" data-quick-add data-title="Tabla Mañío Aconcagua 14x25 cm" data-price="$5,394" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+  </div>
+  <div class="pgi__info">
+    <a class="pgi__title" href="/products/tabla-manio-aconcagua-14x25-cm">Tabla Mañío Aconcagua 14x25 cm</a>
+    <a class="pgi__price" href="/products/tabla-manio-aconcagua-14x25-cm"><span class="pgi__price-new">$5,394</span> <s>$8,990</s></a>
+  </div>
+</article></div>
+    <div class="fc__btn fc__btn--bottom"><a class="btn btn--solid btn--block btn--md" href="/collections/ofertas-de-la-semana">VER MÁS</a></div>
+  </div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee" role="region" aria-label="Información"><div class="ticker"><div class="ticker__track"><span class="tk__item"><strong>- Compra varias marcas en un solo despacho -</strong></span><span class="tk__item">Conoce nuestras <a href="/pages/nuestras-tiendas">tiendas</a></span><span class="tk__item"><strong>- Compra varias marcas en un solo despacho -</strong></span><span class="tk__item">Conoce nuestras <a href="/pages/nuestras-tiendas">tiendas</a></span><span class="tk__item"><strong>- Compra varias marcas en un solo despacho -</strong></span><span class="tk__item">Conoce nuestras <a href="/pages/nuestras-tiendas">tiendas</a></span><span class="tk__item"><strong>- Compra varias marcas en un solo despacho -</strong></span><span class="tk__item">Conoce nuestras <a href="/pages/nuestras-tiendas">tiendas</a></span><span class="tk__item"><strong>- Compra varias marcas en un solo despacho -</strong></span><span class="tk__item">Conoce nuestras <a href="/pages/nuestras-tiendas">tiendas</a></span><span class="tk__item"><strong>- Compra varias marcas en un solo despacho -</strong></span><span class="tk__item">Conoce nuestras <a href="/pages/nuestras-tiendas">tiendas</a></span></div></div></div>
+
+<!-- Brick: más vendidos / recién llegados -->
+<section class="brick">
+  <div class="brick__flex">
+    <a class="brick__block" href="/collections/lo-mas-vendido" aria-label="Los más vendidos"><div class="ph " data-ph="Banner 1 · 690×450" ></div></a>
+    <a class="brick__block" href="/collections/novedades" aria-label="Recién llegados"><div class="ph ph--tone2" data-ph="Banner 2 · 690×450" ></div></a>
+  </div>
+</section>
+
+<!-- Imagen + texto: regalos corporativos -->
+<section class="iwt">
+  <div class="wrapper">
+    <div class="iwt__items">
+      <div class="iwt__image"><div class="ph " data-ph="Imagen 660×330" ></div></div>
+      <div class="iwt__content">
+        <div class="iwt__sub">PRODUCTOS CON DISEÑO E IDENTIDAD LOCAL</div>
+        <p class="iwt__heading">REGALOS CORPORATIVOS</p>
+        <div class="iwt__text"><p>Si quieres hacer regalos originales, con sentido, propósito e impacto, te invitamos a descubrir Creado en Chile y todas las opciones que tenemos para tu organización.</p></div>
+        <div class="iwt__buttons"><a class="btn btn--solid btn--sm" href="/pages/regalos-corporativos">COTIZA AQUÍ</a></div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Image with text: corporate gifts -->
-  <section class="section">
-    <div class="wrapper">
-      <div class="split-banner">
-        <div class="split-banner__image">
-          <img src="assets/img/corporate.jpg" alt="Regalos corporativos con productos chilenos">
+<!-- Novedades exclusivas -->
+<section class="fc fc--grid fc--novedades">
+  <div class="wrapper">
+    <div class="fc__head fc__head--split">
+      <a class="fc__heading" href="/collections/marcas-exclusivas"><h2>NOVEDADES EXCLUSIVAS</h2></a>
+      <div class="fc__btn"><a class="btn btn--solid btn--lg" href="/collections/marcas-exclusivas">Ver productos</a></div>
+    </div>
+    <div class="fc__grid"><article class="pgi">
+  <div class="pgi__image">
+    <a class="pgi__media" href="/products/mouse-pad-ciudades-de-chile-valparaiso" aria-label="Mouse Pad Ciudades de Chile | Valparaiso"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
+    <div class="pgi__badge"><span class="badge badge--sale">10%</span></div><svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
+    <button class="pgi__quick" type="button" data-quick-add data-title="Mouse Pad Ciudades de Chile | Valparaiso" data-price="$8,991" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+  </div>
+  <div class="pgi__info">
+    <a class="pgi__title" href="/products/mouse-pad-ciudades-de-chile-valparaiso">Mouse Pad Ciudades de Chile | Valparaiso</a>
+    <a class="pgi__price" href="/products/mouse-pad-ciudades-de-chile-valparaiso"><span class="pgi__price-new">$8,991</span> <s>$9,990</s></a>
+  </div>
+</article><article class="pgi">
+  <div class="pgi__image">
+    <a class="pgi__media" href="/products/tabla-de-vidrio-para-cortar-20-x-28-cm" aria-label="Tabla de Vidrio para Cortar 20 x 28 cm | Colección Caro Ruiz Suculentas I"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
+    <div class="pgi__badge"><span class="badge badge--sale">10%</span></div><svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
+    <button class="pgi__quick" type="button" data-quick-add data-title="Tabla de Vidrio para Cortar 20 x 28 cm | Colección Caro Ruiz Suculentas I" data-price="$14,391" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+  </div>
+  <div class="pgi__info">
+    <a class="pgi__title" href="/products/tabla-de-vidrio-para-cortar-20-x-28-cm">Tabla de Vidrio para Cortar 20 x 28 cm | Colección Caro Ruiz Suculentas I</a>
+    <a class="pgi__price" href="/products/tabla-de-vidrio-para-cortar-20-x-28-cm"><span class="pgi__price-new">$14,391</span> <s>$15,990</s></a>
+  </div>
+</article><article class="pgi">
+  <div class="pgi__image">
+    <a class="pgi__media" href="/products/cacharrito-alto-oreja-linea-alma" aria-label="Cacharrito Alto (Oreja) Línea Alma"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
+    <svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
+    <button class="pgi__quick" type="button" data-quick-add data-title="Cacharrito Alto (Oreja) Línea Alma" data-price="$38,990" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+  </div>
+  <div class="pgi__info">
+    <a class="pgi__title" href="/products/cacharrito-alto-oreja-linea-alma">Cacharrito Alto (Oreja) Línea Alma</a>
+    <a class="pgi__price" href="/products/cacharrito-alto-oreja-linea-alma"><span class="pgi__price-new">$38,990</span></a>
+  </div>
+</article><article class="pgi">
+  <div class="pgi__image">
+    <a class="pgi__media" href="/products/servilletero-de-madera" aria-label="Servilletero de Madera"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
+    <div class="pgi__badge"><span class="badge badge--sale">10%</span></div><svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
+    <button class="pgi__quick" type="button" data-quick-add data-title="Servilletero de Madera" data-price="$17,991" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+  </div>
+  <div class="pgi__info">
+    <a class="pgi__title" href="/products/servilletero-de-madera">Servilletero de Madera</a>
+    <a class="pgi__price" href="/products/servilletero-de-madera"><span class="pgi__price-new">$17,991</span> <s>$19,990</s></a>
+  </div>
+</article></div>
+    <div class="fc__btn fc__btn--bottom"><a class="btn btn--solid btn--block btn--lg" href="/collections/marcas-exclusivas">Ver productos</a></div>
+  </div>
+</section>
+
+<!-- Fila de íconos -->
+<section class="icons-row">
+  <div class="wrapper">
+    <div class="icons-row__grid">
+      <div class="icons-row__item"><h3>Diseño e identidad local</h3></div>
+      <div class="icons-row__item"><h3>Miles de productos</h3><p>Pagas un sólo envío</p></div>
+      <div class="icons-row__item"><h3>Apoyo y difusión</h3><p>Para marcas locales</p></div>
+      <div class="icons-row__item"><h3>Tiendas</h3><p>Conoce nuestras direcciones y horarios <a href="/pages/nuestras-tiendas">aquí</a></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Lista de colecciones 2 -->
+<section class="cl cl--sand cl--three">
+  <div class="wrapper"><div class="cl__grid"><div class="lci lci--lg"><a class="lci__link" href="/collections/joyas-1"><div class="lci__image"><div class="ph " data-ph="Joyas 427×427" ></div></div><div class="lci__content"><span class="lci__title">Joyas</span></div></a></div><div class="lci lci--lg"><a class="lci__link" href="/collections/souvenirs-y-recuerdos-de-chile"><div class="lci__image"><div class="ph " data-ph="Recuerdos de Chile 427×427" ></div></div><div class="lci__content"><span class="lci__title">Recuerdos de Chile</span></div></a></div><div class="lci lci--lg"><a class="lci__link" href="/collections/quincho-y-parrilla"><div class="lci__image"><div class="ph " data-ph="Quincho y Parrilla 427×427" ></div></div><div class="lci__content"><span class="lci__title">Quincho y Parrilla</span></div></a></div></div></div>
+</section>
+
+<!-- Newsletter -->
+<section class="newsletter">
+  <div class="newsletter__bg"><div class="ph ph--soft" data-ph="Fondo newsletter 1440×350" ></div></div>
+  <div class="newsletter__overlay"></div>
+  <div class="wrapper newsletter__wrap">
+    <div class="newsletter__entry">
+      <h2>Sé parte de nuestra comunidad</h2>
+      <p>Recibe un <strong>10% de descuento</strong> en tu primera compra además de ofertas únicas, lanzamientos y nuevas historias semana a semana.</p>
+    </div>
+    <form class="newsletter__form" data-newsletter novalidate>
+      <div class="newsletter__fields">
+        <label class="visually-hidden" for="nlName">Tu nombre</label><input class="field" id="nlName" name="name" type="text" placeholder="Tu nombre" autocomplete="given-name">
+        <label class="visually-hidden" for="nlEmail">Tu email</label><input class="field" id="nlEmail" name="email" type="email" placeholder="Tu email" autocomplete="email" required>
+      </div>
+      <button class="btn btn--solid btn--block btn--xl" type="submit">¡LISTO!</button>
+      <p class="form-msg" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<!-- ¿Por qué comprar? -->
+<section class="why">
+  <div class="wrapper">
+    <div class="why__block">
+      <div class="why__images">
+        <div class="why__img why__img--secondary"><div class="ph ph--tone2" data-ph="330×262" ></div></div>
+        <div class="why__img why__img--primary"><div class="ph " data-ph="330×252" ></div></div>
+      </div>
+      <div class="why__content">
+        <p class="why__heading">¿Por qué comprar en Creado en Chile?</p>
+        <div class="why__text">
+          <p>Porque encontrarás los mejores regalos con diseño e identidad local, de creadores seleccionados y de nuestras marcas exclusivas. Una gran variedad, para todos los bolsillos, edades y necesidades. Cuando compras en Creado en Chile regalas productos con historia, con sentido y que hablan de Chile.</p>
+          <p><a href="/pages/sobre-creado-en-chile">Conoce nuestra historia</a></p>
         </div>
-        <div class="split-banner__content">
-          <p class="eyebrow">Para empresas</p>
-          <h2>Regalos corporativos</h2>
-          <p>Sorprende a tu equipo o clientes con regalos únicos, hechos por marcas chilenas.</p>
-          <a href="#" class="btn btn--white">Cotiza aquí</a>
-        </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Novedades -->
-  <section class="section" id="novedades">
-    <div class="wrapper">
-      <div class="section__head">
-        <h2 class="section__title">Novedades exclusivas</h2>
-        <a href="#" class="section__link">Ver productos</a>
-      </div>
-      <div class="product-grid">
-        <article class="product-card">
-          <div class="product-card__image">
-            <img src="assets/img/product-5.jpg" alt="Mouse Pad Ciudades de Chile | Valparaíso">
-            <span class="product-card__quick">Compra rápida</span>
-          </div>
-          <h3 class="product-card__title">Mouse Pad Ciudades de Chile | Valparaíso</h3>
-          <p class="product-card__price"><span>$9.990</span></p>
-        </article>
-        <article class="product-card">
-          <div class="product-card__image">
-            <img src="assets/img/product-6.jpg" alt="Calcetines Largos Algodón - Selknam Tanu">
-            <span class="product-card__quick">Compra rápida</span>
-          </div>
-          <h3 class="product-card__title">Calcetines Largos Algodón - Selknam Tanu</h3>
-          <p class="product-card__price"><span>$8.500</span></p>
-        </article>
-        <article class="product-card">
-          <div class="product-card__image">
-            <img src="assets/img/product-7.jpg" alt="Tabla de Vidrio para Cortar - Colección Suculentas">
-            <span class="product-card__quick">Compra rápida</span>
-          </div>
-          <h3 class="product-card__title">Tabla de Vidrio para Cortar 20x28 cm | Suculentas</h3>
-          <p class="product-card__price"><span>$12.990</span></p>
-        </article>
-        <article class="product-card">
-          <div class="product-card__image">
-            <img src="assets/img/product-8.jpg" alt="Aves Chilenas de Fieltro - Chucao">
-            <span class="product-card__quick">Compra rápida</span>
-          </div>
-          <h3 class="product-card__title">Aves Chilenas de Fieltro - Chucao</h3>
-          <p class="product-card__price"><span>$11.500</span></p>
-        </article>
-      </div>
+<!-- Regalos con envío express -->
+<section class="fc fc--grid fc--express">
+  <div class="wrapper">
+    <div class="fc__head fc__head--split">
+      <a class="fc__heading" href="/collections/express-en-3-horas"><h2>Regalos con envío express</h2></a>
+      <div class="fc__btn"><a class="btn btn--solid btn--sm" href="/collections/express-en-3-horas">Ver productos</a></div>
     </div>
-  </section>
+    <div class="fc__grid"><article class="pgi">
+  <div class="pgi__image">
+    <a class="pgi__media" href="/products/chupones-de-manjar-malla-25-unids" aria-label="Chupones de Manjar - Malla (25 unids)"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
+    <svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
+    <button class="pgi__quick" type="button" data-quick-add data-title="Chupones de Manjar - Malla (25 unids)" data-price="$11,990" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+  </div>
+  <div class="pgi__info">
+    <a class="pgi__title" href="/products/chupones-de-manjar-malla-25-unids">Chupones de Manjar - Malla (25 unids)</a>
+    <a class="pgi__price" href="/products/chupones-de-manjar-malla-25-unids"><span class="pgi__price-new">$11,990</span></a>
+  </div>
+</article><article class="pgi">
+  <div class="pgi__image">
+    <a class="pgi__media" href="/products/gift-wrapping" aria-label="Para Regalo"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
+    <svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
+    <button class="pgi__quick" type="button" data-quick-add data-title="Para Regalo" data-price="$1,000" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+  </div>
+  <div class="pgi__info">
+    <a class="pgi__title" href="/products/gift-wrapping">Para Regalo</a>
+    <a class="pgi__price" href="/products/gift-wrapping"><span class="pgi__price-new">$1,000</span></a>
+  </div>
+</article><article class="pgi">
+  <div class="pgi__image">
+    <a class="pgi__media" href="/products/manjar-en-barra-27grs-caja-15unids" aria-label="Manjar en Barra 27grs - Caja 15unids"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
+    <svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
+    <button class="pgi__quick" type="button" data-quick-add data-title="Manjar en Barra 27grs - Caja 15unids" data-price="$11,990" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+  </div>
+  <div class="pgi__info">
+    <a class="pgi__title" href="/products/manjar-en-barra-27grs-caja-15unids">Manjar en Barra 27grs - Caja 15unids</a>
+    <a class="pgi__price" href="/products/manjar-en-barra-27grs-caja-15unids"><span class="pgi__price-new">$11,990</span></a>
+  </div>
+</article><article class="pgi">
+  <div class="pgi__image">
+    <a class="pgi__media" href="/products/vaso-de-gallo-set-de-25-unidad" aria-label="6 Vasos de Gallo 320 ml"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
+    <svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
+    <button class="pgi__quick" type="button" data-quick-add data-title="6 Vasos de Gallo 320 ml" data-price="$24,990" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+  </div>
+  <div class="pgi__info">
+    <a class="pgi__title" href="/products/vaso-de-gallo-set-de-25-unidad">6 Vasos de Gallo 320 ml</a>
+    <a class="pgi__price" href="/products/vaso-de-gallo-set-de-25-unidad"><span class="pgi__price-new">$24,990</span></a>
+  </div>
+</article></div>
+    <div class="fc__btn fc__btn--bottom"><a class="btn btn--solid btn--block btn--sm" href="/collections/express-en-3-horas">Ver productos</a></div>
+  </div>
+</section>
 
-  <!-- Icons row -->
-  <section class="section section--tinted">
-    <div class="wrapper icons-row">
-      <div class="icon-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
-        <p class="icon-item__title">Diseño e identidad local</p>
-        <p class="icon-item__desc">Miles de productos de marcas chilenas</p>
-      </div>
-      <div class="icon-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 7h13l4 4v6h-4"/><circle cx="7" cy="17" r="2"/><circle cx="16" cy="17" r="2"/></svg>
-        <p class="icon-item__title">Pagas un sólo envío</p>
-        <p class="icon-item__desc">Aunque compres de varias marcas</p>
-      </div>
-      <div class="icon-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z"/><path d="M12 8v4l3 2"/></svg>
-        <p class="icon-item__title">Envío express</p>
-        <p class="icon-item__desc">Regalos en pocas horas</p>
-      </div>
-      <div class="icon-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 21s-7-4.5-9-9a5 5 0 019-3 5 5 0 019 3c-2 4.5-9 9-9 9z"/></svg>
-        <p class="icon-item__title">Apoyo a marcas locales</p>
-        <p class="icon-item__desc">Difusión para emprendedores chilenos</p>
-      </div>
-    </div>
-  </section>
+<!-- Banner Reinserta -->
+<section class="banner"><a class="banner__link" href="/collections/reinserta" aria-label="Proyecto social Reinserta"><div class="ph ph--hero" data-ph="Banner Reinserta · 1440×360" ></div></a></section>
 
-  <!-- Envío express collection -->
-  <section class="section" id="envio-express">
-    <div class="wrapper">
-      <div class="section__head">
-        <h2 class="section__title">Regalos con envío express</h2>
-        <a href="#" class="section__link">Ver productos</a>
-      </div>
-      <div class="product-grid">
-        <article class="product-card">
-          <div class="product-card__image">
-            <img src="assets/img/product-1.jpg" alt="Chupones de Manjar - Malla 25 unidades">
-            <span class="product-card__quick">Compra rápida</span>
-          </div>
-          <h3 class="product-card__title">Chupones de Manjar - Malla (25 unids)</h3>
-          <p class="product-card__price"><span>$6.990</span></p>
-        </article>
-        <article class="product-card">
-          <div class="product-card__image">
-            <img src="assets/img/product-2.jpg" alt="Bolsa de regalo">
-            <span class="product-card__quick">Compra rápida</span>
-          </div>
-          <h3 class="product-card__title">Bolsa Regalo · Para Regalo</h3>
-          <p class="product-card__price"><span>$2.990</span></p>
-        </article>
-        <article class="product-card">
-          <div class="product-card__image">
-            <img src="assets/img/product-3.jpg" alt="Manjar en barra 27 gramos caja 15 unidades">
-            <span class="product-card__quick">Compra rápida</span>
-          </div>
-          <h3 class="product-card__title">Manjar en Barra 27grs - Caja 15unids</h3>
-          <p class="product-card__price"><span>$9.990</span></p>
-        </article>
-        <article class="product-card">
-          <div class="product-card__image">
-            <img src="assets/img/product-4.jpg" alt="6 vasos de gallo 320 ml">
-            <span class="product-card__quick">Compra rápida</span>
-          </div>
-          <h3 class="product-card__title">6 Vasos de Gallo 320 ml</h3>
-          <p class="product-card__price"><span>$15.990</span></p>
-        </article>
-      </div>
-    </div>
-  </section>
+<!-- Marcas exclusivas -->
+<section class="cl cl--sand cl--brands">
+  <div class="wrapper">
+    <div class="cl__head"><h2>Conoce nuestras marcas exclusivas</h2></div>
+  </div>
+  <div class="brands">
+    <button class="brands__arrow brands__arrow--prev" type="button" aria-label="Anterior"><svg aria-hidden="true"><use href="#i-chev-l"/></svg></button>
+    <div class="brands__viewport" id="brandsViewport"><div class="brands__track"><div class="lci lci--circle"><a class="lci__link" href="/collections/mayna"><div class="lci__image"><div class="ph " data-ph="Marca 203×203" ></div></div><div class="lci__content"><span class="lci__title">Mayna</span></div></a></div><div class="lci lci--circle"><a class="lci__link" href="/collections/hued-hued"><div class="lci__image"><div class="ph " data-ph="Marca 203×203" ></div></div><div class="lci__content"><span class="lci__title">Hued Hued</span></div></a></div><div class="lci lci--circle"><a class="lci__link" href="/collections/alma-chilena"><div class="lci__image"><div class="ph " data-ph="Marca 203×203" ></div></div><div class="lci__content"><span class="lci__title">Alma Chilena</span></div></a></div><div class="lci lci--circle"><a class="lci__link" href="/collections/ulmmo"><div class="lci__image"><div class="ph " data-ph="Marca 203×203" ></div></div><div class="lci__content"><span class="lci__title">Ulmmo</span></div></a></div><div class="lci lci--circle"><a class="lci__link" href="/collections/esencia-andina"><div class="lci__image"><div class="ph " data-ph="Marca 203×203" ></div></div><div class="lci__content"><span class="lci__title">Esencia Andina</span></div></a></div><div class="lci lci--circle"><a class="lci__link" href="/collections/llena-de-gracia"><div class="lci__image"><div class="ph " data-ph="Marca 203×203" ></div></div><div class="lci__content"><span class="lci__title">Llena de Gracia</span></div></a></div><div class="lci lci--circle"><a class="lci__link" href="/collections/creado-x"><div class="lci__image"><div class="ph " data-ph="Marca 203×203" ></div></div><div class="lci__content"><span class="lci__title">Creado x</span></div></a></div></div></div>
+    <button class="brands__arrow brands__arrow--next" type="button" aria-label="Siguiente"><svg aria-hidden="true"><use href="#i-chev-r"/></svg></button>
+  </div>
+</section>
 
-  <!-- Newsletter -->
-  <section class="section">
-    <div class="wrapper">
-      <div class="newsletter">
-        <p class="eyebrow">Comunidad</p>
-        <h2>Sé parte de nuestra comunidad</h2>
-        <p class="newsletter__discount">Recibe un 10% de descuento en tu primera compra</p>
-        <p>Además de ofertas únicas, lanzamientos y nuevas historias semana a semana.</p>
-        <form id="newsletterForm">
-          <label for="newsletterEmail" class="visually-hidden">Correo electrónico</label>
-          <input type="email" id="newsletterEmail" placeholder="Tu correo electrónico" required>
-          <button type="submit" class="btn btn--primary">Suscribirme</button>
-        </form>
-        <p class="newsletter__msg" id="newsletterMsg"></p>
-      </div>
-    </div>
-  </section>
+<!-- 5 preguntas a… -->
+<section class="text-sec">
+  <div class="wrapper">
+    <h1 class="text-sec__title">5 PREGUNTAS A...</h1>
+    <p class="text-sec__text">Un nuevo espacio de conversación con referentes del arte y el diseño, quienes están potenciando la identidad cultural de nuestro país, a través de cinco preguntas exploramos sus procesos creativos, miradas y reflexiones sobre lo local.</p>
+  </div>
+</section>
 
-  <!-- About / Why buy -->
-  <section class="section">
-    <div class="wrapper about-section">
-      <div class="about-section__images">
-        <img src="assets/img/about-1.jpg" alt="Talleres de marcas chilenas">
-        <img src="assets/img/about-2.jpg" alt="Productos artesanales chilenos">
-      </div>
-      <div class="about-section__text">
-        <p class="eyebrow">Nuestra historia</p>
-        <h2>¿Por qué comprar en Creado en Chile?</h2>
-        <p>Reunimos a cientos de marcas y emprendedores chilenos en un solo lugar, para que encuentres regalos con diseño, identidad y origen local, sin complicarte con múltiples despachos.</p>
-        <a href="#" class="btn btn--outline">Conoce nuestra historia</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Brands -->
-  <section class="section section--tinted" id="marcas">
-    <div class="wrapper">
-      <div class="section__head">
-        <h2 class="section__title">Conoce nuestras marcas exclusivas</h2>
-      </div>
-      <div class="brands-scroller">
-        <span class="brand-pill">Mayna</span>
-        <span class="brand-pill">Hued Hued</span>
-        <span class="brand-pill">Alma Chilena</span>
-        <span class="brand-pill">Ulmmo</span>
-        <span class="brand-pill">Esencia Andina</span>
-        <span class="brand-pill">Llena de Gracia</span>
-        <span class="brand-pill">Creado x</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Blog / Q&A -->
-  <section class="section">
-    <div class="wrapper">
-      <div class="section__head">
-        <p class="eyebrow" style="width:100%;">5 preguntas a...</p>
-      </div>
-      <div class="blog-grid">
-        <a class="blog-card" href="#">
-          <div class="blog-card__image"><img src="assets/img/blog-1.jpg" alt="5 preguntas a Alexis Moreno"></div>
-          <p class="blog-card__title">5 preguntas a Alexis Moreno</p>
-        </a>
-        <a class="blog-card" href="#">
-          <div class="blog-card__image"><img src="assets/img/blog-2.jpg" alt="5 preguntas a Arturo Fermandois"></div>
-          <p class="blog-card__title">5 Preguntas a Arturo Fermandois</p>
-        </a>
-        <a class="blog-card" href="#">
-          <div class="blog-card__image"><img src="assets/img/blog-3.jpg" alt="5 preguntas a Andrea Tessa"></div>
-          <p class="blog-card__title">5 Preguntas a Andrea Tessa</p>
-        </a>
-        <a class="blog-card" href="#">
-          <div class="blog-card__image"><img src="assets/img/blog-4.jpg" alt="5 preguntas a Catalina Sclabos"></div>
-          <p class="blog-card__title">5 Preguntas a Catalina Sclabos</p>
-        </a>
-      </div>
-    </div>
-  </section>
+<section class="blog">
+  <div class="wrapper">
+    <div class="blog__grid"><article class="bpost"><a class="bpost__link" href="/blogs/5-preguntas-a/5-preguntas-a-alexis-moreno"><div class="ph " data-ph="Entrevista 315×473" ></div><span class="bpost__overlay"></span></a><div class="bpost__content"><h3 class="bpost__title"><a href="/blogs/5-preguntas-a/5-preguntas-a-alexis-moreno">5 preguntas a Alexis Moreno</a></h3></div></article><article class="bpost"><a class="bpost__link" href="/blogs/5-preguntas-a/5-preguntas-a-arturo-fermandois"><div class="ph " data-ph="Entrevista 315×473" ></div><span class="bpost__overlay"></span></a><div class="bpost__content"><h3 class="bpost__title"><a href="/blogs/5-preguntas-a/5-preguntas-a-arturo-fermandois">5 Preguntas a Arturo Fermandois</a></h3></div></article><article class="bpost"><a class="bpost__link" href="/blogs/5-preguntas-a/5-preguntas-a-andrea-tessa"><div class="ph " data-ph="Entrevista 315×473" ></div><span class="bpost__overlay"></span></a><div class="bpost__content"><h3 class="bpost__title"><a href="/blogs/5-preguntas-a/5-preguntas-a-andrea-tessa">5 Preguntas a Andrea Tessa</a></h3></div></article><article class="bpost"><a class="bpost__link" href="/blogs/5-preguntas-a/5-preguntas-a-catalina-sclabos"><div class="ph " data-ph="Entrevista 315×473" ></div><span class="bpost__overlay"></span></a><div class="bpost__content"><h3 class="bpost__title"><a href="/blogs/5-preguntas-a/5-preguntas-a-catalina-sclabos">5 Preguntas a Catalina Sclabos</a></h3></div></article></div>
+    <div class="blog__btn"><a class="btn btn--outline btn--sm" href="/blogs/5-preguntas-a">VER TODOS</a></div>
+  </div>
+</section>
 
 </main>
 
 <!-- Footer -->
 <footer class="site-footer">
-  <div class="wrapper">
-    <div class="footer-grid">
-      <div class="footer-col">
-        <h3>Categorías</h3>
-        <ul>
-          <li><a href="#ofertas">Ofertas</a></li>
-          <li><a href="#envio-express">Envío Express</a></li>
-          <li><a href="#guia-regalos">Guía de Regalos</a></li>
-          <li><a href="#marcas">Marcas</a></li>
-          <li><a href="#">+ Vendido</a></li>
-          <li><a href="#">Por precio</a></li>
-        </ul>
+  <div class="wrapper footer-content">
+    <div class="footer-blocks">
+      <div class="footer-block footer-block--cats">
+        <p class="footer-title"><button class="footer-title__button" type="button">Categorías</button></p>
+        <ul class="footer-links"><li><a class="footer-link" href="/collections/en-oferta">Ofertas</a></li><li><a class="footer-link" href="/collections/express-en-3-horas">Envio Express</a></li><li><a class="footer-link" href="/pages/encuentra-el-regalo-que-estas-buscando">Guía de Regalos</a></li><li><a class="footer-link" href="/pages/marcas-creado-en-chile">Marcas</a></li><li><a class="footer-link" href="/collections/lo-mas-vendido">+ Vendido</a></li><li><a class="footer-link" href="#">Por precio</a></li><li><a class="footer-link" href="/collections/novedades">Novedades</a></li><li><a class="footer-link" href="/collections/mujer">Mujer</a></li><li><a class="footer-link" href="/collections/hombre">Hombre</a></li><li><a class="footer-link" href="/collections/casa-y-jardin">Casa y Jardin</a></li><li><a class="footer-link" href="/collections/mesa-y-cocina">Mesa, Cocina, Quincho</a></li><li><a class="footer-link" href="/collections/tiempo-libre">Entretención y Souvenirs</a></li><li><a class="footer-link" href="/collections/belleza-1">Belleza y Bienestar</a></li><li><a class="footer-link" href="/collections/gourmet">Gourmet</a></li><li><a class="footer-link" href="/collections/infantil-1">Infantil</a></li></ul>
       </div>
-      <div class="footer-col">
-        <h3>Explora</h3>
-        <ul>
-          <li><a href="#novedades">Novedades</a></li>
-          <li><a href="#">Mujer</a></li>
-          <li><a href="#">Hombre</a></li>
-          <li><a href="#">Casa y Jardín</a></li>
-          <li><a href="#">Mesa, Cocina, Quincho</a></li>
-          <li><a href="#">Gourmet</a></li>
-        </ul>
+      <div class="footer-block footer-block--info">
+        <p class="footer-title"><button class="footer-title__button" type="button">Info</button></p>
+        <ul class="footer-links"><li><a class="footer-link" href="/pages/tiendas">Tiendas y horarios</a></li><li><a class="footer-link" href="https://wa.me/56988899856">Contacto</a></li><li><a class="footer-link" href="/pages/estado-de-mi-orden">Cambios y devoluciones</a></li><li><a class="footer-link" href="/pages/sobre-creado-en-chile">Nosotros</a></li><li><a class="footer-link" href="/pages/regalos-corporativos">Ventas corporativas</a></li><li><a class="footer-link" href="/pages/terminos-y-condiciones">Términos y condiciones</a></li><li><a class="footer-link" href="/pages/inscr-bete-en-nuestra-base-de-datos">Inscribe tu marca a nuestra BB.DD</a></li><li><a class="footer-link" href="/pages/politica-de-ventas">Políticas, cambios y formas de pago</a></li></ul>
       </div>
-      <div class="footer-col">
-        <h3>Info</h3>
-        <ul>
-          <li><a href="#">Tiendas y horarios</a></li>
-          <li><a href="#">Contacto</a></li>
-          <li><a href="#">Cambios y devoluciones</a></li>
-          <li><a href="#">Nosotros</a></li>
-          <li><a href="#">Ventas corporativas</a></li>
-        </ul>
+      <div class="footer-block footer-block--news">
+        <div class="footer-news-title">Suscríbete a nuestro newsletter</div>
+        <form class="footer-news" data-newsletter novalidate>
+          <label class="visually-hidden" for="ftEmail">Tu email</label>
+          <input class="field field--dark" id="ftEmail" name="email" type="email" placeholder="Tu email" autocomplete="email" required>
+          <button class="btn btn--white btn--block" type="submit">Suscribirme</button>
+          <p class="form-msg form-msg--dark" role="status" aria-live="polite"></p>
+        </form>
       </div>
-      <div class="footer-col">
-        <h3>Políticas</h3>
-        <ul>
-          <li><a href="#">Términos y condiciones</a></li>
-          <li><a href="#">Inscribe tu marca a nuestra BB.DD</a></li>
-          <li><a href="#">Políticas, cambios y formas de pago</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© <span id="year"></span> Creado en Chile</span>
-      <span>Réplica de práctica frontend — sin fines comerciales</span>
     </div>
   </div>
+  <div class="wrapper footer-bottom">
+    <div class="footer-bottom__social"><a class="social" href="https://www.instagram.com/creadoenchile/" aria-label="Instagram"><svg aria-hidden="true"><use href="#i-insta"/></svg></a></div>
+    <div class="footer-bottom__center">
+      <div class="lang" id="lang">
+        <button class="lang__toggle" type="button" aria-expanded="false" aria-haspopup="listbox"><span>Español</span><svg aria-hidden="true"><use href="#i-chev"/></svg></button>
+        <ul class="lang__list" role="listbox" hidden><li role="option" aria-selected="true">Español</li><li role="option">English</li></ul>
+      </div>
+      <p class="footer-copyright">© <span id="year">2026</span>, <a href="/">Creado en Chile</a>. Esta tienda es proporcionada por <a href="https://www.shopify.com/">Shopify</a>.</p>
+    </div>
+    <ul class="payment-icons" aria-label="Medios de pago">
+      <li><svg viewBox="0 0 38 24" role="img" aria-label="Visa"><rect width="38" height="24" rx="3" fill="#1434cb"/><text x="19" y="16.5" text-anchor="middle" font-family="Work Sans,sans-serif" font-weight="700" font-style="italic" font-size="11" fill="#fff">VISA</text></svg></li>
+      <li><svg viewBox="0 0 38 24" role="img" aria-label="Mastercard"><rect width="38" height="24" rx="3" fill="#2b2b2b"/><circle cx="15" cy="12" r="7" fill="#eb001b"/><circle cx="23" cy="12" r="7" fill="#f79e1b"/><path d="M19 6.6a7 7 0 0 1 0 10.8 7 7 0 0 1 0-10.8Z" fill="#ff5f00"/></svg></li>
+      <li><svg viewBox="0 0 38 24" role="img" aria-label="Diners Club"><rect width="38" height="24" rx="3" fill="#fff"/><circle cx="19" cy="12" r="8" fill="#0079be"/><circle cx="19" cy="12" r="5.6" fill="#fff"/><path d="M17 8.2v7.6M21 8.2v7.6" stroke="#0079be" stroke-width="1.4"/></svg></li>
+      <li><svg viewBox="0 0 38 24" role="img" aria-label="American Express"><rect width="38" height="24" rx="3" fill="#2e77bb"/><text x="19" y="15.5" text-anchor="middle" font-family="Work Sans,sans-serif" font-weight="700" font-size="8" fill="#fff">AMEX</text></svg></li>
+    </ul>
+  </div>
 </footer>
+
+<!-- WhatsApp flotante -->
+<a class="wa-float" href="https://wa.me/56988899856" aria-label="Chatear por WhatsApp"><svg aria-hidden="true"><use href="#i-wa"/></svg></a>
+
+<!-- Popup 10% -->
+<div class="popup" id="popup" role="dialog" aria-modal="true" aria-labelledby="popupTitle" hidden>
+  <div class="popup__panel">
+    <button class="popup__close" type="button" id="popupClose" aria-label="Cerrar"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+    <div class="popup__form">
+      <h2 class="popup__title" id="popupTitle">10% de descuento<br>en tu primera compra</h2>
+      <form data-newsletter novalidate>
+        <label class="visually-hidden" for="pEmail">Tu email</label>
+        <input class="popup__input" id="pEmail" name="email" type="email" placeholder="Tu email" autocomplete="email" required>
+        <button class="popup__submit" type="submit">¡LISTO!</button>
+        <p class="form-msg" role="status" aria-live="polite"></p>
+      </form>
+      <button class="popup__no" type="button" id="popupNo">No, gracias.</button>
+      <p class="popup__legal">Al compartirnos tu mail, aceptas recibir nuestros newsletter con descuentos, novedades, lanzamientos y más</p>
+    </div>
+    <div class="popup__image"><div class="ph ph--tone2" data-ph="Popup 390×440" ></div></div>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
