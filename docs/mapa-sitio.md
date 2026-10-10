@@ -82,4 +82,6 @@ Hecho y medido contra el original a 1440, 820 y 390 px: inicio, plantilla de col
 
 Suscripción (propuesta nueva): landing, recordatorio gratis, reserva, alta del plan anual y Mi suscripción, con precios de ejemplo (ver README).
 
+Mi Creado (propuesta nueva): acceso, inicio, personas, fechas, guardados, pedidos, direcciones y perfil.
+
 Pendiente: páginas de contenido (hoy `page.html` es un comodín), blog, y los widgets de terceros de la ficha (reseñas, "comprados juntos", stock por tienda).

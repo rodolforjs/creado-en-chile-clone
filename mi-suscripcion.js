@@ -149,6 +149,7 @@
       <p class="seyebrow">Mi Creado</p>
       <h1 class="sform__title">Mi suscripción</h1>
       ${s.user ? `<p class="sform__lead">${esc(s.user.name)} · ${esc(s.user.email)}</p>` : '<p class="sform__lead">Aquí ves tus fechas, tu reserva y tu plan.</p>'}
+      ${S.accountNav('suscripcion')}
       ${tabs}
       <div class="sacct__body">${on ? ({ resumen, fechas, prefs }[ui.tab])() : noPlan()}</div>
       <p class="sform__msg" role="status">${ui.msg}</p>

@@ -26,6 +26,12 @@
   v.textContent = p.v;
   v.href = `search.html?q=${encodeURIComponent(p.v)}`;
   $('#pdpTitle').textContent = p.t;
+  // Guardados de Mi Creado (se guardan en el navegador; la cuenta se pide al abrir Mi Creado)
+  const fav = $('#pdpFav');
+  const favState = () => { const st = JSON.parse(localStorage.getItem('cec_sub') || '{}'); return (st.saved || []).includes(p.h); };
+  const favPaint = () => { const on = favState(); fav.textContent = on ? '♥ Guardado' : '♡ Guardar'; fav.setAttribute('aria-pressed', String(on)); };
+  fav.addEventListener('click', () => { const st = JSON.parse(localStorage.getItem('cec_sub') || '{}'); st.saved = st.saved || []; st.saved = st.saved.includes(p.h) ? st.saved.filter((x) => x !== p.h) : [...st.saved, p.h]; localStorage.setItem('cec_sub', JSON.stringify(st)); favPaint(); });
+  favPaint();
   $('#pdpSave').href = `recordatorio.html?p=${encodeURIComponent(p.h)}`;
   const off = p.cp && p.cp > p.p ? Math.round((1 - p.p / p.cp) * 100) : 0;
   $('#pdpPrice').innerHTML = `<span class="pdp__price-now">${fmt(p.p)}</span>${off ? ` <s>${fmt(p.cp)}</s> <span class="badge badge--sale">${off}%</span>` : ''}`;

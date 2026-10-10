@@ -38,11 +38,7 @@
     // 2 · Cuenta
     () => `<h1 class="sform__title">Tu cuenta</h1>
       <p class="sform__lead">La necesitamos para guardar tus fechas y avisarte.</p>
-      ${st.user ? `<p class="sform__acct">Seguirás con la cuenta de <b>${S.esc(st.user.name)}</b> (${S.esc(st.user.email)}).</p>` : `
-      <button class="gbtn" type="button" id="gDemo"><svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.6 9.2c0-.6-.1-1.2-.2-1.8H9v3.4h4.8a4.1 4.1 0 0 1-1.8 2.7v2.2h2.9c1.7-1.6 2.7-3.9 2.7-6.5z"/><path fill="#34A853" d="M9 18c2.4 0 4.5-.8 6-2.2l-2.9-2.2c-.8.5-1.8.9-3.1.9-2.4 0-4.4-1.6-5.1-3.8H.9v2.3A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.9 10.7a5.4 5.4 0 0 1 0-3.4V5H.9a9 9 0 0 0 0 8z"/><path fill="#EA4335" d="M9 3.6c1.3 0 2.5.5 3.5 1.400l2.600-2.600A9 9 0 0 0 .9 5l3 2.300C4.600 5.200 6.600 3.600 9 3.600z"/></svg>Continuar con Google (demo)</button>
-      <p class="sform__or">o con tu correo</p>
-      <label class="sfield"><span>Nombre</span><input id="uName" type="text" autocomplete="off"></label>
-      <label class="sfield"><span>Correo</span><input id="uEmail" type="email" autocomplete="off"></label>`}
+      <div id="acctBox"></div>
       ${nav()}`,
     // 3 · Personas y fechas
     () => {
@@ -87,7 +83,9 @@
     app.querySelector('[data-back]')?.addEventListener('click', () => { st.step -= 1; st.msg = ''; draw(); });
     app.querySelector('[data-next]')?.addEventListener('click', next);
     if (st.step === 1) {
-      $('#gDemo')?.addEventListener('click', () => { $('#uName').value = 'Cuenta de demostración'; $('#uEmail').value = 'demo@ejemplo.cl'; });
+      const box = $('#acctBox');
+      if (st.user) box.innerHTML = `<p class="sform__acct">Seguirás con la cuenta de <b>${S.esc(st.user.name)}</b> (${S.esc(st.user.email)}).</p>`;
+      else S.loginBox(box, (u) => { st.user = u; st.msg = ''; st.step = 2; draw(); });
     }
     if (st.step === 2) {
       app.querySelectorAll('[data-del]').forEach((b) => b.addEventListener('click', () => { st.items.splice(+b.dataset.del, 1); draw(); }));
@@ -134,12 +132,7 @@
 
   const next = () => {
     st.msg = '';
-    if (st.step === 1 && !st.user) {
-      const n = $('#uName').value.trim();
-      const e = $('#uEmail').value.trim();
-      if (!n || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) { st.msg = 'Necesitamos tu nombre y un correo válido (o usa Google).'; draw(); return; }
-      st.user = { name: n, email: e };
-    }
+    if (st.step === 1 && !st.user) { st.msg = 'Entra con Google, shop o tu correo para continuar.'; draw(); return; }
     if (st.step === 2 && !st.items.length) { st.msg = 'Agrega al menos una fecha para continuar.'; draw(); return; }
     if (st.step === 4) {
       if (!st.terms) { st.msg = 'Acepta las condiciones para continuar.'; draw(); return; }

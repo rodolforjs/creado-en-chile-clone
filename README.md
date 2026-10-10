@@ -21,13 +21,14 @@ Incluye barra de anuncios con ticker, header con desplegables, header compacto a
 | `recordatorio.html` | Recordatorio gratis: guarda persona y fecha, muestra el aviso de ejemplo |
 | `reserva.html` | Reserva de la próxima fecha (sin plan, sin pago hasta activarla) |
 | `suscribirse.html` | Alta del plan anual en 5 pasos (plan, cuenta, personas y fechas, rango, pago demo) |
+| `mi-creado.html?s=<sección>` | Mi Creado: acceso (Google, shop o correo con código, demo), inicio, personas y gustos, fechas, guardados, pedidos, direcciones y perfil |
 | `mi-suscripcion.html` | Plan, próxima fecha con regalo propuesto (aceptar, cambiar, pausar), fechas y personas, despacho y avisos, reserva y recordatorios |
 
 Los productos salen de `data/catalog.js` (textos, marcas, precios y pertenencia a colecciones tomados del sitio real, sin imágenes: todas son placeholders). Las descripciones completas de la ficha están en `data/descriptions.js`. Todas las colecciones enlazadas tienen sus productos reales; `creado-x` está vacía también en el original. El carro se guarda en `localStorage`. No se replicaron los widgets de terceros de la ficha (reseñas, "comprados juntos", stock por tienda), por lo que la página de producto queda más corta que el original. La búsqueda es textual simple: el original usa el motor de Shopify y devuelve más resultados.
 
 ## Suscripción (propuesta nueva, no existe en el sitio real)
 
-Viene del documento de arquitectura de la propuesta (Taller Integrado). Es una demostración: todo vive en `localStorage` (`cec_sub`), no hay cuentas ni cobros. Los precios y condiciones son **de ejemplo** porque la propuesta los deja "a definir": plan anual $29.990 con 4 fechas, 1 cambio por fecha y envío gratis; cada regalo se paga al aceptarlo dentro del rango elegido ($15.000–$25.000, $25.000–$40.000, $40.000–$60.000); la reserva se cobra solo al activarla; si se cancela, el plan sigue hasta el fin del período. Los regalos propuestos salen del catálogo según gustos y rango (`sub.js`). Enlaces desde el pie, un banner en el inicio, una invitación en el carro, "Guardar para una fecha" en la ficha y "Reservar la próxima fecha" en la confirmación del pedido. Esos agregados (banner, invitación) alteran las alturas de inicio y carro respecto del original. Faltan de la propuesta: Mi Creado completo (inicio, guardados, pedidos, direcciones), Match, contextos y mini paquetes.
+Viene del documento de arquitectura de la propuesta (Taller Integrado). Es una demostración: todo vive en `localStorage` (`cec_sub`), no hay cuentas ni cobros. Los precios y condiciones son **de ejemplo** porque la propuesta los deja "a definir": plan anual $29.990 con 4 fechas, 1 cambio por fecha y envío gratis; cada regalo se paga al aceptarlo dentro del rango elegido ($15.000–$25.000, $25.000–$40.000, $40.000–$60.000); la reserva se cobra solo al activarla; si se cancela, el plan sigue hasta el fin del período. Los regalos propuestos salen del catálogo según gustos y rango (`sub.js`). Enlaces desde el pie, un banner en el inicio, una invitación en el carro, "Guardar para una fecha" en la ficha y "Reservar la próxima fecha" en la confirmación del pedido. Esos agregados (banner, invitación) alteran las alturas de inicio y carro respecto del original. Mi Creado reúne todo en una cuenta local (`cec_sub`): ícono en el header, acceso en una pantalla que vuelve a donde estabas, pedidos y direcciones que se guardan al comprar, "crear cuenta en un paso" en la confirmación del pedido, y "Guardar" en la ficha. Es una demostración: no hay Google ni Shopify reales (el código del correo es 123456). Faltan de la propuesta: Match (y sus guardados), contextos y mini paquetes.
 
 ## Estructura
 
@@ -39,7 +40,8 @@ home.js         # Hero y carrusel de marcas
 collection.js   # Filtros, orden y paginación (también la búsqueda)
 product.js      # Ficha de producto
 cart.js / order.js / page.js
-sub.js          # Suscripción: perfil local, calendario y regalos sugeridos
+sub.js          # Cuenta local, calendario y regalos sugeridos (suscripción y Mi Creado)
+mi-creado.js    # Secciones de Mi Creado
 suscripcion.js / recordatorio.js / reserva.js / suscribirse.js / mi-suscripcion.js
 data-helpers.js # Tarjeta de producto compartida
 data/catalog.js # Catálogo de práctica

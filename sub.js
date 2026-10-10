@@ -61,8 +61,17 @@
   const upcoming = () => OCCASIONS.map((o) => ({ ...o, date: nextDate(o) })).sort((a, b) => a.date - b.date);
 
   // ---- almacenamiento ----
-  const blank = () => ({ user: null, people: [], reminders: [], reservation: null, plan: null });
-  const load = () => { try { return { ...blank(), ...(JSON.parse(localStorage.getItem(KEY)) || {}) }; } catch { return blank(); } };
+  const blank = () => ({
+    user: null, people: [], reminders: [], reservation: null, plan: null,
+    saved: [], orders: [], addresses: [], profile: { lang: 'es', notify: { email: true, wa: false, news: true } },
+  });
+  const load = () => {
+    try {
+      const raw = JSON.parse(localStorage.getItem(KEY)) || {};
+      const b = blank();
+      return { ...b, ...raw, profile: { ...b.profile, ...(raw.profile || {}), notify: { ...b.profile.notify, ...((raw.profile || {}).notify || {}) } } };
+    } catch { return blank(); }
+  };
   const save = (s) => { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { /* sin storage */ } };
   const uid = (p) => `${p}${Date.now().toString(36)}${Math.floor(Math.random() * 1296).toString(36)}`;
   const personOf = (s, id) => s.people.find((p) => p.id === id);
@@ -100,8 +109,60 @@
   const readChecks = (root, name) => [...root.querySelectorAll(`input[name="${name}"]:checked`)].map((i) => i.value);
   const occOptions = (selected) => upcoming().map((o) => `<option value="${o.id}" ${selected === o.id ? 'selected' : ''}>${o.name} · ${fmtShort(o.date)}</option>`).join('');
 
+
+  // ---- cuenta (demostración): Google, shop o correo con código, en una sola pantalla ----
+  const nameFromEmail = (e) => e.split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
+  const GSVG = '<svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.6 9.2c0-.6-.1-1.2-.2-1.8H9v3.4h4.8a4.1 4.1 0 0 1-1.8 2.7v2.2h2.9c1.7-1.6 2.7-3.9 2.7-6.5z"/><path fill="#34A853" d="M9 18c2.4 0 4.5-.8 6-2.2l-2.9-2.2c-.8.5-1.8.9-3.1.9-2.4 0-4.4-1.6-5.1-3.8H.9v2.3A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.9 10.7a5.4 5.4 0 0 1 0-3.4V5H.9a9 9 0 0 0 0 8z"/><path fill="#EA4335" d="M9 3.6c1.3 0 2.5.5 3.5 1.4l2.6-2.600A9 9 0 0 0 .9 5l3 2.300C4.600 5.200 6.600 3.600 9 3.600z"/></svg>';
+  const setUser = (user) => { const s = load(); s.user = user; save(s); return s; };
+  const logout = () => { const s = load(); s.user = null; save(s); };
+  // Pinta las opciones de acceso en `root`. `hint` = correo ya conocido (ej. el del pedido). Llama onLogin(user).
+  const loginBox = (root, onLogin, { hint = '', lead = '' } = {}) => {
+    root.innerHTML = `${lead ? `<p class="sform__acct">${lead}</p>` : ''}
+      <button class="gbtn" type="button" data-m="google">${GSVG}Continuar con Google (demo)</button>
+      <button class="gbtn gbtn--alt" type="button" data-m="shop"><b class="shopmark">shop</b>Continuar con shop (demo)</button>
+      <p class="sform__or">o con tu correo</p>
+      <div class="lcode">
+        <label class="sfield"><span>Correo</span><input type="email" data-email autocomplete="off" value="${esc(hint)}"></label>
+        <button class="btn btn--outline btn--md" type="button" data-m="send">Enviarme un código</button>
+        <div class="lcode__step" hidden>
+          <p class="sform__fine">Demostración: el código llegaría a tu correo. Usa <b>123456</b>.</p>
+          <label class="sfield"><span>Código</span><input type="text" inputmode="numeric" maxlength="6" data-code autocomplete="off"></label>
+          <button class="btn btn--solid btn--md" type="button" data-m="verify">Entrar</button>
+        </div>
+        <p class="sform__msg" role="alert"></p>
+      </div>`;
+    const msg = root.querySelector('.sform__msg');
+    const emailEl = root.querySelector('[data-email]');
+    const fin = (u) => { setUser(u); onLogin(u); };
+    root.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-m]');
+      if (!b) return;
+      const m = b.dataset.m;
+      if (m === 'google') fin({ name: 'Cuenta de demostración', email: 'demo@ejemplo.cl', method: 'google' });
+      else if (m === 'shop') fin({ name: 'Cuenta de demostración', email: 'demo@ejemplo.cl', method: 'shop' });
+      else if (m === 'send') {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim())) { msg.textContent = 'Ingresa un correo válido.'; return; }
+        msg.textContent = '';
+        root.querySelector('.lcode__step').hidden = false;
+        root.querySelector('[data-code]').focus();
+      } else if (m === 'verify') {
+        if (root.querySelector('[data-code]').value.trim() !== '123456') { msg.textContent = 'Código incorrecto. En la demostración es 123456.'; return; }
+        const em = emailEl.value.trim();
+        fin({ name: nameFromEmail(em), email: em, method: 'code' });
+      }
+    });
+  };
+
+  // Barra de navegación de Mi Creado (la usan mi-creado.html y mi-suscripcion.html)
+  const NAV = [
+    ['inicio', 'Inicio', 'mi-creado.html'], ['personas', 'Personas y gustos', 'mi-creado.html?s=personas'], ['fechas', 'Fechas', 'mi-creado.html?s=fechas'],
+    ['guardados', 'Guardados', 'mi-creado.html?s=guardados'], ['suscripcion', 'Mi suscripción', 'mi-suscripcion.html'],
+    ['pedidos', 'Pedidos', 'mi-creado.html?s=pedidos'], ['direcciones', 'Direcciones', 'mi-creado.html?s=direcciones'], ['perfil', 'Perfil', 'mi-creado.html?s=perfil'],
+  ];
+  const accountNav = (active) => `<nav class="anav" aria-label="Mi Creado">${NAV.map(([k, l, h]) => `<a href="${h}" class="${k === active ? 'is-on' : ''}" ${k === active ? 'aria-current="page"' : ''}>${l}</a>`).join('')}</nav>`;
+
   window.CEC_SUB = {
     PLAN, RANGES, RELS, TASTES, OCCASIONS, fmt, esc, load, save, uid, personOf, occ, info, upcoming, nextDate, daysTo, fmtDate, fmtShort, inDays,
-    suggest, product, giftCard, tasteChips, readChecks, occOptions, tasteLabels,
+    suggest, product, giftCard, setUser, logout, loginBox, accountNav, nameFromEmail, tasteChips, readChecks, occOptions, tasteLabels,
   };
 })();

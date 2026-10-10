@@ -38,6 +38,9 @@
 
   /* ---------- Búsqueda ---------- */
   const searchPop = $('#searchPop');
+  // Mi Creado: al entrar, vuelve a la página donde estaba
+  const acct = $('#accountLink');
+  if (acct) acct.addEventListener('click', () => { try { sessionStorage.setItem('cec_return', location.pathname.split('/').pop() + location.search); } catch { /* sin storage */ } });
   const searchBtn = $('#searchToggle');
   const searchOpen = () => !searchPop.hidden;
   function closeSearch() {

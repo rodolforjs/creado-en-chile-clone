@@ -27,13 +27,7 @@
             <label class="sfield"><span>Día</span><input name="cdate" type="date"></label>
           </div>
         </fieldset>
-        <fieldset class="sfs"><legend>Tu cuenta</legend>
-          ${s.user ? `<p class="sform__acct">Guardaremos esto en la cuenta de <b>${S.esc(s.user.name)}</b> (${S.esc(s.user.email)}).</p>` : `
-          <button class="gbtn" type="button" id="gDemo"><svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.6 9.2c0-.6-.1-1.2-.2-1.8H9v3.4h4.8a4.1 4.1 0 0 1-1.8 2.7v2.2h2.9c1.7-1.6 2.7-3.9 2.7-6.5z"/><path fill="#34A853" d="M9 18c2.4 0 4.5-.8 6-2.2l-2.9-2.2c-.8.5-1.8.9-3.1.9-2.400 0-4.400-1.600-5.100-3.800H.9v2.300A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.900 10.700a5.400 5.400 0 0 1 0-3.400V5H.9a9 9 0 0 0 0 8z"/><path fill="#EA4335" d="M9 3.600c1.300 0 2.500.5 3.500 1.400l2.600-2.600A9 9 0 0 0 .9 5l3 2.300C4.600 5.200 6.600 3.600 9 3.600z"/></svg>Continuar con Google (demo)</button>
-          <p class="sform__or">o con tu correo</p>
-          <label class="sfield"><span>Nombre</span><input name="uname" type="text" autocomplete="off"></label>
-          <label class="sfield"><span>Correo</span><input name="uemail" type="email" autocomplete="off"></label>`}
-        </fieldset>
+        <fieldset class="sfs"><legend>Tu cuenta</legend><div id="acctBox"></div></fieldset>
         <p class="sform__msg" id="msg" role="alert"></p>
         <button class="btn btn--solid btn--xl" type="submit">Guardar y avisarme</button>
         <p class="sform__fine">Demostración: los datos se quedan en este navegador.</p>
@@ -43,9 +37,15 @@
     const toggle = () => { $('#customBox').hidden = f.elements.occ.value !== 'custom'; };
     f.elements.occ.addEventListener('change', toggle);
     toggle();
-    const g = $('#gDemo');
-    if (g) g.addEventListener('click', () => { f.elements.uname.value = 'Cuenta de demostración'; f.elements.uemail.value = 'demo@ejemplo.cl'; $('#msg').textContent = ''; });
+    acctBox();
     f.addEventListener('submit', (e) => { e.preventDefault(); submit(f); });
+  };
+
+  // Cuenta en un toque: Google, shop o correo con código. Si ya hay cuenta, solo se muestra.
+  const acctBox = () => {
+    const box = $('#acctBox');
+    if (s.user) { box.innerHTML = `<p class="sform__acct">Guardaremos esto en la cuenta de <b>${S.esc(s.user.name)}</b> (${S.esc(s.user.email)}).</p>`; return; }
+    S.loginBox(box, (u) => { s.user = u; acctBox(); $('#msg').textContent = ''; });
   };
 
   const submit = (f) => {
@@ -60,12 +60,7 @@
       const [, m, d] = v.split('-').map(Number);
       custom = { label, m, d };
     }
-    if (!s.user) {
-      const un = f.elements.uname.value.trim();
-      const ue = f.elements.uemail.value.trim();
-      if (!un || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ue)) { msg.textContent = 'Necesitamos tu nombre y un correo válido (o usa Google).'; return; }
-      s.user = { name: un, email: ue };
-    }
+    if (!s.user) { msg.textContent = 'Entra con Google, shop o tu correo para guardar la fecha.'; return; }
     const person = { id: S.uid('p'), name, rel: f.elements.rel.value, tastes: S.readChecks(f, 'tastes') };
     s.people.push(person);
     const rem = { id: S.uid('r'), personId: person.id, occId: custom ? null : f.elements.occ.value, custom, ideas: preProd ? [preProd.h] : [] };
