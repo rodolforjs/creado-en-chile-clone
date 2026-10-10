@@ -18,14 +18,20 @@
   ];
 
   const qs = new URLSearchParams(location.search);
+  const query = (qs.get('q') || '').trim();
+  const isSearch = location.pathname.endsWith('search.html');
   const handle = qs.get('c') || 'mujer';
-  const all = (D.collections[handle] || D.products.map((p) => p.i));
+  const norm = (s) => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const tokens = norm(query).split(/\s+/).filter(Boolean);
+  const all = isSearch
+    ? D.products.filter((p) => { const hay = norm(`${p.t} ${p.v} ${p.ty || ''} ${(p.tg || []).join(' ')}`); return tokens.every((t) => hay.includes(t)); }).map((p) => p.i)
+    : (D.collections[handle] || D.products.map((p) => p.i));
   const info = (D.titles || {})[handle];
   const pretty = (h) => h.replace(/-\d+$/, '').replace(/-/g, ' ').replace(/^./, (c) => c.toUpperCase());
-  const title = info ? info.t : pretty(handle);
+  const title = isSearch ? (query ? `Resultados para “${query}”` : 'Búsqueda') : (info ? info.t : pretty(handle));
 
-  document.title = `${title} | Creado en Chile`;
-  $('#colCrumb').textContent = title;
+  document.title = `${isSearch ? 'Búsqueda' : title} | Creado en Chile`;
+  $('#colCrumb').textContent = isSearch ? 'Búsqueda' : title;
   $('#colTitle').textContent = title.toUpperCase();
 
   // ---- estado (en la URL) ----
@@ -36,7 +42,7 @@
   };
   const sync = () => {
     const u = new URLSearchParams();
-    u.set('c', handle);
+    if (isSearch) u.set('q', query); else u.set('c', handle);
     if (state.sort !== 'best') u.set('sort', state.sort);
     Object.entries(state.f).forEach(([k, arr]) => arr.forEach((v) => u.append(k, v)));
     if (state.page > 1) u.set('page', state.page);

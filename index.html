@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Rubik:wght@500;600&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -71,19 +72,32 @@
 </div>
 
 <!-- Drawer de carro -->
-<div class="drawer drawer--right" id="cartDrawer" aria-hidden="true">
-  <div class="drawer__header">
-    <p class="drawer__title">Tu carrito</p>
+<div class="drawer drawer--right drawer--cart" id="cartDrawer" aria-hidden="true">
+  <div class="cartd__head">
+    <p class="cartd__title">Carrito <span class="cartd__count" id="cartDrawerCount"></span></p>
     <button class="drawer__close" type="button" data-drawer-close aria-label="Cerrar carro"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
   </div>
-  <div class="cart" id="cartBody">
-    <p class="cart__empty" id="cartEmpty">Tu carrito está vacío.</p>
-    <ul class="cart__list" id="cartList"></ul>
-    <div class="cart__footer" id="cartFooter" hidden>
-      <p class="cart__subtotal"><span>Subtotal</span><strong id="cartTotal">$0</strong></p>
-      <p class="cart__note">Envío gratis sobre $60.000.</p>
-      <a class="btn btn--solid btn--block" href="pedido.html">Ir a pagar</a>
+  <div class="cartd__body" id="cartBody">
+    <div class="cartd__ship" id="cartShip" hidden>
+      <p id="cartShipText"></p>
+      <div class="cartd__bar"><span id="cartShipBar"></span></div>
     </div>
+    <div class="cartd__express" id="cartExpress" hidden>⚡ ¡Tu pedido califica para<br><strong>despacho express (3 horas)!</strong></div>
+    <p class="cart__empty" id="cartEmpty">Tu carrito está vacío.</p>
+    <ul class="cartd__list" id="cartList"></ul>
+    <details class="cartd__msg" id="cartMsg" hidden><summary>Si compras una bolsa, ¡agrégarle un mensaje!</summary><textarea class="cartd__note" id="cartNote" rows="3" placeholder="Escribe tu mensaje"></textarea></details>
+  </div>
+  <div class="cartd__foot" id="cartFooter" hidden>
+    <div class="cartd__gift">
+      <p class="cartd__gift-title">¿Quieres agregar una bolsa de regalo?</p>
+      <div class="cartd__gift-row">
+        <div class="qty qty--sm"><button type="button" data-gift="-1" aria-label="Menos">−</button><input id="giftQty" type="text" inputmode="numeric" value="0" aria-label="Bolsas de regalo" readonly><button type="button" data-gift="1" aria-label="Más">+</button></div>
+        <button class="cartd__gift-btn" type="button" id="giftAdd">Agregar bolsa de regalo</button>
+      </div>
+    </div>
+    <label class="cartd__terms"><input type="checkbox" id="cartTerms"> Acepto los <a href="page.html?p=terminos-y-condiciones">términos y condiciones</a></label>
+    <a class="cartd__checkout is-disabled" id="cartCheckout" href="pedido.html" aria-disabled="true">Check out • <span id="cartTotal">$0</span> CLP</a>
+    <p class="cartd__note-ship">Gastos de envío e impuestos calculados al la compra</p>
   </div>
 </div>
 <div class="scrim" id="scrim" hidden></div>
@@ -132,7 +146,7 @@
   <div class="pgi__image">
     <a class="pgi__media" href="product.html?p=room-spray-acai-y-mandarina-450-ml-vidrio" aria-label="Room Spray Acai y Mandarina 500 ml vidrio"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
     <div class="pgi__badge"><span class="badge badge--sale">20%</span></div><svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
-    <button class="pgi__quick" type="button" data-quick-add data-handle="room-spray-acai-y-mandarina-450-ml-vidrio" data-title="Room Spray Acai y Mandarina 500 ml vidrio" data-price="$14,390" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+    <button class="pgi__quick" type="button" data-quick-add data-express="1" data-handle="room-spray-acai-y-mandarina-450-ml-vidrio" data-title="Room Spray Acai y Mandarina 500 ml vidrio" data-price="$14,390" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
   </div>
   <div class="pgi__info">
     <a class="pgi__title" href="product.html?p=room-spray-acai-y-mandarina-450-ml-vidrio">Room Spray Acai y Mandarina 500 ml vidrio</a>
@@ -142,7 +156,7 @@
   <div class="pgi__image">
     <a class="pgi__media" href="product.html?p=room-spray-quillay-y-maderas-nativas-450-ml-vidrio" aria-label="Room Spray Quillay y Maderas Nativas 450 ml vidrio"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
     <div class="pgi__badge"><span class="badge badge--sale">20%</span></div><svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
-    <button class="pgi__quick" type="button" data-quick-add data-handle="room-spray-quillay-y-maderas-nativas-450-ml-vidrio" data-title="Room Spray Quillay y Maderas Nativas 450 ml vidrio" data-price="$14,390" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+    <button class="pgi__quick" type="button" data-quick-add data-express="1" data-handle="room-spray-quillay-y-maderas-nativas-450-ml-vidrio" data-title="Room Spray Quillay y Maderas Nativas 450 ml vidrio" data-price="$14,390" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
   </div>
   <div class="pgi__info">
     <a class="pgi__title" href="product.html?p=room-spray-quillay-y-maderas-nativas-450-ml-vidrio">Room Spray Quillay y Maderas Nativas 450 ml vidrio</a>
@@ -152,7 +166,7 @@
   <div class="pgi__image">
     <a class="pgi__media" href="product.html?p=tabla-manio-aconcagua-14x25-cm" aria-label="Tabla Mañío Aconcagua 14x25 cm"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
     <div class="pgi__badge"><span class="badge badge--sale">40%</span></div><svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
-    <button class="pgi__quick" type="button" data-quick-add data-handle="tabla-manio-aconcagua-14x25-cm" data-title="Tabla Mañío Aconcagua 14x25 cm" data-price="$5,394" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+    <button class="pgi__quick" type="button" data-quick-add data-express="1" data-handle="tabla-manio-aconcagua-14x25-cm" data-title="Tabla Mañío Aconcagua 14x25 cm" data-price="$5,394" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
   </div>
   <div class="pgi__info">
     <a class="pgi__title" href="product.html?p=tabla-manio-aconcagua-14x25-cm">Tabla Mañío Aconcagua 14x25 cm</a>
@@ -200,7 +214,7 @@
   <div class="pgi__image">
     <a class="pgi__media" href="product.html?p=mouse-pad-ciudades-de-chile-valparaiso" aria-label="Mouse Pad Ciudades de Chile | Valparaiso"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
     <div class="pgi__badge"><span class="badge badge--sale">10%</span></div><svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
-    <button class="pgi__quick" type="button" data-quick-add data-handle="mouse-pad-ciudades-de-chile-valparaiso" data-title="Mouse Pad Ciudades de Chile | Valparaiso" data-price="$8,991" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+    <button class="pgi__quick" type="button" data-quick-add data-express="1" data-handle="mouse-pad-ciudades-de-chile-valparaiso" data-title="Mouse Pad Ciudades de Chile | Valparaiso" data-price="$8,991" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
   </div>
   <div class="pgi__info">
     <a class="pgi__title" href="product.html?p=mouse-pad-ciudades-de-chile-valparaiso">Mouse Pad Ciudades de Chile | Valparaiso</a>
@@ -210,7 +224,7 @@
   <div class="pgi__image">
     <a class="pgi__media" href="product.html?p=tabla-de-vidrio-para-cortar-20-x-28-cm" aria-label="Tabla de Vidrio para Cortar 20 x 28 cm | Colección Caro Ruiz Suculentas I"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
     <div class="pgi__badge"><span class="badge badge--sale">10%</span></div><svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
-    <button class="pgi__quick" type="button" data-quick-add data-handle="tabla-de-vidrio-para-cortar-20-x-28-cm" data-title="Tabla de Vidrio para Cortar 20 x 28 cm | Colección Caro Ruiz Suculentas I" data-price="$14,391" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+    <button class="pgi__quick" type="button" data-quick-add data-express="1" data-handle="tabla-de-vidrio-para-cortar-20-x-28-cm" data-title="Tabla de Vidrio para Cortar 20 x 28 cm | Colección Caro Ruiz Suculentas I" data-price="$14,391" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
   </div>
   <div class="pgi__info">
     <a class="pgi__title" href="product.html?p=tabla-de-vidrio-para-cortar-20-x-28-cm">Tabla de Vidrio para Cortar 20 x 28 cm | Colección Caro Ruiz Suculentas I</a>
@@ -220,7 +234,7 @@
   <div class="pgi__image">
     <a class="pgi__media" href="product.html?p=cacharrito-alto-oreja-linea-alma" aria-label="Cacharrito Alto (Oreja) Línea Alma"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
     <svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
-    <button class="pgi__quick" type="button" data-quick-add data-handle="cacharrito-alto-oreja-linea-alma" data-title="Cacharrito Alto (Oreja) Línea Alma" data-price="$38,990" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+    <button class="pgi__quick" type="button" data-quick-add data-express="1" data-handle="cacharrito-alto-oreja-linea-alma" data-title="Cacharrito Alto (Oreja) Línea Alma" data-price="$38,990" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
   </div>
   <div class="pgi__info">
     <a class="pgi__title" href="product.html?p=cacharrito-alto-oreja-linea-alma">Cacharrito Alto (Oreja) Línea Alma</a>
@@ -230,7 +244,7 @@
   <div class="pgi__image">
     <a class="pgi__media" href="product.html?p=servilletero-de-madera" aria-label="Servilletero de Madera"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
     <div class="pgi__badge"><span class="badge badge--sale">10%</span></div><svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
-    <button class="pgi__quick" type="button" data-quick-add data-handle="servilletero-de-madera" data-title="Servilletero de Madera" data-price="$17,991" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+    <button class="pgi__quick" type="button" data-quick-add data-express="1" data-handle="servilletero-de-madera" data-title="Servilletero de Madera" data-price="$17,991" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
   </div>
   <div class="pgi__info">
     <a class="pgi__title" href="product.html?p=servilletero-de-madera">Servilletero de Madera</a>
@@ -308,7 +322,7 @@
   <div class="pgi__image">
     <a class="pgi__media" href="product.html?p=chupones-de-manjar-malla-25-unids" aria-label="Chupones de Manjar - Malla (25 unids)"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
     <svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
-    <button class="pgi__quick" type="button" data-quick-add data-handle="chupones-de-manjar-malla-25-unids" data-title="Chupones de Manjar - Malla (25 unids)" data-price="$11,990" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+    <button class="pgi__quick" type="button" data-quick-add data-express="1" data-handle="chupones-de-manjar-malla-25-unids" data-title="Chupones de Manjar - Malla (25 unids)" data-price="$11,990" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
   </div>
   <div class="pgi__info">
     <a class="pgi__title" href="product.html?p=chupones-de-manjar-malla-25-unids">Chupones de Manjar - Malla (25 unids)</a>
@@ -318,7 +332,7 @@
   <div class="pgi__image">
     <a class="pgi__media" href="product.html?p=gift-wrapping" aria-label="Para Regalo"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
     <svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
-    <button class="pgi__quick" type="button" data-quick-add data-handle="gift-wrapping" data-title="Para Regalo" data-price="$1,000" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+    <button class="pgi__quick" type="button" data-quick-add data-express="1" data-handle="gift-wrapping" data-title="Para Regalo" data-price="$1,000" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
   </div>
   <div class="pgi__info">
     <a class="pgi__title" href="product.html?p=gift-wrapping">Para Regalo</a>
@@ -328,7 +342,7 @@
   <div class="pgi__image">
     <a class="pgi__media" href="product.html?p=manjar-en-barra-27grs-caja-15unids" aria-label="Manjar en Barra 27grs - Caja 15unids"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
     <svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
-    <button class="pgi__quick" type="button" data-quick-add data-handle="manjar-en-barra-27grs-caja-15unids" data-title="Manjar en Barra 27grs - Caja 15unids" data-price="$11,990" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+    <button class="pgi__quick" type="button" data-quick-add data-express="1" data-handle="manjar-en-barra-27grs-caja-15unids" data-title="Manjar en Barra 27grs - Caja 15unids" data-price="$11,990" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
   </div>
   <div class="pgi__info">
     <a class="pgi__title" href="product.html?p=manjar-en-barra-27grs-caja-15unids">Manjar en Barra 27grs - Caja 15unids</a>
@@ -338,7 +352,7 @@
   <div class="pgi__image">
     <a class="pgi__media" href="product.html?p=vaso-de-gallo-set-de-25-unidad" aria-label="6 Vasos de Gallo 320 ml"><div class="ph ph--product" data-ph="Producto 315×378" ></div></a>
     <svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>
-    <button class="pgi__quick" type="button" data-quick-add data-handle="vaso-de-gallo-set-de-25-unidad" data-title="6 Vasos de Gallo 320 ml" data-price="$24,990" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
+    <button class="pgi__quick" type="button" data-quick-add data-express="1" data-handle="vaso-de-gallo-set-de-25-unidad" data-title="6 Vasos de Gallo 320 ml" data-price="$24,990" aria-label="Compra rápida"><svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="pgi__quick-text">Compra rápida</span></button>
   </div>
   <div class="pgi__info">
     <a class="pgi__title" href="product.html?p=vaso-de-gallo-set-de-25-unidad">6 Vasos de Gallo 320 ml</a>

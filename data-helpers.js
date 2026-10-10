@@ -44,7 +44,7 @@
   <div class="pgi__image">
     <a class="pgi__media" href="${href}" aria-label="${esc(p.t)}"><div class="ph ph--product" data-ph="${esc(p.v)}"></div></a>
     ${badge}${coin}
-    <button class="pgi__quick" type="button" data-quick-add data-handle="${esc(p.h)}" data-title="${esc(p.t)}" data-price="${p.p}" aria-label="Compra rápida">${CART}<span class="pgi__quick-text">Compra rápida</span></button>
+    <button class="pgi__quick" type="button" data-quick-add data-express="${expressSet.has(idx) ? 1 : 0}" data-handle="${esc(p.h)}" data-title="${esc(p.t)}" data-price="${p.p}" aria-label="Compra rápida">${CART}<span class="pgi__quick-text">Compra rápida</span></button>
   </div>
   <div class="pgi__info">
     <a class="pgi__title" href="${href}">${esc(p.t)}</a>

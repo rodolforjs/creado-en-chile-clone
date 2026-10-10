@@ -118,37 +118,68 @@
   /* ---------- Carro (localStorage, solo demostración) ---------- */
   const fmt = (n) => '$' + Math.round(n).toLocaleString('en-US');
   const KEY = 'cec_cart';
+  const FREE_SHIPPING = 60000;
   const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
   const save = (c) => { try { localStorage.setItem(KEY, JSON.stringify(c)); } catch { /* sin storage */ } };
   let cart = load();
+  const stepper = (qty, onChange) => {
+    const w = document.createElement('div');
+    w.className = 'qty qty--sm';
+    w.innerHTML = '<button type="button" aria-label="Menos">−</button><input type="text" inputmode="numeric" readonly aria-label="Cantidad"><button type="button" aria-label="Más">+</button>';
+    $('input', w).value = qty;
+    const [minus, plus] = $$('button', w);
+    minus.addEventListener('click', () => onChange(qty - 1));
+    plus.addEventListener('click', () => onChange(qty + 1));
+    return w;
+  };
+  const setQty = (i, q) => { if (q < 1) cart.splice(i, 1); else cart[i].qty = q; save(cart); render(); };
+  const totals = () => cart.reduce((t, it) => ({ total: t.total + it.price * it.qty, count: t.count + it.qty }), { total: 0, count: 0 });
   const render = () => {
     const list = $('#cartList');
     list.innerHTML = '';
-    let total = 0;
-    let count = 0;
+    const { total, count } = totals();
     cart.forEach((it, i) => {
-      total += it.price * it.qty;
-      count += it.qty;
       const li = document.createElement('li');
-      const left = document.createElement('div');
+      li.className = 'cartd__item';
+      const img = document.createElement('div');
+      img.className = 'ph ph--product cartd__img';
+      img.dataset.ph = '100×100';
+      const info = document.createElement('div');
+      info.className = 'cartd__info';
+      const row = document.createElement('div');
+      row.className = 'cartd__row';
       const t = document.createElement('a');
-      t.className = 'cart__item-title';
-      t.href = `product.html?p=${encodeURIComponent(it.handle || '')}`;
+      t.className = 'cartd__name';
+      t.href = it.handle === 'gift-wrapping' ? '#' : `product.html?p=${encodeURIComponent(it.handle || '')}`;
       t.textContent = it.title;
-      const m = document.createElement('p');
-      m.className = 'cart__item-meta';
-      m.textContent = `${it.variant ? it.variant + ' · ' : ''}${it.qty} × ${fmt(it.price)}`;
+      const pr = document.createElement('span');
+      pr.className = 'cartd__price';
+      pr.textContent = fmt(it.price * it.qty);
+      row.append(t, pr);
+      info.append(row);
+      if (it.variant) { const v = document.createElement('p'); v.className = 'cartd__variant'; v.textContent = `Color: ${it.variant}`; info.append(v); }
+      const act = document.createElement('div');
+      act.className = 'cartd__actions';
       const rm = document.createElement('button');
-      rm.className = 'cart__item-remove';
       rm.type = 'button';
-      rm.textContent = 'Quitar';
-      rm.addEventListener('click', () => { cart.splice(i, 1); save(cart); render(); });
-      left.append(t, m, rm);
-      li.append(left);
+      rm.className = 'cartd__remove';
+      rm.textContent = 'Eliminar';
+      rm.addEventListener('click', () => setQty(i, 0));
+      act.append(stepper(it.qty, (q) => setQty(i, q)), rm);
+      info.append(act);
+      li.append(img, info);
       list.append(li);
     });
-    $('#cartEmpty').hidden = cart.length > 0;
-    $('#cartFooter').hidden = cart.length === 0;
+    const empty = cart.length === 0;
+    $('#cartEmpty').hidden = !empty;
+    $('#cartFooter').hidden = empty;
+    $('#cartShip').hidden = empty;
+    $('#cartMsg').hidden = !cart.some((c) => c.handle === 'gift-wrapping');
+    $('#cartExpress').hidden = empty || !cart.every((c) => c.express);
+    const left = Math.max(0, FREE_SHIPPING - total);
+    $('#cartShipText').textContent = left > 0 ? `Te falta ${fmt(left)} para envío gratis` : '¡Tu pedido tiene envío gratis!';
+    $('#cartShipBar').style.width = `${Math.min(100, (total / FREE_SHIPPING) * 100)}%`;
+    $('#cartDrawerCount').textContent = count ? `(${count} ${count === 1 ? 'producto' : 'productos'})` : '';
     $('#cartTotal').textContent = fmt(total);
     const badge = $('#cartCount');
     badge.hidden = count === 0;
@@ -156,7 +187,7 @@
     document.dispatchEvent(new CustomEvent('cart:change', { detail: { cart, total, count } }));
   };
   const addToCart = (item, open = true) => {
-    const found = cart.find((c) => c.handle === item.handle && c.variant === item.variant);
+    const found = cart.find((c) => c.handle === item.handle && (c.variant || '') === (item.variant || ''));
     if (found) found.qty += item.qty || 1; else cart.push({ ...item, qty: item.qty || 1 });
     save(cart);
     render();
@@ -166,12 +197,27 @@
     const btn = e.target.closest('[data-quick-add]');
     if (!btn) return;
     e.preventDefault();
-    addToCart({ handle: btn.dataset.handle || '', title: btn.dataset.title, price: parseInt(btn.dataset.price.replace(/[^\d]/g, ''), 10) });
+    addToCart({ handle: btn.dataset.handle || '', title: btn.dataset.title, price: parseInt(btn.dataset.price.replace(/[^\d]/g, ''), 10), express: btn.dataset.express === '1' });
   });
+  // bolsa de regalo y condiciones
+  const giftQty = $('#giftQty');
+  $$('[data-gift]').forEach((b) => b.addEventListener('click', () => { giftQty.value = Math.max(0, (+giftQty.value || 0) + (+b.dataset.gift)); }));
+  $('#giftAdd').addEventListener('click', () => {
+    const q = +giftQty.value || 0;
+    if (!q) return;
+    addToCart({ handle: 'gift-wrapping', title: 'Para Regalo', price: 1000, express: true, qty: q }, false);
+    giftQty.value = 0;
+  });
+  const terms = $('#cartTerms');
+  const checkout = $('#cartCheckout');
+  checkout.href = 'pedido.html';
+  terms.addEventListener('change', () => { checkout.classList.toggle('is-disabled', !terms.checked); checkout.setAttribute('aria-disabled', String(!terms.checked)); });
+  checkout.addEventListener('click', (e) => { if (!terms.checked) e.preventDefault(); });
   render();
   window.CEC = {
     fmt, addToCart, openCart: () => setDrawer($('#cartDrawer'), true),
-    getCart: () => cart, clearCart: () => { cart = []; save(cart); render(); },
+    getCart: () => cart, setQty, totals, FREE_SHIPPING,
+    clearCart: () => { cart = []; save(cart); render(); },
     url: {
       collection: (h, extra = '') => `collection.html?c=${encodeURIComponent(h)}${extra}`,
       product: (h) => `product.html?p=${encodeURIComponent(h)}`,
