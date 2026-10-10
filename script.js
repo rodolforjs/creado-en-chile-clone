@@ -9,7 +9,14 @@
 
   /* ---------- Header compacto al hacer scroll ---------- */
   const header = $('#siteHeader');
-  const onScroll = () => header.classList.toggle('is-stuck', window.scrollY > 140);
+  const hideOnScroll = document.body.classList.contains('hide-header-on-scroll');
+  let lastY = window.scrollY;
+  const onScroll = () => {
+    const y = window.scrollY;
+    header.classList.toggle('is-stuck', y > 140);
+    if (hideOnScroll) header.classList.toggle('is-hidden', y > 260 && y > lastY);
+    lastY = y;
+  };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
@@ -64,52 +71,6 @@
     btn.setAttribute('aria-expanded', String(open));
   }));
 
-  /* ---------- Hero: slider con puntos y autoplay ---------- */
-  const track = $('#heroTrack');
-  const dots = $$('#heroDots .dot');
-  let slide = 0;
-  let timer;
-  const go = (i) => {
-    slide = (i + dots.length) % dots.length;
-    track.style.transform = `translateX(${-slide * 100}%)`;
-    dots.forEach((d, n) => {
-      d.classList.toggle('is-selected', n === slide);
-      d.setAttribute('aria-selected', String(n === slide));
-    });
-  };
-  const play = () => { clearInterval(timer); timer = setInterval(() => go(slide + 1), 6000); };
-  $('#heroPrev').addEventListener('click', () => { go(slide - 1); play(); });
-  $('#heroNext').addEventListener('click', () => { go(slide + 1); play(); });
-  dots.forEach((d, n) => d.addEventListener('click', () => { go(n); play(); }));
-  let startX = null;
-  const hero = $('.hero');
-  hero.addEventListener('pointerdown', (e) => { startX = e.clientX; });
-  hero.addEventListener('pointerup', (e) => {
-    if (startX === null) return;
-    const dx = e.clientX - startX;
-    startX = null;
-    if (Math.abs(dx) > 50) { go(slide + (dx < 0 ? 1 : -1)); play(); }
-  });
-  hero.addEventListener('mouseenter', () => clearInterval(timer));
-  hero.addEventListener('mouseleave', play);
-  go(0);
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) play();
-
-  /* ---------- Marcas: flechas del carrusel ---------- */
-  const vp = $('#brandsViewport');
-  const prev = $('.brands__arrow--prev');
-  const next = $('.brands__arrow--next');
-  const step = () => vp.clientWidth * 0.7;
-  const syncArrows = () => {
-    prev.disabled = vp.scrollLeft <= 4;
-    next.disabled = vp.scrollLeft + vp.clientWidth >= vp.scrollWidth - 4;
-  };
-  prev.addEventListener('click', () => vp.scrollBy({ left: -step(), behavior: 'smooth' }));
-  next.addEventListener('click', () => vp.scrollBy({ left: step(), behavior: 'smooth' }));
-  vp.addEventListener('scroll', syncArrows, { passive: true });
-  window.addEventListener('resize', syncArrows);
-  syncArrows();
-
   /* ---------- Footer móvil: acordeones ---------- */
   $$('.footer-title__button').forEach((btn) => btn.addEventListener('click', () => {
     if (!window.matchMedia('(max-width: 767px)').matches) return;
@@ -154,9 +115,12 @@
   $('#popupNo').addEventListener('click', closePopup);
   popup.addEventListener('click', (e) => { if (e.target === popup) closePopup(); });
 
-  /* ---------- Carro (en memoria, solo demostración) ---------- */
-  const cart = [];
-  const fmt = (n) => '$' + n.toLocaleString('es-CL');
+  /* ---------- Carro (localStorage, solo demostración) ---------- */
+  const fmt = (n) => '$' + Math.round(n).toLocaleString('en-US');
+  const KEY = 'cec_cart';
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
+  const save = (c) => { try { localStorage.setItem(KEY, JSON.stringify(c)); } catch { /* sin storage */ } };
+  let cart = load();
   const render = () => {
     const list = $('#cartList');
     list.innerHTML = '';
@@ -167,17 +131,18 @@
       count += it.qty;
       const li = document.createElement('li');
       const left = document.createElement('div');
-      const t = document.createElement('p');
+      const t = document.createElement('a');
       t.className = 'cart__item-title';
+      t.href = `product.html?p=${encodeURIComponent(it.handle || '')}`;
       t.textContent = it.title;
       const m = document.createElement('p');
       m.className = 'cart__item-meta';
-      m.textContent = `${it.qty} × ${fmt(it.price)}`;
+      m.textContent = `${it.variant ? it.variant + ' · ' : ''}${it.qty} × ${fmt(it.price)}`;
       const rm = document.createElement('button');
       rm.className = 'cart__item-remove';
       rm.type = 'button';
       rm.textContent = 'Quitar';
-      rm.addEventListener('click', () => { cart.splice(i, 1); render(); });
+      rm.addEventListener('click', () => { cart.splice(i, 1); save(cart); render(); });
       left.append(t, m, rm);
       li.append(left);
       list.append(li);
@@ -188,15 +153,30 @@
     const badge = $('#cartCount');
     badge.hidden = count === 0;
     badge.textContent = count;
+    document.dispatchEvent(new CustomEvent('cart:change', { detail: { cart, total, count } }));
   };
-  $$('[data-quick-add]').forEach((btn) => btn.addEventListener('click', () => {
-    const price = parseInt(btn.dataset.price.replace(/[^\d]/g, ''), 10);
-    const found = cart.find((c) => c.title === btn.dataset.title);
-    if (found) found.qty += 1; else cart.push({ title: btn.dataset.title, price, qty: 1 });
+  const addToCart = (item, open = true) => {
+    const found = cart.find((c) => c.handle === item.handle && c.variant === item.variant);
+    if (found) found.qty += item.qty || 1; else cart.push({ ...item, qty: item.qty || 1 });
+    save(cart);
     render();
-    setDrawer($('#cartDrawer'), true);
-  }));
+    if (open) setDrawer($('#cartDrawer'), true);
+  };
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-quick-add]');
+    if (!btn) return;
+    e.preventDefault();
+    addToCart({ handle: btn.dataset.handle || '', title: btn.dataset.title, price: parseInt(btn.dataset.price.replace(/[^\d]/g, ''), 10) });
+  });
   render();
+  window.CEC = {
+    fmt, addToCart, openCart: () => setDrawer($('#cartDrawer'), true),
+    getCart: () => cart, clearCart: () => { cart = []; save(cart); render(); },
+    url: {
+      collection: (h, extra = '') => `collection.html?c=${encodeURIComponent(h)}${extra}`,
+      product: (h) => `product.html?p=${encodeURIComponent(h)}`,
+    },
+  };
 
   /* ---------- Año del footer ---------- */
   const y = $('#year');
