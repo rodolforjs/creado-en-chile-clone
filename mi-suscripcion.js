@@ -28,7 +28,7 @@
     <fieldset class="sfs sfs--tight"><legend>¿Cómo lo recibes?</legend>
       <label class="srange"><input type="radio" name="dm-${id}" value="envio" checked><b>Despacho a domicilio</b></label>
       <label class="srange"><input type="radio" name="dm-${id}" value="retiro"><b>Retiro en tienda</b></label>
-      <label class="field"><span data-lbl>Dirección (demo)</span><input type="text" data-place placeholder="Calle y número, comuna"></label>
+      <label class="sfield"><span data-lbl>Dirección (demo)</span><input type="text" data-place placeholder="Calle y número, comuna"></label>
     </fieldset>
     <button class="btn btn--solid btn--md" type="button" data-act="confirm" data-id="${id}">Confirmar regalo</button>
     <button class="btn btn--outline btn--md" type="button" data-act="close">Volver</button></div>`;
@@ -86,14 +86,14 @@
     return `<h3 class="sacct__h2">Fechas</h3>
       <ul class="srows">${rows.map(({ it, name, date }) => { const p = S.personOf(s, it.personId); const [lab, cls] = chip(it.status); return `<li>
         <div><b>${p ? esc(p.name) : ''}</b> <span>${p ? esc(p.rel) : ''}</span><p>${esc(name)} · ${S.fmtDate(date)}</p></div>
-        <label class="field field--inline"><span class="visually-hidden">Rango</span><select data-act="range" data-person="${it.personId}">${S.RANGES.map((r) => `<option value="${r.id}" ${(s.plan.ranges[it.personId] || 'r2') === r.id ? 'selected' : ''}>${r.label}</option>`).join('')}</select></label>
+        <label class="sfield sfield--inline"><span class="visually-hidden">Rango</span><select data-act="range" data-person="${it.personId}">${S.RANGES.map((r) => `<option value="${r.id}" ${(s.plan.ranges[it.personId] || 'r2') === r.id ? 'selected' : ''}>${r.label}</option>`).join('')}</select></label>
         <span class="schip ${cls}">${lab}</span>
         ${it.status === 'paused' ? `<button class="link-underline" type="button" data-act="resume" data-id="${it.id}">Retomar</button>` : it.status === 'pending' ? `<button class="link-underline" type="button" data-act="pause" data-id="${it.id}">Pausar</button>` : '<span></span>'}
         ${it.status === 'accepted' ? '<span></span>' : `<button class="link-underline" type="button" data-act="remove" data-id="${it.id}">Quitar</button>`}</li>`; }).join('')}</ul>
       ${canAdd ? `<fieldset class="sfs"><legend>Agregar una fecha</legend>
-        <label class="field"><span>Persona</span><select id="nPerson">${s.people.map((p) => `<option value="${p.id}">${esc(p.name)} (${esc(p.rel)})</option>`).join('')}<option value="new">Persona nueva</option></select></label>
-        <label class="field" id="nNameBox" hidden><span>Nombre</span><input id="nName" type="text" autocomplete="off"></label>
-        <label class="field"><span>Ocasión</span><select id="nOcc">${S.occOptions()}</select></label>
+        <label class="sfield"><span>Persona</span><select id="nPerson">${s.people.map((p) => `<option value="${p.id}">${esc(p.name)} (${esc(p.rel)})</option>`).join('')}<option value="new">Persona nueva</option></select></label>
+        <label class="sfield" id="nNameBox" hidden><span>Nombre</span><input id="nName" type="text" autocomplete="off"></label>
+        <label class="sfield"><span>Ocasión</span><select id="nOcc">${S.occOptions()}</select></label>
         <button class="btn btn--outline btn--md" type="button" data-act="add">Agregar fecha</button></fieldset>` : `<p class="sform__fine">Usaste las ${S.PLAN.dates} fechas del plan.</p>`}
       <h3 class="sacct__h2">Personas y gustos</h3>
       ${s.people.filter((p) => used.has(p.id)).map((p) => `<fieldset class="sfs sfs--tight"><legend>${esc(p.name)} <span>${esc(p.rel)}</span></legend><div class="chips" data-person="${p.id}">${S.tasteChips('t-' + p.id, p.tastes)}</div></fieldset>`).join('') || '<p>Aún no hay personas.</p>'}`;
@@ -104,9 +104,9 @@
     const paused = s.plan.status === 'paused';
     return `<h3 class="sacct__h2">Despacho y avisos</h3>
       <div class="sform__row">
-        <label class="field"><span>Cómo prefieres recibirlo</span><select data-pref="delivery"><option value="envio" ${pr.delivery === 'envio' ? 'selected' : ''}>Despacho a domicilio</option><option value="retiro" ${pr.delivery === 'retiro' ? 'selected' : ''}>Retiro en tienda</option></select></label>
-        <label class="field"><span>Avisarme con</span><select data-pref="lead">${[3, 7, 14].map((n) => `<option value="${n}" ${+pr.lead === n ? 'selected' : ''}>${n} días de anticipación</option>`).join('')}</select></label>
-        <label class="field"><span>Canal de aviso</span><select data-pref="channel"><option value="email" ${pr.channel === 'email' ? 'selected' : ''}>Correo</option><option value="wa" ${pr.channel === 'wa' ? 'selected' : ''}>WhatsApp</option></select></label>
+        <label class="sfield"><span>Cómo prefieres recibirlo</span><select data-pref="delivery"><option value="envio" ${pr.delivery === 'envio' ? 'selected' : ''}>Despacho a domicilio</option><option value="retiro" ${pr.delivery === 'retiro' ? 'selected' : ''}>Retiro en tienda</option></select></label>
+        <label class="sfield"><span>Avisarme con</span><select data-pref="lead">${[3, 7, 14].map((n) => `<option value="${n}" ${+pr.lead === n ? 'selected' : ''}>${n} días de anticipación</option>`).join('')}</select></label>
+        <label class="sfield"><span>Canal de aviso</span><select data-pref="channel"><option value="email" ${pr.channel === 'email' ? 'selected' : ''}>Correo</option><option value="wa" ${pr.channel === 'wa' ? 'selected' : ''}>WhatsApp</option></select></label>
       </div>
       <h3 class="sacct__h2">Pausar o cancelar</h3>
       <p>${paused ? 'El plan está en pausa y no enviamos avisos.' : 'Pausa los avisos cuando quieras, sin perder tus fechas.'}</p>

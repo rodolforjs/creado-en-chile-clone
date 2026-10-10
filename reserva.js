@@ -30,8 +30,8 @@
       ${s.reservation ? `<div class="snotice">Ya tienes una reserva (${S.esc(S.info(s.reservation).name)}). Si reservas otra, reemplaza a la anterior.</div>` : ''}
       ${lastProd ? `<div class="snotice">Conectado con tu compra: <b>${S.esc(lastProd.t)}</b>. Por eso te mostramos ideas en la misma línea.</div>` : ''}
       <div class="sform__row">
-        <label class="field"><span>Ocasión</span><select id="rOcc">${S.occOptions(st.occ)}</select></label>
-        <label class="field"><span>Rango de precio</span><select id="rRange">${S.RANGES.map((r) => `<option value="${r.id}" ${r.id === st.range ? 'selected' : ''}>${r.label}</option>`).join('')}</select></label>
+        <label class="sfield"><span>Ocasión</span><select id="rOcc">${S.occOptions(st.occ)}</select></label>
+        <label class="sfield"><span>Rango de precio</span><select id="rRange">${S.RANGES.map((r) => `<option value="${r.id}" ${r.id === st.range ? 'selected' : ''}>${r.label}</option>`).join('')}</select></label>
       </div>
       <h2 class="sform__h2">Elige el objeto para el ${S.fmtDate(date)}</h2>
       <div class="spick" role="radiogroup" aria-label="Regalos sugeridos">${list.map((p) => `<label class="spick__item ${st.pick === p.h ? 'is-on' : ''}"><input type="radio" name="gift" value="${S.esc(p.h)}" ${st.pick === p.h ? 'checked' : ''}>${S.giftCard(p, '', false)}<span class="spick__mark">Elegido</span></label>`).join('')}</div>

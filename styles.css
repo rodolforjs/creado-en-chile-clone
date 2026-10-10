@@ -1080,12 +1080,12 @@ a.page:hover { border-bottom-color: #0b0b0b; }
 .sfs--tight { padding: 14px 18px; }
 .sfs legend { padding: 0 8px; font-family: var(--font-head); font-size: 17px; font-weight: 500; }
 .sfs legend span, .sitems span, .srows span { font-family: var(--font-body); font-size: 13px; font-weight: 400; color: #6b6b6b; }
-.field { display: block; margin-bottom: 14px; }
-.field > span { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; }
-.field input, .field select { width: 100%; height: 44px; padding: 0 14px; border: 1px solid #0b0b0b; border-radius: var(--radius); background: #fff; font-size: 15px; }
-.field input[type=date] { padding-right: 10px; }
-.field--inline { margin: 0; }
-.field--inline select { height: 38px; font-size: 13px; }
+.sfield { display: block; margin-bottom: 14px; }
+.sfield > span { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; }
+.sfield input, .sfield select { width: 100%; height: 44px; padding: 0 14px; border: 1px solid #0b0b0b; border-radius: var(--radius); background: #fff; font-size: 15px; }
+.sfield input[type=date] { padding-right: 10px; }
+.sfield--inline { margin: 0; }
+.sfield--inline select { height: 38px; font-size: 13px; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip input { position: absolute; opacity: 0; }
 .chip span { display: inline-block; padding: 8px 14px; border: 1px solid #0b0b0b; border-radius: 999px; font-size: 14px; cursor: pointer; }
@@ -1177,7 +1177,7 @@ a.page:hover { border-bottom-color: #0b0b0b; }
   .sstepper b { display: none; }
   .sstepper li.is-now b { display: inline; }
   .srows li { grid-template-columns: minmax(0, 1fr) auto; }
-  .srows li > .field--inline { grid-column: 1 / -1; }
+  .srows li > .sfield--inline { grid-column: 1 / -1; }
   .srows--rem li { grid-template-columns: minmax(0, 1fr) auto; }
   .srows--rem li > span { display: none; }
   .sform__actions--split { flex-direction: row; }
@@ -1203,3 +1203,6 @@ a.page:hover { border-bottom-color: #0b0b0b; }
   .stabs::-webkit-scrollbar { display: none; }
   .stabs button { flex: none; padding: 12px 14px; white-space: nowrap; }
 }
+.sfield[hidden], .sitems [hidden], .sdeliv [hidden] { display: none; }
+.chip { position: relative; }
+.sitems .link-underline, .sacct .link-underline, .sform .link-underline { padding: 0 0 2px; border: 0; border-bottom: 1px solid #0b0b0b; background: none; font-size: 12.8px; letter-spacing: .96px; text-transform: uppercase; }

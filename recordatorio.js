@@ -16,23 +16,23 @@
       ${preProd ? `<div class="snotice">Guardaremos <b>${S.esc(preProd.t)}</b> como una de las ideas para esa fecha.</div>` : ''}
       <form id="remForm" novalidate>
         <fieldset class="sfs"><legend>¿Para quién es?</legend>
-          <label class="field"><span>Nombre</span><input name="name" type="text" autocomplete="off" placeholder="Ej.: Carmen"></label>
-          <label class="field"><span>Quién es para ti</span><select name="rel">${S.RELS.map((r) => `<option>${r}</option>`).join('')}</select></label>
-          <div class="field"><span>Qué le gusta (opcional)</span><div class="chips">${S.tasteChips('tastes')}</div></div>
+          <label class="sfield"><span>Nombre</span><input name="name" type="text" autocomplete="off" placeholder="Ej.: Carmen"></label>
+          <label class="sfield"><span>Quién es para ti</span><select name="rel">${S.RELS.map((r) => `<option>${r}</option>`).join('')}</select></label>
+          <div class="sfield"><span>Qué le gusta (opcional)</span><div class="chips">${S.tasteChips('tastes')}</div></div>
         </fieldset>
         <fieldset class="sfs"><legend>¿Qué fecha?</legend>
-          <label class="field"><span>Ocasión</span><select name="occ">${S.occOptions(preOcc)}<option value="custom">Otra fecha (cumpleaños, aniversario)</option></select></label>
+          <label class="sfield"><span>Ocasión</span><select name="occ">${S.occOptions(preOcc)}<option value="custom">Otra fecha (cumpleaños, aniversario)</option></select></label>
           <div id="customBox" hidden>
-            <label class="field"><span>Nombre de la fecha</span><input name="clabel" type="text" placeholder="Ej.: Cumpleaños de Carmen"></label>
-            <label class="field"><span>Día</span><input name="cdate" type="date"></label>
+            <label class="sfield"><span>Nombre de la fecha</span><input name="clabel" type="text" placeholder="Ej.: Cumpleaños de Carmen"></label>
+            <label class="sfield"><span>Día</span><input name="cdate" type="date"></label>
           </div>
         </fieldset>
         <fieldset class="sfs"><legend>Tu cuenta</legend>
           ${s.user ? `<p class="sform__acct">Guardaremos esto en la cuenta de <b>${S.esc(s.user.name)}</b> (${S.esc(s.user.email)}).</p>` : `
           <button class="gbtn" type="button" id="gDemo"><svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.6 9.2c0-.6-.1-1.2-.2-1.8H9v3.4h4.8a4.1 4.1 0 0 1-1.8 2.7v2.2h2.9c1.7-1.6 2.7-3.9 2.7-6.5z"/><path fill="#34A853" d="M9 18c2.4 0 4.5-.8 6-2.2l-2.9-2.2c-.8.5-1.8.9-3.1.9-2.400 0-4.400-1.600-5.100-3.800H.9v2.300A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.900 10.700a5.400 5.400 0 0 1 0-3.400V5H.9a9 9 0 0 0 0 8z"/><path fill="#EA4335" d="M9 3.600c1.300 0 2.500.5 3.500 1.400l2.600-2.600A9 9 0 0 0 .9 5l3 2.300C4.600 5.200 6.600 3.600 9 3.600z"/></svg>Continuar con Google (demo)</button>
           <p class="sform__or">o con tu correo</p>
-          <label class="field"><span>Nombre</span><input name="uname" type="text" autocomplete="off"></label>
-          <label class="field"><span>Correo</span><input name="uemail" type="email" autocomplete="off"></label>`}
+          <label class="sfield"><span>Nombre</span><input name="uname" type="text" autocomplete="off"></label>
+          <label class="sfield"><span>Correo</span><input name="uemail" type="email" autocomplete="off"></label>`}
         </fieldset>
         <p class="sform__msg" id="msg" role="alert"></p>
         <button class="btn btn--solid btn--xl" type="submit">Guardar y avisarme</button>

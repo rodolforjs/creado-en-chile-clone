@@ -41,8 +41,8 @@
       ${st.user ? `<p class="sform__acct">Seguirás con la cuenta de <b>${S.esc(st.user.name)}</b> (${S.esc(st.user.email)}).</p>` : `
       <button class="gbtn" type="button" id="gDemo"><svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.6 9.2c0-.6-.1-1.2-.2-1.8H9v3.4h4.8a4.1 4.1 0 0 1-1.8 2.7v2.2h2.9c1.7-1.6 2.7-3.9 2.7-6.5z"/><path fill="#34A853" d="M9 18c2.4 0 4.5-.8 6-2.2l-2.9-2.2c-.8.5-1.8.9-3.1.9-2.4 0-4.4-1.6-5.1-3.8H.9v2.3A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.9 10.7a5.4 5.4 0 0 1 0-3.4V5H.9a9 9 0 0 0 0 8z"/><path fill="#EA4335" d="M9 3.6c1.3 0 2.5.5 3.5 1.400l2.600-2.600A9 9 0 0 0 .9 5l3 2.300C4.600 5.200 6.600 3.600 9 3.600z"/></svg>Continuar con Google (demo)</button>
       <p class="sform__or">o con tu correo</p>
-      <label class="field"><span>Nombre</span><input id="uName" type="text" autocomplete="off"></label>
-      <label class="field"><span>Correo</span><input id="uEmail" type="email" autocomplete="off"></label>`}
+      <label class="sfield"><span>Nombre</span><input id="uName" type="text" autocomplete="off"></label>
+      <label class="sfield"><span>Correo</span><input id="uEmail" type="email" autocomplete="off"></label>`}
       ${nav()}`,
     // 3 · Personas y fechas
     () => {
@@ -52,16 +52,16 @@
       <p class="scount"><b>${st.items.length}</b> de ${S.PLAN.dates} fechas</p>
       <ul class="sitems">${st.items.map((it, i) => { const x = itemInfo(it); return `<li><div><b>${S.esc(x.p ? x.p.name : '')}</b> <span>${S.esc(x.p ? x.p.rel : '')}</span><p>${S.esc(x.name)} · ${S.fmtDate(x.date)}</p></div><button class="link-underline" type="button" data-del="${i}">Quitar</button></li>`; }).join('') || '<li class="sitems__empty">Aún no agregas fechas.</li>'}</ul>
       ${full ? '' : `<fieldset class="sfs"><legend>Agregar una fecha</legend>
-        <label class="field"><span>Persona</span><select id="aPerson">${st.people.map((p) => `<option value="${p.id}">${S.esc(p.name)} (${S.esc(p.rel)})</option>`).join('')}<option value="new">Persona nueva</option></select></label>
+        <label class="sfield"><span>Persona</span><select id="aPerson">${st.people.map((p) => `<option value="${p.id}">${S.esc(p.name)} (${S.esc(p.rel)})</option>`).join('')}<option value="new">Persona nueva</option></select></label>
         <div id="aNew">
-          <label class="field"><span>Nombre</span><input id="aName" type="text" autocomplete="off"></label>
-          <label class="field"><span>Quién es para ti</span><select id="aRel">${S.RELS.map((r) => `<option>${r}</option>`).join('')}</select></label>
-          <div class="field"><span>Qué le gusta (opcional)</span><div class="chips" id="aTastes">${S.tasteChips('tastes')}</div></div>
+          <label class="sfield"><span>Nombre</span><input id="aName" type="text" autocomplete="off"></label>
+          <label class="sfield"><span>Quién es para ti</span><select id="aRel">${S.RELS.map((r) => `<option>${r}</option>`).join('')}</select></label>
+          <div class="sfield"><span>Qué le gusta (opcional)</span><div class="chips" id="aTastes">${S.tasteChips('tastes')}</div></div>
         </div>
-        <label class="field"><span>Ocasión</span><select id="aOcc">${S.occOptions()}<option value="custom">Otra fecha (cumpleaños, aniversario)</option></select></label>
+        <label class="sfield"><span>Ocasión</span><select id="aOcc">${S.occOptions()}<option value="custom">Otra fecha (cumpleaños, aniversario)</option></select></label>
         <div id="aCustom" hidden>
-          <label class="field"><span>Nombre de la fecha</span><input id="aLabel" type="text" placeholder="Ej.: Cumpleaños de Carmen"></label>
-          <label class="field"><span>Día</span><input id="aDate" type="date"></label>
+          <label class="sfield"><span>Nombre de la fecha</span><input id="aLabel" type="text" placeholder="Ej.: Cumpleaños de Carmen"></label>
+          <label class="sfield"><span>Día</span><input id="aDate" type="date"></label>
         </div>
         <button class="btn btn--outline btn--md" type="button" id="aAdd">Agregar fecha</button>
       </fieldset>`}${nav()}`;
