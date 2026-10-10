@@ -63,7 +63,7 @@
   // ---- almacenamiento ----
   const blank = () => ({
     user: null, people: [], reminders: [], reservation: null, plan: null,
-    saved: [], orders: [], addresses: [], profile: { lang: 'es', notify: { email: true, wa: false, news: true } },
+    saved: [], matches: [], orders: [], addresses: [], profile: { lang: 'es', notify: { email: true, wa: false, news: true } },
   });
   const load = () => {
     try {

@@ -64,7 +64,7 @@
       } else {
         const person = S.personOf(s, nx.personId) || { tastes: [], id: 'x' };
         gifts = S.suggest({ tastes: person.tastes, range: 'r2', seed: person.id + nx.it.id, n: 3 });
-        cta = `<a class="btn btn--solid btn--md" href="reserva.html?r=${nx.it.id}">Reservar uno de estos</a><a class="btn btn--outline btn--md" href="suscripcion.html#planes">Ver el plan anual</a>`;
+        cta = `<a class="btn btn--solid btn--md" href="reserva.html?r=${nx.it.id}">Reservar uno de estos</a><a class="btn btn--outline btn--md" href="match.html${nx.personId ? `?p=${nx.personId}` : ''}">Hacer un Match</a><a class="btn btn--outline btn--md" href="suscripcion.html#planes">Ver el plan anual</a>`;
       }
       card = `<article class="sacct__card"><p class="sacct__label">Próxima fecha</p><h3 class="sacct__h">${esc(nx.name)}${nx.personId ? ` · ${esc(personName(nx.personId))}` : ''}</h3>
         <p class="sacct__when">${S.fmtDate(nx.date)} · ${S.inDays(days)} <span class="schip ${KIND[nx.kind][1]}">${KIND[nx.kind][0]}</span></p>
@@ -75,7 +75,7 @@
     }
     const lastCard = last ? `<article class="sacct__card"><p class="sacct__label">Último pedido</p><h3 class="sacct__h">${esc(last.id)}</h3><p class="sacct__when">${fmtD(last.date)} · ${S.fmt(last.total)}</p><p>${last.items.map((i) => esc(i.title)).slice(0, 3).join(', ')}${last.items.length > 3 ? '…' : ''}</p><div class="sacct__actions"><a class="btn btn--outline btn--md" href="mi-creado.html?s=pedidos">Ver mis pedidos</a></div></article>` : `<article class="sacct__card"><p class="sacct__label">Último pedido</p><p>Todavía no tienes pedidos.</p><div class="sacct__actions"><a class="btn btn--outline btn--md" href="index.html">Ir a comprar</a></div></article>`;
     const stat = (n, l, k) => `<a class="astat" href="mi-creado.html?s=${k}"><b>${n}</b><span>${l}</span></a>`;
-    const saved = new Set([...s.saved, ...s.reminders.flatMap((r) => r.ideas || [])]).size;
+    const saved = new Set([...s.saved, ...s.reminders.flatMap((r) => r.ideas || [])]).size + (s.matches || []).length;
     return `<div class="astats">${stat(s.people.length, 'Personas', 'personas')}${stat(entries().length, 'Fechas', 'fechas')}${stat(saved, 'Guardados', 'guardados')}${stat(s.orders.length, 'Pedidos', 'pedidos')}</div>
       <div class="sgrid sgrid--even">${card}${lastCard}</div>`;
   };
@@ -85,7 +85,7 @@
     ${s.people.map((p) => `<fieldset class="sfs"><legend>${esc(p.name)} <span>${esc(p.rel)}</span></legend>
       <div class="chips" data-person="${p.id}">${S.tasteChips('t-' + p.id, p.tastes)}</div>
       <p class="sform__fine">${datesOf(p.id)}</p>
-      <button class="link-underline" type="button" data-act="delPerson" data-id="${p.id}">Quitar persona</button></fieldset>`).join('') || '<div class="sempty"><p>Aún no guardas personas.</p></div>'}
+      <a class="btn btn--outline btn--md" href="match.html?p=${p.id}">Hacer un Match para ${esc(p.name)}</a> <button class="link-underline" type="button" data-act="delPerson" data-id="${p.id}">Quitar persona</button></fieldset>`).join('') || '<div class="sempty"><p>Aún no guardas personas.</p></div>'}
     <fieldset class="sfs"><legend>Agregar persona</legend>
       <label class="sfield"><span>Nombre</span><input id="npName" type="text" autocomplete="off"></label>
       <label class="sfield"><span>Quién es para ti</span><select id="npRel">${S.RELS.map((r) => `<option>${r}</option>`).join('')}</select></label>
@@ -113,7 +113,9 @@
     return `<h3 class="sacct__h2">Guardados</h3>
       <p class="sform__lead">Lo que guardaste desde la ficha de producto o como idea para una fecha.</p>
       ${prods.length ? `<div class="agrid">${prods.map((p) => `<div class="agrid__item">${window.CEC_UI.card(p, { swatches: false })}${s.saved.includes(p.h) ? `<button class="link-underline" type="button" data-act="unsave" data-id="${esc(p.h)}">Quitar de guardados</button>` : '<p class="sform__fine">Idea de una fecha</p>'}</div>`).join('')}</div>` : '<div class="sempty"><h3>Aún no guardas nada</h3><p>En la ficha de cada producto puedes tocar “Guardar”.</p><div class="sacct__actions" style="justify-content:center"><a class="btn btn--solid btn--md" href="index.html">Ver productos</a></div></div>'}
-      <p class="sform__fine">Los Match guardados llegarán cuando exista Match.</p>`;
+      <h3 class="sacct__h2">Mis Match</h3>
+      ${(s.matches || []).length ? (s.matches || []).map((m) => `<article class="sacct__card"><div class="orow"><div><b>Match para ${esc(m.forWho)}</b><p>${fmtD(m.date)} · ${m.items.length} ${m.items.length === 1 ? 'regalo' : 'regalos'}</p></div><button class="link-underline" type="button" data-act="delMatch" data-id="${m.id}">Quitar</button></div>
+        <div class="agrid">${m.items.map((h) => S.product(h)).filter(Boolean).map((p) => `<div class="agrid__item">${window.CEC_UI.card(p, { swatches: false })}</div>`).join('')}</div></article>`).join('') : '<div class="sempty"><h3>Aún no guardas un Match</h3><p>Haz un Match y guarda tu lista corta para compararla después.</p><div class="sacct__actions" style="justify-content:center"><a class="btn btn--solid btn--md" href="match.html">Hacer un Match</a></div></div>'}`;
   };
 
   const pedidos = () => `<h3 class="sacct__h2">Pedidos</h3>
@@ -198,6 +200,7 @@
       s.reminders.push({ id: S.uid('r'), personId: $('#fPerson').value, occId: custom ? null : occId, custom, ideas: [] });
       persist();
     },
+    delMatch: (id) => { s.matches = (s.matches || []).filter((m) => m.id !== id); persist(); },
     unsave: (h) => { s.saved = s.saved.filter((x) => x !== h); persist(); },
     toggleOrder: (id) => { ui.openOrder = ui.openOrder === id ? null : id; },
     rebuy: (id) => {

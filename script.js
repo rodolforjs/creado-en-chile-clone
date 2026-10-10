@@ -227,6 +227,16 @@
     },
   };
 
+  /* ---------- Match: botón flotante sobre WhatsApp ---------- */
+  if (!document.querySelector('.page-match')) {
+    const mf = document.createElement('a');
+    mf.className = 'match-float';
+    mf.href = 'match.html';
+    mf.setAttribute('aria-label', 'Match: encuentra un regalo');
+    mf.innerHTML = '<span aria-hidden="true">♥</span> Match';
+    document.body.appendChild(mf);
+  }
+
   /* ---------- Año del footer ---------- */
   const y = $('#year');
   if (y) y.textContent = new Date().getFullYear();

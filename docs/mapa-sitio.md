@@ -84,4 +84,6 @@ Suscripción (propuesta nueva): landing, recordatorio gratis, reserva, alta del 
 
 Mi Creado (propuesta nueva): acceso, inicio, personas, fechas, guardados, pedidos, direcciones y perfil.
 
-Pendiente: páginas de contenido (hoy `page.html` es un comodín), blog, y los widgets de terceros de la ficha (reseñas, "comprados juntos", stock por tienda).
+Match (propuesta nueva): botón flotante sobre WhatsApp, `match.html` (para quién, momento/presupuesto/SOS, mazo de cartas que aprende, Mis Match máx. 8, pago compartido, teaser digital) y Mis Match guardados en Mi Creado > Guardados.
+
+Pendiente: contextos y mini paquetes, páginas de contenido (hoy `page.html` es un comodín), blog, y los widgets de terceros de la ficha (reseñas, "comprados juntos", stock por tienda).
