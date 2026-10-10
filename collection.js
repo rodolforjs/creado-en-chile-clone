@@ -5,12 +5,15 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const PER_PAGE = 48;
 
-  const SORTS = [
+  const SORTS_ALL = [
     ['features', 'Características'], ['relevant', 'Más relevantes'], ['best', 'Más vendidos'],
     ['az', 'Alfabéticamente, A-Z'], ['za', 'Alfabéticamente, Z-A'],
     ['pasc', 'Precio, menor a mayor'], ['pdesc', 'Precio, mayor a menor'],
     ['dasc', 'Fecha: antiguo(a) a reciente'], ['ddesc', 'Fecha: reciente a antiguo(a)'],
   ];
+  // La búsqueda del original solo ordena por relevancia o precio.
+  const SORTS_SEARCH = [['relevant', 'Relevancia'], ['pasc', 'Precio, menor a mayor'], ['pdesc', 'Precio, mayor a menor']];
+  const MORE_AFTER = 10; // en la búsqueda, cada filtro muestra 10 opciones y "Ver más"
   const PRICES = [
     ['0-10000', 'Menos de $10.000'], ['10000-25000', '$10.000 a $25.000'], ['25000-35000', '$25.000 a $35.000'],
     ['35000-50000', '$35.000 a $50.000'], ['50000-75000', '$50.000 a $75.000'], ['75000-100000', '$75.000 a $100.000'],
@@ -20,6 +23,7 @@
   const qs = new URLSearchParams(location.search);
   const query = (qs.get('q') || '').trim();
   const isSearch = location.pathname.endsWith('search.html');
+  const SORTS = isSearch ? SORTS_SEARCH : SORTS_ALL;
   const handle = qs.get('c') || 'mujer';
   const norm = (s) => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   const tokens = norm(query).split(/\s+/).filter(Boolean);
@@ -28,22 +32,27 @@
     : (D.collections[handle] || D.products.map((p) => p.i));
   const info = (D.titles || {})[handle];
   const pretty = (h) => h.replace(/-\d+$/, '').replace(/-/g, ' ').replace(/^./, (c) => c.toUpperCase());
-  const title = isSearch ? (query ? `Resultados para “${query}”` : 'Búsqueda') : (info ? info.t : pretty(handle));
+  const title = isSearch ? (query ? `Resultados para "${query}"` : 'Búsqueda') : (info ? info.t : pretty(handle));
 
   document.title = `${isSearch ? 'Búsqueda' : title} | Creado en Chile`;
-  $('#colCrumb').textContent = isSearch ? 'Búsqueda' : title;
-  $('#colTitle').textContent = title.toUpperCase();
+  if (isSearch) {
+    $('#colTitle').textContent = title;
+    $('#spInput').value = query;
+  } else {
+    $('#colCrumb').textContent = title;
+    $('#colTitle').textContent = title.toUpperCase();
+  }
 
   // ---- estado (en la URL) ----
   const state = {
-    sort: qs.get('sort') || 'best',
+    sort: qs.get('sort') || (isSearch ? 'relevant' : 'best'),
     page: Math.max(1, parseInt(qs.get('page'), 10) || 1),
     f: { marca: qs.getAll('marca'), color: qs.getAll('color'), talla: qs.getAll('talla'), tipo: qs.getAll('tipo'), precio: qs.getAll('precio') },
   };
   const sync = () => {
     const u = new URLSearchParams();
     if (isSearch) u.set('q', query); else u.set('c', handle);
-    if (state.sort !== 'best') u.set('sort', state.sort);
+    if (state.sort !== (isSearch ? 'relevant' : 'best')) u.set('sort', state.sort);
     Object.entries(state.f).forEach(([k, arr]) => arr.forEach((v) => u.append(k, v)));
     if (state.page > 1) u.set('page', state.page);
     history.replaceState(null, '', `?${u}`);
@@ -89,17 +98,25 @@
   const filtersSort = $('#filtersSort');
   filtersSort.innerHTML = '<p class="filters__label">Ordenar por</p><ul id="sortListM"></ul>';
 
+  const moreOpen = {}; // grupos de la búsqueda con "Ver más" desplegado
   const renderFilters = () => {
-    $('#filtersList').innerHTML = groups.filter((g) => g.opts.length > 1 || g.key === 'precio').map((g) => {
-      const open = state.f[g.key].length > 0;
-      const items = g.opts.map(([v, l]) => `<li><label class="check"><input type="checkbox" data-k="${g.key}" value="${esc(v)}" ${state.f[g.key].includes(v) ? 'checked' : ''}><span class="check__box"></span>${g.key === 'color' ? `<span class="check__dot" style="background:${window.CEC_UI.COLORS[v] || '#ccc'}"></span>` : ''}<span class="check__label">${esc(l)}</span></label></li>`).join('');
-      return `<div class="filter ${open ? 'is-open' : ''}" data-g="${g.key}"><button class="filter__title" type="button" aria-expanded="${open}">${g.label}${state.f[g.key].length ? `<span class="filter__count">(${state.f[g.key].length})</span>` : ''}<span class="filter__icon" aria-hidden="true"></span></button><div class="filter__body"><ul class="filter__tags">${items}</ul></div></div>`;
+    $('#filtersList').innerHTML = groups.filter((g) => g.opts.length > (isSearch ? 0 : 1) || g.key === 'precio').map((g) => {
+      // en la búsqueda del original los filtros parten abiertos (en móvil, cerrados)
+      const open = state.f[g.key].length > 0 || (isSearch && !mobile.matches);
+      const capped = isSearch && g.key !== 'color' && g.opts.length > MORE_AFTER;
+      const items = g.opts.map(([v, l], i) => `<li${capped && !moreOpen[g.key] && i >= MORE_AFTER ? ' hidden' : ''}><label class="check"><input type="checkbox" data-k="${g.key}" value="${esc(v)}" ${state.f[g.key].includes(v) ? 'checked' : ''}><span class="check__box"></span>${g.key === 'color' ? `<span class="check__dot" style="background:${window.CEC_UI.COLORS[v] || '#ccc'}"></span>` : ''}<span class="check__label">${esc(l)}</span></label></li>`).join('');
+      const more = capped ? `<button class="filter__more" type="button" data-more="${g.key}">${moreOpen[g.key] ? 'Ver menos' : 'Ver más'}</button>` : '';
+      return `<div class="filter ${open ? 'is-open' : ''}" data-g="${g.key}"><button class="filter__title" type="button" aria-expanded="${open}">${g.label}${state.f[g.key].length ? `<span class="filter__count">(${state.f[g.key].length})</span>` : ''}<span class="filter__icon" aria-hidden="true"></span></button><div class="filter__body"><ul class="filter__tags">${items}</ul>${more}</div></div>`;
     }).join('');
     $$('#filtersList .filter__title').forEach((b) => b.addEventListener('click', () => {
       const f = b.parentElement;
       const o = !f.classList.contains('is-open');
       f.classList.toggle('is-open', o);
       b.setAttribute('aria-expanded', String(o));
+    }));
+    $$('#filtersList .filter__more').forEach((b) => b.addEventListener('click', () => {
+      moreOpen[b.dataset.more] = !moreOpen[b.dataset.more];
+      renderFilters();
     }));
     $$('#filtersList input').forEach((inp) => inp.addEventListener('change', () => {
       const arr = state.f[inp.dataset.k];
@@ -149,7 +166,7 @@
     }));
   };
 
-  const mobile = window.matchMedia('(max-width: 1023px)');
+  const mobile = window.matchMedia('(max-width: 767px)');
   function update() { sync(); renderSort($('#sortList'), 'sort'); renderSort($('#sortListM'), 'sortm'); renderCount(); renderGrid(); }
 
   // ---- ordenar (popover) ----

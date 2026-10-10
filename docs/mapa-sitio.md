@@ -76,6 +76,8 @@ Listado "Agenda y Noticias" con tarjetas de "5 preguntas a…", y artículo en f
 
 Ofertas · Envío Express · Guía de Regalos · Marcas · + Vendido · Por precio (7 rangos) · Novedades · Mujer · Hombre · Casa y Jardín · Mesa, Cocina, Quincho · Entretención y Souvenirs · Belleza y Bienestar · Gourmet · Infantil. Cada categoría tiene su submenú de subcolecciones (ver el HTML de arquitectura).
 
-## Brecha frente al clon actual
+## Estado del clon (2026-10-10)
 
-El clon tiene solo `index.html` (15 secciones) y no incluye todavía: hero slideshow con puntos, botones por precio, marquee, bloque brick, íconos, vistos recientemente, slideshow de banners ni blog. Faltan por completo las plantillas de colección, ficha, carro, búsqueda, páginas de contenido y blog.
+Hecho y medido contra el original a 1440, 820 y 390 px: inicio, plantilla de colección, ficha de producto, carro (vacío), búsqueda. Hecho sin medir: carro con productos y flujo de pedido (demostración).
+
+Pendiente: páginas de contenido (hoy `page.html` es un comodín), blog, y los widgets de terceros de la ficha (reseñas, "comprados juntos", stock por tienda).

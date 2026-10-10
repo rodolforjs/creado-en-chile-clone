@@ -31,15 +31,20 @@
   const express = expressSet.has(p.i);
   $('#pdpExpress').hidden = !express;
 
-  // descripción
-  let desc = p.d || '';
-  if (desc.length >= 235 && desc.lastIndexOf('.') > 60) desc = desc.slice(0, desc.lastIndexOf('.') + 1);
-  const paras = desc.split(/(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚ])/).reduce((acc, s) => {
-    const last = acc[acc.length - 1];
-    if (last && last.length < 90) acc[acc.length - 1] = `${last} ${s}`; else acc.push(s);
-    return acc;
-  }, []);
-  $('#pdpDesc').innerHTML = paras.map((t) => `<p>${esc(t)}</p>`).join('');
+  // descripción (texto completo de data/descriptions.js; si falta, cae al extracto del catálogo)
+  const full = (window.CEC_DESC || {})[p.h];
+  if (full) {
+    $('#pdpDesc').innerHTML = full;
+  } else {
+    let desc = p.d || '';
+    if (desc.length >= 235 && desc.lastIndexOf('.') > 60) desc = desc.slice(0, desc.lastIndexOf('.') + 1);
+    const paras = desc.split(/(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚ])/).reduce((acc, s) => {
+      const last = acc[acc.length - 1];
+      if (last && last.length < 90) acc[acc.length - 1] = `${last} ${s}`; else acc.push(s);
+      return acc;
+    }, []);
+    $('#pdpDesc').innerHTML = paras.map((t) => `<p>${esc(t)}</p>`).join('');
+  }
 
   // galería (placeholders 630×945)
   const n = Math.max(1, Math.min(p.im || 1, 15));

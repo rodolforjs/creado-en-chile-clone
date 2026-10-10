@@ -21,7 +21,7 @@
     });
     return found;
   };
-  const colorCount = (p) => { const o = (p.o || []).find((x) => /color/i.test(x.n)); return o ? o.v.length : 0; };
+  const colorCount = (p) => { const o = (p.o || []).find((x) => /^color$/i.test(x.n.trim())); return o ? o.v.length : 0; };
 
   const COIN = '<svg class="pgi__coin" aria-hidden="true"><use href="#coin-3h"/></svg>';
   const CART = '<svg class="pgi__quick-icon" aria-hidden="true"><use href="#i-cart"/></svg>';
@@ -35,7 +35,7 @@
     const coin = expressSet.has(idx) ? COIN : '';
     const n = colorCount(p);
     let sw = '';
-    if (swatches && n > 1) {
+    if (swatches && n > 0) {
       const pills = Array.from({ length: Math.min(n, 4) }, () => '<span class="pgi__swatch"></span>').join('');
       sw = `<div class="pgi__swatches">${pills}${n > 4 ? `<span class="pgi__more">+ ${n - 4} más</span>` : ''}</div>`;
     }

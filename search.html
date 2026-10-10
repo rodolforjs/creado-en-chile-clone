@@ -102,12 +102,13 @@
 </div>
 <div class="scrim" id="scrim" hidden></div>
 
-<main id="main" class="page-collection">
-<section class="crumbs">
-  <div class="wrapper">
-    <p class="crumbs__path" id="colCrumb">Colección</p>
-    <h3 class="crumbs__title" id="colTitle">COLECCIÓN</h3>
-  </div>
+<main id="main" class="page-collection page-search">
+<section class="sphead">
+  <form class="sphead__form" action="search.html" method="get" role="search">
+    <svg class="sphead__icon" aria-hidden="true"><use href="#i-search"/></svg>
+    <input class="sphead__input" type="search" name="q" id="spInput" autocomplete="off" aria-label="Buscar productos en nuestro sitio">
+  </form>
+  <h2 class="sphead__title" id="colTitle">Resultados</h2>
 </section>
 <div class="collection">
   <div class="wrapper">
