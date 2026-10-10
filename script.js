@@ -78,6 +78,8 @@
     });
   };
   const play = () => { clearInterval(timer); timer = setInterval(() => go(slide + 1), 6000); };
+  $('#heroPrev').addEventListener('click', () => { go(slide - 1); play(); });
+  $('#heroNext').addEventListener('click', () => { go(slide + 1); play(); });
   dots.forEach((d, n) => d.addEventListener('click', () => { go(n); play(); }));
   let startX = null;
   const hero = $('.hero');
