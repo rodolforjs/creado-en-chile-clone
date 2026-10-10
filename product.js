@@ -26,6 +26,7 @@
   v.textContent = p.v;
   v.href = `search.html?q=${encodeURIComponent(p.v)}`;
   $('#pdpTitle').textContent = p.t;
+  $('#pdpSave').href = `recordatorio.html?p=${encodeURIComponent(p.h)}`;
   const off = p.cp && p.cp > p.p ? Math.round((1 - p.p / p.cp) * 100) : 0;
   $('#pdpPrice').innerHTML = `<span class="pdp__price-now">${fmt(p.p)}</span>${off ? ` <s>${fmt(p.cp)}</s> <span class="badge badge--sale">${off}%</span>` : ''}`;
   const express = expressSet.has(p.i);

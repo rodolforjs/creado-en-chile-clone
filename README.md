@@ -17,8 +17,17 @@ Incluye barra de anuncios con ticker, header con desplegables, header compacto a
 | `pedido.html` | Finalizar compra y confirmación (demostración, no envía datos) |
 | `search.html?q=<texto>` | Resultados de búsqueda (misma plantilla de colección) |
 | `page.html?p=<slug>` | Páginas que aún no están en la réplica |
+| `suscripcion.html` | Landing de Suscripción: cómo funciona, 3 niveles, calendario de fechas, preguntas |
+| `recordatorio.html` | Recordatorio gratis: guarda persona y fecha, muestra el aviso de ejemplo |
+| `reserva.html` | Reserva de la próxima fecha (sin plan, sin pago hasta activarla) |
+| `suscribirse.html` | Alta del plan anual en 5 pasos (plan, cuenta, personas y fechas, rango, pago demo) |
+| `mi-suscripcion.html` | Plan, próxima fecha con regalo propuesto (aceptar, cambiar, pausar), fechas y personas, despacho y avisos, reserva y recordatorios |
 
 Los productos salen de `data/catalog.js` (textos, marcas, precios y pertenencia a colecciones tomados del sitio real, sin imágenes: todas son placeholders). Las descripciones completas de la ficha están en `data/descriptions.js`. Todas las colecciones enlazadas tienen sus productos reales; `creado-x` está vacía también en el original. El carro se guarda en `localStorage`. No se replicaron los widgets de terceros de la ficha (reseñas, "comprados juntos", stock por tienda), por lo que la página de producto queda más corta que el original. La búsqueda es textual simple: el original usa el motor de Shopify y devuelve más resultados.
+
+## Suscripción (propuesta nueva, no existe en el sitio real)
+
+Viene del documento de arquitectura de la propuesta (Taller Integrado). Es una demostración: todo vive en `localStorage` (`cec_sub`), no hay cuentas ni cobros. Los precios y condiciones son **de ejemplo** porque la propuesta los deja "a definir": plan anual $29.990 con 4 fechas, 1 cambio por fecha y envío gratis; cada regalo se paga al aceptarlo dentro del rango elegido ($15.000–$25.000, $25.000–$40.000, $40.000–$60.000); la reserva se cobra solo al activarla; si se cancela, el plan sigue hasta el fin del período. Los regalos propuestos salen del catálogo según gustos y rango (`sub.js`). Enlaces desde el pie, un banner en el inicio, una invitación en el carro, "Guardar para una fecha" en la ficha y "Reservar la próxima fecha" en la confirmación del pedido. Esos agregados (banner, invitación) alteran las alturas de inicio y carro respecto del original. Faltan de la propuesta: Mi Creado completo (inicio, guardados, pedidos, direcciones), Match, contextos y mini paquetes.
 
 ## Estructura
 
@@ -30,6 +39,8 @@ home.js         # Hero y carrusel de marcas
 collection.js   # Filtros, orden y paginación (también la búsqueda)
 product.js      # Ficha de producto
 cart.js / order.js / page.js
+sub.js          # Suscripción: perfil local, calendario y regalos sugeridos
+suscripcion.js / recordatorio.js / reserva.js / suscribirse.js / mi-suscripcion.js
 data-helpers.js # Tarjeta de producto compartida
 data/catalog.js # Catálogo de práctica
 data/descriptions.js # Descripciones completas (HTML simplificado) para la ficha

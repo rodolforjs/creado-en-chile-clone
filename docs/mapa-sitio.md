@@ -80,4 +80,6 @@ Ofertas · Envío Express · Guía de Regalos · Marcas · + Vendido · Por prec
 
 Hecho y medido contra el original a 1440, 820 y 390 px: inicio, plantilla de colección, ficha de producto, carro (vacío), búsqueda. Hecho sin medir: carro con productos y flujo de pedido (demostración).
 
+Suscripción (propuesta nueva): landing, recordatorio gratis, reserva, alta del plan anual y Mi suscripción, con precios de ejemplo (ver README).
+
 Pendiente: páginas de contenido (hoy `page.html` es un comodín), blog, y los widgets de terceros de la ficha (reseñas, "comprados juntos", stock por tienda).

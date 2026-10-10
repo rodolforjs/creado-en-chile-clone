@@ -45,6 +45,7 @@
     $('#doneMsg').textContent = `Te enviamos la confirmación a ${f.elements.email.value.trim()}.`;
     $('#orderForm').hidden = true;
     $('#orderDone').hidden = false;
+    try { localStorage.setItem('cec_last_buy', JSON.stringify({ handle: cart[0].handle || null, title: cart[0].title })); } catch { /* sin storage */ }
     window.CEC.clearCart();
     window.scrollTo({ top: 0 });
   });
