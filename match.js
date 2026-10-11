@@ -25,6 +25,18 @@
     { id: 'm3', min: 30000, max: 50000, label: '$30.000 a $50.000' },
     { id: 'm4', min: 50000, max: 1e9, label: 'Más de $50.000' },
   ];
+  // Vínculos para "alguien nuevo": cercanos y de compromiso. Cada uno sugiere gustos y presupuesto de partida.
+  const RELOPTS = [
+    { id: 'pareja', g: 'Cercano', label: 'Pareja', sub: 'Quien te acompaña', tastes: ['casa', 'joyas', 'belleza'], range: 'm3' },
+    { id: 'familia', g: 'Cercano', label: 'Familia', sub: 'Mamá, papá, hermanos', tastes: ['mesa', 'casa', 'gourmet'], range: 'm2' },
+    { id: 'amistad', g: 'Cercano', label: 'Amigo o amiga', sub: 'Un cumpleaños, un gusto', tastes: ['libros', 'gourmet', 'joyas'], range: 'm2' },
+    { id: 'nino', g: 'Cercano', label: 'Niño o niña', sub: 'Hijos, sobrinos, ahijados', tastes: ['infantil', 'libros'], range: 'm1' },
+    { id: 'colega', g: 'Compromiso', label: 'Colega o jefatura', sub: 'Trabajo y oficina', tastes: ['libros', 'gourmet'], range: 'm1' },
+    { id: 'anfitrion', g: 'Compromiso', label: 'Anfitrión o invitación', sub: 'Una cena, una visita', tastes: ['gourmet', 'mesa'], range: 'm2' },
+    { id: 'gracias', g: 'Compromiso', label: 'Agradecimiento', sub: 'Un favor, un gesto', tastes: ['gourmet', 'belleza'], range: 'm1' },
+    { id: 'otro', g: 'Otro', label: 'No sé / otra persona', sub: 'Sin pistas, sorpréndeme', tastes: [], range: '' },
+  ];
+  const relOf = (id) => RELOPTS.find((r) => r.id === id);
   const ctxOf = (id) => CONTEXTS.find((c) => c.id === id);
   const budgetOf = (id) => BUDGETS.find((b) => b.id === id);
   const hay = (p) => `${p.t} ${p.ty || ''} ${(p.tg || []).join(' ')}`;
@@ -41,6 +53,7 @@
   const clearDraft = () => { try { localStorage.removeItem(DRAFT); } catch { /* sin storage */ } };
 
   const person = () => (st.who && st.who.person ? S.personOf(s, st.who.person) : null);
+  const rel = () => (st.who && st.who.rel ? relOf(st.who.rel) : null);
   const forName = () => { const p = person(); return p ? p.name : st.who && st.who.kind === 'me' ? 'ti' : 'la persona'; };
 
   // ---------- puntaje: etiquetas con pesos que se mueven con cada reacción ----------
@@ -64,7 +77,7 @@
     }
     return list;
   };
-  const pr = () => { const c = person(); return c ? c.tastes.map((id) => S.TASTES.find((t) => t.id === id)).filter(Boolean) : []; };
+  const pr = () => { const c = person(); const ids = c ? c.tastes : rel() ? rel().tastes : []; return ids.map((id) => S.TASTES.find((t) => t.id === id)).filter(Boolean); };
   const score = (p) => {
     const h = hay(p);
     const c = ctxOf(st.ctx);
@@ -89,6 +102,7 @@
     const w = (k) => why.find((x) => x.k === k);
     const who = person();
     if (w('taste') && who) return `A ${who.name} le gusta ${w('taste').t.toLowerCase()}, y esto va por ahí.`;
+    if (w('taste') && rel()) return `Una apuesta segura para ${rel().label.toLowerCase()}: ${w('taste').t.toLowerCase()}.`;
     if (w('vendor')) return `Te gustó otra pieza de ${w('vendor').t}: tiene el mismo sello.`;
     if (w('cat')) return 'Es del tipo de regalo que has ido eligiendo.';
     if (w('ctx')) return `Calza con “${w('ctx').t}”, el momento que elegiste.`;
@@ -134,9 +148,16 @@
     }
   };
 
+  const relStep = () => {
+    const groups = ['Cercano', 'Compromiso', 'Otro'];
+    shell(`${steps(1)}${head('Match', '¿Quién es esa persona?', 'Elige el vínculo y afinamos las ideas. Puedes saltarlo.')}
+      ${groups.map((g) => `<h2 class="mh">${g === 'Otro' ? 'Si no estás seguro' : g === 'Cercano' ? 'Alguien cercano' : 'Un compromiso'}</h2><div class="mpeople">${RELOPTS.filter((r) => r.g === g).map((r) => `<button class="mperson" type="button" data-m="rel" data-id="${r.id}"><b>${r.label}</b><span>${r.sub}</span></button>`).join('')}</div>`).join('')}
+      <div class="sacct__actions mact"><button class="link-underline" type="button" data-m="relskip">Saltar este paso</button></div>`);
+  };
+
   const ask = () => {
     const sosOn = st.sos ? 'checked' : '';
-    shell(`${steps(2)}${head('Match', `¿Para qué momento${person() ? ` es el regalo de ${esc(person().name)}` : ' es el regalo'}?`, 'Todo es opcional. Si prefieres, déjanos sorprenderte.')}
+    shell(`${steps(2)}${head('Match', `¿Para qué momento${person() ? ` es el regalo de ${esc(person().name)}` : rel() ? ` es el regalo para ${esc(rel().label.toLowerCase())}` : ' es el regalo'}?`, 'Todo es opcional. Si prefieres, déjanos sorprenderte.')}
       <h2 class="mh">Momento</h2>
       <div class="mtiles mtiles--3">${CONTEXTS.map((c) => `<button class="mtile mtile--sm ${st.ctx === c.id ? 'is-on' : ''}" type="button" data-m="ctx" data-id="${c.id}" aria-pressed="${st.ctx === c.id}"><span class="mtile__img ph ph--product" data-ph="${esc(c.label)}"></span><span class="mtile__t">${esc(c.label)}</span></button>`).join('')}</div>
       <h2 class="mh">Presupuesto</h2>
@@ -235,10 +256,13 @@
     who: (b) => {
       st.who = b.dataset.k === 'person' ? { kind: 'person', person: b.dataset.id } : { kind: b.dataset.k };
       if (qs.get('ctx')) st.ctx = qs.get('ctx');
+      if (b.dataset.k === 'other') { st.step = 'rel'; relStep(); return; }
       st.step = 'ask'; ask();
     },
     ctx: (b) => { st.ctx = st.ctx === b.dataset.id ? '' : b.dataset.id; st.sos = $('#mSos').checked; ask(); },
     range: (b) => { st.range = st.range === b.dataset.id ? '' : b.dataset.id; st.sos = $('#mSos').checked; ask(); },
+    rel: (b) => { const r = relOf(b.dataset.id); st.who = { kind: 'other', rel: r.id }; if (!st.range && r.range) st.range = r.range; st.step = 'ask'; ask(); },
+    relskip: () => { st.who = { kind: 'other' }; st.step = 'ask'; ask(); },
     start: () => { st.sos = $('#mSos').checked; deal(); },
     surprise: () => { st.ctx = ''; st.range = ''; st.sos = false; deal(); },
     details: () => { st.details = !st.details; card(); },
