@@ -7,7 +7,9 @@
   const esc = S.esc;
   const $ = (s, r = document) => r.querySelector(s);
   const app = $('#subApp');
-  const MAX = 8;
+  const DECK = 10; // cartas por Match
+  const LIKE_MAX = 6; // me gusta que caben en la lista
+  const LIST = 8; // opciones en Mis Match: tus me gusta + parecidas
   const DRAFT = 'cec_match_draft';
 
   // Momentos (contextos): se reconocen por el texto, el tipo y las etiquetas del producto
@@ -130,7 +132,7 @@
 
   // ---------- pantallas ----------
   const head = (eyebrow, title, lead) => `<p class="seyebrow">${eyebrow}</p><h1 class="sform__title">${title}</h1>${lead ? `<p class="sform__lead">${lead}</p>` : ''}`;
-  const shell = (inner, wide = false) => { app.innerHTML = `<section class="mt"><div class="wrapper${wide ? '' : ' wrapper--narrow'}">${inner}</div></section>`; window.scrollTo({ top: 0 }); };
+  const shell = (inner, wide = false, keep = false) => { const y = window.scrollY; app.innerHTML = `<section class="mt"><div class="wrapper${wide ? '' : ' wrapper--narrow'}">${inner}</div></section>`; window.scrollTo({ top: keep ? y : 0 }); };
   const steps = (n) => `<ol class="msteps" aria-label="Pasos">${['Para quién', 'Tu momento', 'Cartas', 'Mis Match'].map((l, i) => `<li class="${i + 1 === n ? 'is-on' : i + 1 < n ? 'is-done' : ''}">${l}</li>`).join('')}</ol>`;
 
   const entry = () => {
@@ -155,27 +157,28 @@
       <div class="sacct__actions mact"><button class="link-underline" type="button" data-m="relskip">Saltar este paso</button></div>`);
   };
 
-  const ask = () => {
+  const ask = (keep = false) => {
     const sosOn = st.sos ? 'checked' : '';
     shell(`${steps(2)}${head('Match', `¿Para qué momento${person() ? ` es el regalo de ${esc(person().name)}` : rel() ? ` es el regalo para ${esc(rel().label.toLowerCase())}` : ' es el regalo'}?`, 'Todo es opcional. Si prefieres, déjanos sorprenderte.')}
-      <h2 class="mh">Momento</h2>
-      <div class="mtiles mtiles--3">${CONTEXTS.map((c) => `<button class="mtile mtile--sm ${st.ctx === c.id ? 'is-on' : ''}" type="button" data-m="ctx" data-id="${c.id}" aria-pressed="${st.ctx === c.id}"><span class="mtile__img ph ph--product" data-ph="${esc(c.label)}"></span><span class="mtile__t">${esc(c.label)}</span></button>`).join('')}</div>
-      <h2 class="mh">Presupuesto</h2>
-      <div class="chips">${BUDGETS.map((b) => `<button class="mchip ${st.range === b.id ? 'is-on' : ''}" type="button" data-m="range" data-id="${b.id}" aria-pressed="${st.range === b.id}">${b.label}</button>`).join('')}</div>
-      <h2 class="mh">Urgencia</h2>
-      <label class="check check--block"><input type="checkbox" id="mSos" ${sosOn}><span class="check__box"></span><span class="check__label"><b>Lo necesito hoy</b> (Modo SOS): solo regalos que llegan o se retiran hoy</span></label>
-      <div class="sacct__actions mact"><button class="btn btn--solid btn--md" type="button" data-m="start">Ver las cartas</button><button class="btn btn--outline btn--md" type="button" data-m="surprise">Sorpréndeme</button></div>`);
+      <div class="mask">
+        <div><h2 class="mh">Momento</h2>
+        <div class="mtiles mtiles--6">${CONTEXTS.map((c) => `<button class="mtile mtile--sm ${st.ctx === c.id ? 'is-on' : ''}" type="button" data-m="ctx" data-id="${c.id}" aria-pressed="${st.ctx === c.id}"><span class="mtile__img ph ph--product" data-ph="${esc(c.label)}"></span><span class="mtile__t">${esc(c.label)}</span></button>`).join('')}</div></div>
+        <div class="mask__row"><div><h2 class="mh">Presupuesto</h2>
+        <div class="chips">${BUDGETS.map((b) => `<button class="mchip ${st.range === b.id ? 'is-on' : ''}" type="button" data-m="range" data-id="${b.id}" aria-pressed="${st.range === b.id}">${b.label}</button>`).join('')}</div></div>
+        <div><h2 class="mh">Urgencia</h2>
+        <label class="check check--block"><input type="checkbox" id="mSos" ${sosOn}><span class="check__box"></span><span class="check__label"><b>Lo necesito hoy</b> (Modo SOS): solo lo que llega hoy</span></label></div></div>
+      </div>
+      <div class="sacct__actions mact"><button class="btn btn--solid btn--md" type="button" data-m="start">Ver las cartas</button><button class="btn btn--outline btn--md" type="button" data-m="surprise">Sorpréndeme</button></div>`, true, keep);
   };
 
-  const card = () => {
+  const card = (keep = false) => {
     const x = st.current;
     if (!x) { empty(); return; }
     const p = x.p;
     const m = (p.d || '').match(/\d+(?:[.,]\d+)?\s?(?:x\s?\d+(?:[.,]\d+)?\s?)*(?:cm|mm|ml|g|kg)\b/i);
-    const left = MAX - st.likes.length;
     const note = `${st.widened ? '<p class="snote snote--in">Ampliamos un poco el presupuesto para tener más opciones.</p>' : ''}${st.sosRelaxed ? '<p class="snote snote--in">Hoy quedan pocas piezas que lleguen hoy: te mostramos lo más cercano y avisamos cuándo llega.</p>' : ''}`;
     shell(`${steps(3)}
-      <div class="mdeck__bar"><span>Carta ${st.seen.length + 1}</span><span>${st.likes.length} de ${MAX} que te gustan</span></div>
+      <div class="mdeck__bar"><span>Carta ${st.seen.length + 1} de ${DECK}</span><span>${st.likes.length} ${st.likes.length === 1 ? 'me gusta' : 'me gusta'}</span></div>
       <article class="mcard" aria-live="polite">
         <div class="mcard__photo"><div class="ph ph--product" data-ph="${esc(p.v)}"></div><span class="mcard__pct">${pct(x.v)}% match</span></div>
         <div class="mcard__body">
@@ -185,12 +188,12 @@
           <p class="mcard__stock ${isSos(p) ? 'is-now' : ''}">${isSos(p) ? '⚡ Llega hoy · Express 3 horas' : st.sos ? 'No llega hoy · llega en 1 a 2 días hábiles' : 'En stock · despacho en 2 a 5 días hábiles'}</p>
           <p class="mcard__why">${esc(phrase(p, x.why))}</p>
           <button class="link-underline" type="button" data-m="details" aria-expanded="${st.details}">${st.details ? 'Ver menos' : 'Ver historia y detalles'}</button>
-          ${st.details ? `<div class="mcard__more"><p>${esc(p.d || 'Una pieza de diseño chileno.')}</p>${m ? `<p><b>Medidas:</b> ${esc(m[0])}</p>` : ''}<p><b>Marca:</b> ${esc(p.v || '')}${p.ty ? ` · <b>Tipo:</b> ${esc(p.ty)}` : ''}</p><a class="link-underline" href="${window.CEC.url.product(p.h)}" target="_blank" rel="noopener">Abrir la ficha</a></div>` : ''}
+          ${st.details ? `<div class="mcard__more"><p>${esc(p.d || 'Una pieza de diseño chileno.')}</p>${m ? `<p><b>Medidas:</b> ${esc(m[0])}</p>` : ''}<a class="link-underline" href="${window.CEC.url.product(p.h)}" target="_blank" rel="noopener">Abrir la ficha</a></div>` : ''}
+          ${note}
+          <div class="mdeck__btns"><button class="btn btn--outline btn--md" type="button" data-m="no"><span aria-hidden="true">✕</span> Descartar</button><button class="btn btn--solid btn--md" type="button" data-m="yes"><span aria-hidden="true">♥</span> Me gusta</button></div>
+          ${st.likes.length ? '<p class="mdeck__foot"><button class="link-underline" type="button" data-m="enough">Ya tengo suficientes, ver mi lista</button></p>' : ''}
         </div>
-      </article>
-      ${note}
-      <div class="mdeck__btns"><button class="btn btn--outline btn--md" type="button" data-m="no"><span aria-hidden="true">✕</span> Descartar</button><button class="btn btn--solid btn--md" type="button" data-m="yes"><span aria-hidden="true">♥</span> Me gusta</button></div>
-      <p class="mdeck__foot">${left > 0 ? `Te faltan ${left} para cerrar tu lista.` : ''} ${st.likes.length ? '<button class="link-underline" type="button" data-m="enough">Ya tengo suficientes</button>' : ''}</p>`);
+      </article>`, true, keep);
   };
 
   const empty = () => {
@@ -198,22 +201,35 @@
       <div class="sacct__actions">${st.likes.length ? '<button class="btn btn--solid btn--md" type="button" data-m="enough">Ver Mis Match</button>' : ''}<button class="btn btn--outline btn--md" type="button" data-m="again">Cambiar mis respuestas</button></div>`);
   };
 
+  // Parecidas a lo que te gustó: mismo tipo, misma marca o mismo tramo de precio, sin repetir lo ya visto
+  const similar = (n) => {
+    const liked = st.likes.map((h) => U.byHandle[h]).filter(Boolean);
+    if (!liked.length) return [];
+    const sim = (p) => liked.reduce((a, l) => a + (cat(l) === cat(p) ? 2 : 0) + ((l.v || '') === (p.v || '') ? 1 : 0) + (keysOf(l)[2] === keysOf(p)[2] ? 0.5 : 0), 0);
+    const seen = new Set([...st.seen, ...st.likes]);
+    const pl = D.products.filter((p) => p.p > 0 && !seen.has(p.h));
+    return pl.map((p) => ({ p, v: sim(p) + score(p).v * 0.2 })).sort((a, b) => b.v - a.v).slice(0, n).map((x) => x.p.h);
+  };
   const stockLine = (p) => (isSos(p) ? '<span class="schip is-ok">Llega hoy</span>' : '<span class="schip">2 a 5 días hábiles</span>');
   const list = () => {
-    const items = st.likes.map((h) => U.byHandle[h]).filter(Boolean);
+    if (!st.similar) st.similar = similar(Math.max(2, LIST - Math.min(st.likes.length, LIST - 2)));
+    const likes = st.likes.slice(0, LIST - 2);
+    const sims = st.similar.filter((h) => !likes.includes(h)).slice(0, LIST - likes.length);
+    const rows = [...likes.map((h) => [h, false]), ...sims.map((h) => [h, true])].filter(([h]) => U.byHandle[h]);
+    const items = likes.map((h) => U.byHandle[h]).filter(Boolean);
     const total = items.reduce((a, p) => a + p.p, 0);
     const forOther = st.who && st.who.kind !== 'me';
     const per = Math.ceil(total / Math.max(2, st.share));
     const user = s.user;
-    shell(`${steps(4)}${head('Mis Match', items.length ? `Tu lista corta${person() ? ` para ${esc(person().name)}` : ''}` : 'Aún no elegiste ninguno', items.length ? 'Compara precio, stock y despacho, y elige.' : 'Vuelve a las cartas y toca “Me gusta”.')}
-      ${items.length ? `<ul class="mlist">${items.map((p) => `<li class="mrow"><a class="mrow__img" href="${window.CEC.url.product(p.h)}"><div class="ph ph--product" data-ph="${esc(p.v)}"></div></a>
-        <div class="mrow__info"><a class="mrow__t" href="${window.CEC.url.product(p.h)}">${esc(p.t)}</a><p>${esc(p.v || '')}</p><p class="mrow__p">${U.fmt(p.p)} ${stockLine(p)}</p></div>
-        <div class="mrow__act"><button class="btn btn--solid btn--md" type="button" data-m="addcart" data-id="${esc(p.h)}">Al carro</button><button class="link-underline" type="button" data-m="drop" data-id="${esc(p.h)}">Quitar</button></div></li>`).join('')}</ul>` : ''}
-      <div class="sacct__actions mact"><button class="btn btn--outline btn--md" type="button" data-m="more" ${st.likes.length >= MAX ? 'disabled' : ''}>Seguir viendo cartas</button><button class="btn btn--outline btn--md" type="button" data-m="again">Empezar otro Match</button></div>
+    shell(`${steps(4)}<div class="mlisthead"><h1 class="sform__title">${rows.length ? `Tu lista corta${person() ? ` para ${esc(person().name)}` : ''}` : 'Aún no elegiste ninguno'}</h1><p class="sform__lead">${rows.length ? 'Lo que te gustó y algunas parecidas. Compara precio, stock y despacho.' : 'Vuelve a las cartas y toca “Me gusta”.'}</p></div>
+      ${rows.length ? `<ul class="mlist">${rows.map(([h, sim]) => { const p = U.byHandle[h]; return `<li class="mrow ${sim ? 'is-sim' : ''}"><a class="mrow__img" href="${window.CEC.url.product(p.h)}"><div class="ph ph--product" data-ph="${esc(p.v)}"></div></a>
+        <div class="mrow__info">${sim ? '<span class="mrow__tag">Parecido a lo que te gustó</span>' : '<span class="mrow__tag mrow__tag--like">♥ Te gustó</span>'}<a class="mrow__t" href="${window.CEC.url.product(p.h)}">${esc(p.t)}</a><p>${esc(p.v || '')}</p><p class="mrow__p">${U.fmt(p.p)} ${stockLine(p)}</p>
+        <div class="mrow__act"><button class="btn btn--solid btn--md" type="button" data-m="addcart" data-id="${esc(p.h)}">Al carro</button><button class="link-underline" type="button" data-m="${sim ? 'dropsim' : 'drop'}" data-id="${esc(p.h)}">Quitar</button></div></div></li>`; }).join('')}</ul>` : ''}
+      <div class="sacct__actions mact"><button class="btn btn--outline btn--md" type="button" data-m="more" ${st.seen.length >= DECK ? 'disabled' : ''}>Seguir viendo cartas</button><button class="btn btn--outline btn--md" type="button" data-m="again">Empezar otro Match</button></div>
       ${items.length ? `<div class="mextras">
         <fieldset class="sfs"><legend>Pago compartido</legend><p class="sform__fine">Reúne a más personas para un mismo regalo (“hacer una vaca”).</p>
           <label class="sfield"><span>¿Entre cuántas personas?</span><select id="mShare">${[2, 3, 4, 5, 6, 8, 10].map((n) => `<option ${st.share === n ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
-          <p>Si eliges todo tu lista (${U.fmt(total)}), cada persona aporta <b>${U.fmt(per)}</b>.</p>
+          <p>Si eliges todo lo que te gustó (${U.fmt(total)}), cada persona aporta <b>${U.fmt(per)}</b>.</p>
           <a class="btn btn--outline btn--md" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(`Hagamos una vaca por un regalo en Creado en Chile: ${U.fmt(per)} por persona (somos ${st.share}). Mira las opciones: ${items.map((p) => p.t).join(', ')}`)}">Invitar por WhatsApp</a></fieldset>
         ${forOther ? `<fieldset class="sfs"><legend>Teaser digital</legend><p class="sform__fine">Un aviso para que ${esc(forName())} sepa que viene un regalo, sin revelar qué es.</p>
           <p class="mteaser">“Alguien está preparando un regalo para ti en Creado en Chile. Pronto sabrás qué es.”</p>
@@ -221,8 +237,8 @@
         <fieldset class="sfs"><legend>Guardar este Match</legend>
           ${st.savedId ? `<p class="schip is-ok">Guardado en Mi Creado</p> <a class="link-underline" href="mi-creado.html?s=guardados">Ver Mis Match</a>`
             : user ? '<button class="btn btn--solid btn--md" type="button" data-m="save">Guardar en Mi Creado</button>'
-            : '<p class="sform__fine">Si no quieres, Match funciona completo igual: solo no se guarda. Con Google es un toque.</p><div id="mLogin"></div>'}</section></div>` : ''}
-      <p class="sform__msg" role="status">${esc(st.msg)}</p>`);
+            : '<p class="sform__fine">Si no quieres, Match funciona completo igual: solo no se guarda. Con Google es un toque.</p><div id="mLogin"></div>'}</fieldset></div>` : ''}
+      <p class="sform__msg" role="status">${esc(st.msg)}</p>`, true);
     const lb = $('#mLogin');
     if (lb) S.loginBox(lb, () => { s = S.load(); saveMatch(); list(); });
     const sh = $('#mShare');
@@ -234,7 +250,7 @@
     if (!s.user) return;
     const id = S.uid('m');
     s.matches = s.matches || [];
-    s.matches.unshift({ id, date: new Date().toISOString(), forWho: forName(), personId: st.who && st.who.person ? st.who.person : null, ctx: st.ctx, range: st.range, items: st.likes.slice() });
+    s.matches.unshift({ id, date: new Date().toISOString(), forWho: forName(), personId: st.who && st.who.person ? st.who.person : null, ctx: st.ctx, range: st.range, items: st.likes.slice(0, LIST - 2).concat((st.similar || []).filter((h) => !st.likes.includes(h)).slice(0, LIST - Math.min(st.likes.length, LIST - 2))) });
     s.matches = s.matches.slice(0, 20);
     S.save(s);
     st.savedId = id; st.msg = '';
@@ -249,7 +265,7 @@
     keysOf(x.p).forEach((k) => { st.w[k] = (st.w[k] || 0) + (liked ? 1 : -0.8) * (k.startsWith('v:') ? 0.4 : 1); });
     st.seen.push(x.p.h);
     if (liked) st.likes.push(x.p.h);
-    if (st.likes.length >= MAX) { st.step = 'list'; persistDraft(); list(); return; }
+    if (st.likes.length >= LIKE_MAX || st.seen.length >= DECK) { st.step = 'list'; st.similar = null; persistDraft(); list(); return; }
     deal();
   };
   const go = {
@@ -259,19 +275,20 @@
       if (b.dataset.k === 'other') { st.step = 'rel'; relStep(); return; }
       st.step = 'ask'; ask();
     },
-    ctx: (b) => { st.ctx = st.ctx === b.dataset.id ? '' : b.dataset.id; st.sos = $('#mSos').checked; ask(); },
-    range: (b) => { st.range = st.range === b.dataset.id ? '' : b.dataset.id; st.sos = $('#mSos').checked; ask(); },
+    ctx: (b) => { st.ctx = st.ctx === b.dataset.id ? '' : b.dataset.id; st.sos = $('#mSos').checked; ask(true); },
+    range: (b) => { st.range = st.range === b.dataset.id ? '' : b.dataset.id; st.sos = $('#mSos').checked; ask(true); },
     rel: (b) => { const r = relOf(b.dataset.id); st.who = { kind: 'other', rel: r.id }; if (!st.range && r.range) st.range = r.range; st.step = 'ask'; ask(); },
     relskip: () => { st.who = { kind: 'other' }; st.step = 'ask'; ask(); },
     start: () => { st.sos = $('#mSos').checked; deal(); },
     surprise: () => { st.ctx = ''; st.range = ''; st.sos = false; deal(); },
-    details: () => { st.details = !st.details; card(); },
+    details: () => { st.details = !st.details; card(true); },
     yes: () => react(true),
     no: () => react(false),
-    enough: () => { st.step = 'list'; persistDraft(); list(); },
+    enough: () => { st.step = 'list'; st.similar = null; persistDraft(); list(); },
     more: () => { deal(); },
     again: () => { st = fresh(); st.who = null; entry(); },
-    drop: (b) => { st.likes = st.likes.filter((h) => h !== b.dataset.id); persistDraft(); list(); },
+    drop: (b) => { st.likes = st.likes.filter((h) => h !== b.dataset.id); st.seen = st.seen; persistDraft(); list(); },
+    dropsim: (b) => { st.similar = (st.similar || []).filter((h) => h !== b.dataset.id); list(); },
     addcart: (b) => {
       const p = U.byHandle[b.dataset.id];
       window.CEC.addToCart({ handle: p.h, title: p.t, price: p.p, express: isSos(p) });
