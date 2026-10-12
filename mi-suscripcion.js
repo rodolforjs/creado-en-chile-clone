@@ -67,7 +67,7 @@
       <p class="sacct__prepaid">Tu regalo está prepagado: <b>${S.fmt(value)}</b>. Si eliges uno más caro, pagas la diferencia; si es más barato, queda de crédito.</p>
       ${opts.length ? `<div class="sopts" role="radiogroup">${opts.map((o) => `<label class="sopt ${o.h === pickId ? 'is-on' : ''}"><input type="radio" name="pick-${it.id}" value="${esc(o.h)}" ${o.h === pickId ? 'checked' : ''}>${S.giftCard(o, '', false)}<span class="sopt__diff">${diffNote(o.p - value)}</span></label>`).join('')}</div>` : '<p>No encontramos regalos en tu rango. Prueba cambiar el rango.</p>'}`;
     return `<article class="sacct__card sacct__card--wide" id="item-${it.id}">
-      <p class="sacct__label">Próxima fecha</p>
+      <div class="gtags">${S.tag('Fecha', S.fmtShort(date))}</div>
       <h3 class="sacct__h">${esc(name)} · ${person ? esc(person.name) : ''}</h3>
       <p class="sacct__when">${S.fmtDate(date)} · ${S.inDays(days)}</p>
       ${gift}
@@ -139,7 +139,7 @@
       else if (ui.open === rv.id) body = deliveryBlock(rv.id).replace('Confirmar regalo', `Activar y pagar ${S.fmt(p.p)} (demo)`);
       else body = `${near ? `<p class="snotice">Se acerca la fecha: <b>¿lo activamos?</b></p>` : `<p class="sform__fine">Faltan ${days} días. Te preguntaremos “¿lo activamos?” unos días antes; si quieres, puedes activarla ahora.</p>`}
         <div class="sacct__actions"><button class="btn btn--solid btn--md" type="button" data-act="rActivate" data-id="${rv.id}">Activar</button><button class="btn btn--outline btn--md" type="button" data-act="rCancel">Cancelar reserva</button></div>`;
-      html += `<article class="sacct__card"><p class="sacct__label">Tu reserva</p><h3 class="sacct__h">${esc(name)}</h3><p class="sacct__when">${S.fmtDate(date)} · ${S.inDays(days)}</p><div class="sacct__gift">${p ? S.giftCard(p) : ''}</div>${body}</article>`;
+      html += `<article class="sacct__card"><div class="gtags">${S.tag('Tu reserva', S.fmtShort(date))}</div><h3 class="sacct__h">${esc(name)}</h3><p class="sacct__when">${S.fmtDate(date)} · ${S.inDays(days)}</p><div class="sacct__gift">${p ? S.giftCard(p) : ''}</div>${body}</article>`;
     }
     if (rem.length) {
       html += `<h3 class="sacct__h2">Tus recordatorios (gratis)</h3><ul class="srows srows--rem">${rem.map((r) => { const p = S.personOf(s, r.personId); const { name, date } = S.info(r); return `<li><div><b>${p ? esc(p.name) : ''}</b> <span>${p ? esc(p.rel) : ''}</span><p>${esc(name)} · ${S.fmtDate(date)} · ${S.inDays(S.daysTo(date))}</p></div><span></span><span></span><button class="link-underline" type="button" data-act="rmRem" data-id="${r.id}">Quitar</button></li>`; }).join('')}</ul>`;

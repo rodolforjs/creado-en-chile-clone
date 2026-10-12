@@ -54,7 +54,7 @@
     const p = S.product(st.pick);
     const date = S.nextDate(S.occ(st.occ));
     app.innerHTML = `<section class="sform"><div class="wrapper wrapper--narrow">
-      <p class="seyebrow">Reservado</p>
+      <div class="gtags sform__tag">${S.tag('Reservado', S.fmtShort(date), { drop: true })}</div>
       <h1 class="sform__title">Tu regalo para ${S.esc(S.occ(st.occ).name)} quedó reservado</h1>
       <p class="sform__lead">Es el ${S.fmtDate(date)}. No se cobró nada. Unos días antes te preguntaremos si lo activamos, y ahí eliges entrega o retiro.</p>
       <div class="sform__gifts sform__gifts--one">${S.giftCard(p)}</div>

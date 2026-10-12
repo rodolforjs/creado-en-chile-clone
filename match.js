@@ -175,7 +175,7 @@
     shell(`${steps(3)}
       <div class="mdeck__bar"><span>Carta ${st.seen.length + 1} de ${DECK}</span><span>${st.likes.length} ${st.likes.length === 1 ? 'me gusta' : 'me gusta'}</span></div>
       <article class="mcard" aria-live="polite">
-        <div class="mcard__photo"><div class="ph ph--product" data-ph="${esc(p.v)}" data-img="${esc(p.h)}" data-img-w="900"></div><span class="mcard__pct">${pct(x.v)}% match</span></div>
+        <div class="mcard__photo"><div class="ph ph--product" data-ph="${esc(p.v)}" data-img="${esc(p.h)}" data-img-w="900"></div>${S.tag('Match', pct(x.v) + '%', { pos: 'photo', hang: true })}</div>
         <div class="mcard__body">
           <p class="mcard__brand">${esc(p.v || '')}</p>${I.lang() !== 'es' ? `<p class="mcard__origin">Hecho en Chile por ${esc(p.v || 'una marca chilena')}</p>` : ''}
           <h2 class="mcard__title">${esc(p.t)}</h2>
@@ -217,8 +217,8 @@
     const per = Math.ceil(total / Math.max(2, st.share));
     const user = s.user;
     shell(`${steps(4)}<div class="mlisthead"><h1 class="sform__title">${rows.length ? `Tu lista corta${person() ? ` para ${esc(person().name)}` : ''}` : 'Aún no elegiste ninguno'}</h1><p class="sform__lead">${rows.length ? 'Lo que te gustó y algunas parecidas. Compara precio, stock y despacho.' : 'Vuelve a las cartas y toca “Me gusta”.'}</p></div>
-      ${rows.length ? `<ul class="mlist">${rows.map(([h, sim]) => { const p = U.byHandle[h]; return `<li class="mrow ${sim ? 'is-sim' : ''}"><a class="mrow__img" href="${window.CEC.url.product(p.h)}"><div class="ph ph--product" data-ph="${esc(p.v)}"></div></a>
-        <div class="mrow__info">${sim ? '<span class="mrow__tag">Parecido a lo que te gustó</span>' : '<span class="mrow__tag mrow__tag--like">♥ Te gustó</span>'}<a class="mrow__t" href="${window.CEC.url.product(p.h)}">${esc(p.t)}</a><p>${esc(p.v || '')}</p><p class="mrow__p">${U.fmt(p.p)} ${stockLine(p)}</p>
+      ${rows.length ? `<ul class="mlist">${rows.map(([h, sim]) => { const p = U.byHandle[h]; return `<li class="mrow ${sim ? 'is-sim' : ''}"><a class="mrow__img" href="${window.CEC.url.product(p.h)}"><div class="ph ph--product" data-ph="${esc(p.v)}" data-img="${esc(p.h)}" data-img-w="300"></div></a>
+        <div class="mrow__info">${sim ? S.tag('Parecido', '', { small: true }) : S.tag('♥ Te gustó', '', { small: true })}<a class="mrow__t" href="${window.CEC.url.product(p.h)}">${esc(p.t)}</a><p>${esc(p.v || '')}</p><p class="mrow__p">${U.fmt(p.p)} ${stockLine(p)}</p>
         <div class="mrow__act"><button class="btn btn--solid btn--md" type="button" data-m="addcart" data-id="${esc(p.h)}">Al carro</button><button class="link-underline" type="button" data-m="${sim ? 'dropsim' : 'drop'}" data-id="${esc(p.h)}">Quitar</button></div></div></li>`; }).join('')}</ul>` : ''}
       <div class="sacct__actions mact"><button class="btn btn--outline btn--md" type="button" data-m="more" ${st.seen.length >= DECK ? 'disabled' : ''}>Seguir viendo cartas</button><button class="btn btn--outline btn--md" type="button" data-m="again">Empezar otro Match</button></div>
       ${items.length ? `<div class="mextras">

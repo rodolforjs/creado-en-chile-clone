@@ -76,8 +76,8 @@
     const ideas = S.suggest({ tastes: person.tastes, range: 'r2', seed: person.id + rem.id, n: 3, exclude: rem.ideas });
     const shown = [...rem.ideas.map(S.product).filter(Boolean), ...ideas].slice(0, 3);
     app.innerHTML = `<section class="sform"><div class="wrapper wrapper--narrow">
-      <p class="seyebrow">Listo</p>
-      <h1 class="sform__title">Te avisamos por ${S.esc(person.name)}</h1>
+      <div class="gtags sform__tag">${S.tag('Fecha guardada', S.fmtShort(date), { drop: true })}</div>
+      <h1 class="sform__title">¡Listo! Te avisamos por ${S.esc(person.name)}</h1>
       <p class="sform__lead">${S.esc(name)} es el ${S.fmtDate(date)} (${S.inDays(days)}). Te escribimos a ${S.esc(s.user.email)} ${lead} ${lead === 1 ? 'día' : 'días'} antes.</p>
       <h2 class="sform__h2">Así se vería tu aviso</h2>
       <div class="sform__gifts">${shown.map((p) => S.giftCard(p)).join('')}</div>

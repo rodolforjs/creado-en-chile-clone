@@ -10,7 +10,7 @@
   const qs = new URLSearchParams(location.search);
   let sec = SECTIONS.includes(qs.get('s')) ? qs.get('s') : 'inicio';
   let s = S.load();
-  const ui = { msg: '', edit: null, openOrder: null };
+  const ui = { msg: '', edit: null, openOrder: null, fresh: '' };
   const persist = () => S.save(s);
   const fmtD = (iso) => S.fmtDate(new Date(iso));
   const first = () => (s.user ? s.user.name.split(' ')[0] : '');
@@ -65,7 +65,7 @@
         gifts = S.suggest({ tastes: person.tastes, range: 'r2', seed: person.id + nx.it.id, n: 3 });
         cta = `<a class="btn btn--solid btn--md" href="reserva.html?r=${nx.it.id}">Reservar uno de estos</a><a class="btn btn--outline btn--md" href="match.html${nx.personId ? `?p=${nx.personId}` : ''}">Hacer un Match</a><a class="btn btn--outline btn--md" href="suscripcion.html#planes">Ver el plan anual</a>`;
       }
-      card = `<article class="sacct__card"><p class="sacct__label">Próxima fecha</p><h3 class="sacct__h">${esc(nx.name)}${nx.personId ? ` · ${esc(personName(nx.personId))}` : ''}</h3>
+      card = `<article class="sacct__card"><div class="gtags">${S.tag('Próxima fecha', S.inDays(days))}</div><h3 class="sacct__h">${esc(nx.name)}${nx.personId ? ` · ${esc(personName(nx.personId))}` : ''}</h3>
         <p class="sacct__when">${S.fmtDate(nx.date)} · ${S.inDays(days)} <span class="schip ${KIND[nx.kind][1]}">${KIND[nx.kind][0]}</span></p>
         <p class="sacct__label">${nx.kind === 'rem' ? 'Ideas para esa persona' : 'Regalo propuesto'}</p>
         <div class="sform__gifts">${gifts.map((p) => S.giftCard(p)).join('')}</div><div class="sacct__actions">${cta}</div></article>`;
@@ -95,7 +95,7 @@
   const fechas = () => {
     const list = entries();
     return `<h3 class="sacct__h2">Fechas</h3>
-      <ul class="srows srows--dates">${list.map((e) => `<li><div><b>${esc(e.name)}</b> <span>${e.personId ? esc(personName(e.personId)) : ''}</span><p>${S.fmtDate(e.date)} · ${S.inDays(S.daysTo(e.date))}</p></div>
+      <ul class="srows srows--dates">${list.map((e) => `<li><div>${S.tag(e.name, S.fmtShort(e.date), { small: true, drop: e.it.id === ui.fresh })} <span>${e.personId ? esc(personName(e.personId)) : ''}</span><p>${S.fmtDate(e.date)} · ${S.inDays(S.daysTo(e.date))}</p></div>
         <span class="schip ${KIND[e.kind][1]}">${KIND[e.kind][0]}</span><span class="schip ${e.status === 'accepted' || e.status === 'active' ? 'is-ok' : e.status === 'paused' ? 'is-off' : ''}">${STATUS[e.status] || ''}</span>
         ${e.kind === 'rem' ? `<button class="link-underline" type="button" data-act="delRem" data-id="${e.it.id}">Quitar</button>` : '<a class="link-underline" href="mi-suscripcion.html">Gestionar</a>'}</li>`).join('') || '<li class="sitems__empty">Aún no hay fechas.</li>'}</ul>
       <fieldset class="sfs"><legend>Guardar una fecha</legend>
@@ -196,7 +196,9 @@
         const [, m, d] = v.split('-').map(Number);
         custom = { label, m, d };
       }
-      s.reminders.push({ id: S.uid('r'), personId: $('#fPerson').value, occId: custom ? null : occId, custom, ideas: [] });
+      const nr = { id: S.uid('r'), personId: $('#fPerson').value, occId: custom ? null : occId, custom, ideas: [] };
+      s.reminders.push(nr);
+      ui.fresh = nr.id; setTimeout(() => { ui.fresh = ""; }, 1500);
       persist();
     },
     delMatch: (id) => { s.matches = (s.matches || []).filter((m) => m.id !== id); persist(); },

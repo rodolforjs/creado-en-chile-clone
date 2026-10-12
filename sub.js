@@ -166,7 +166,12 @@
   ];
   const accountNav = (active) => `<nav class="anav" aria-label="Mi Creado">${NAV.map(([k, l, h]) => `<a href="${h}" class="${k === active ? 'is-on' : ''}" ${k === active ? 'aria-current="page"' : ''}>${l}</a>`).join('')}</nav>`;
 
+  // Etiqueta de regalo: el sello de lo nuevo de la propuesta (Match, fechas guardadas, reservas).
+  // k = rótulo corto (mayúsculas), t = texto principal, opts: { drop, small, cls }
+  const tag = (k, t, o = {}) => `<span class="gtag-wrap${o.small ? ' gtag-wrap--sm' : ''}${o.pos ? ' gtag-wrap--' + o.pos : ''}"><span class="gtag${o.small ? ' gtag--sm' : ''}${o.drop ? ' gtag--drop' : ''}${o.hang ? ' gtag--hang' : ''}"><span class="gtag__k">${esc(k)}</span>${t ? `<b class="gtag__t">${esc(t)}</b>` : ''}</span></span>`;
+
   window.CEC_SUB = {
+    tag,
     PLAN, SHIP, cost, rangeOf, RANGES, RELS, TASTES, OCCASIONS, fmt, esc, load, save, uid, personOf, occ, info, upcoming, nextDate, daysTo, fmtDate, fmtShort, inDays,
     suggest, product, giftCard, setUser, logout, loginBox, accountNav, nameFromEmail, tasteChips, readChecks, occOptions, tasteLabels,
   };
