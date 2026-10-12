@@ -41,7 +41,7 @@
 
   const qs = new URLSearchParams(location.search);
   let s = S.load();
-  const fresh = () => ({ step: 'entry', who: null, ctx: qs.get('ctx') && ctxOf(qs.get('ctx')) ? qs.get('ctx') : '', range: '', sos: false, seen: [], likes: [], w: {}, current: null, widened: false, sosRelaxed: false, details: false, msg: '', savedId: '', share: 3 });
+  const fresh = () => ({ step: 'entry', who: null, ctx: qs.get('ctx') && ctxOf(qs.get('ctx')) ? qs.get('ctx') : '', range: '', sos: false, seen: [], likes: [], w: {}, current: null, widened: false, sosRelaxed: false, details: false, msg: '', savedId: '', share: 3, cmp: [] });
   let st = fresh();
   let draft = null;
   try { draft = JSON.parse(localStorage.getItem(DRAFT)); } catch { draft = null; }
@@ -105,6 +105,45 @@
     if (w('sos')) return 'Te llega hoy, sin esperar.';
     return `Diseño de ${p.v || 'una marca chilena'}, para empezar con algo distinto.`;
   };
+
+  // ---------- el paquete que se arma mientras juegas ----------
+  const labelOf = {};
+  const keyLabel = (k) => {
+    if (labelOf[k]) return labelOf[k];
+    const val = k.slice(2);
+    let l = val;
+    if (k[0] === 'c') { const p = D.products.find((x) => cat(x) === val); l = p && p.ty ? p.ty.toLowerCase() : val; }
+    if (k[0] === 'v') { const p = D.products.find((x) => (x.v || '').toLowerCase() === val); l = p ? p.v : val; }
+    labelOf[k] = l;
+    return l;
+  };
+  // Lo que Match aprendió de tus reacciones: tipos y marcas con peso fuerte (el tramo de precio no se muestra)
+  const learned = () => Object.entries(st.w)
+    .filter(([k, w]) => (k[0] === 'c' && Math.abs(w) >= 0.8) || (k[0] === 'v' && Math.abs(w) >= 0.3))
+    .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1])).slice(0, 5)
+    .map(([k, w]) => ({ k, up: w > 0, label: `${w > 0 ? 'Más' : 'Menos'} ${k[0] === 'v' ? 'de ' : ''}${keyLabel(k)}` }));
+  const packBox = () => {
+    const items = st.likes.map((h) => U.byHandle[h]).filter(Boolean);
+    const total = items.reduce((a, p) => a + p.p, 0);
+    const b = budgetOf(st.range);
+    const cap = b && b.max < 1e9 ? b.max : 0;
+    const over = cap && total > cap;
+    const slots = Array.from({ length: LIKE_MAX }, (_, i) => (items[i] ? `<span class="mpack__slot has" title="${esc(items[i].t)}"><span class="ph ph--product" data-ph="" data-img="${esc(items[i].h)}" data-img-w="200"></span></span>` : '<span class="mpack__slot"></span>')).join('');
+    const chips = learned();
+    return `<section class="mpack" id="mPack" aria-label="Tu paquete">
+      <div class="mpack__top">
+        <div class="mpack__box"><p class="mpack__k">Tu paquete</p><div class="mpack__slots">${slots}</div></div>
+        <div class="mpack__meter"><p class="mpack__k">${cap ? 'Presupuesto' : 'Llevas'}</p>
+          ${cap ? `<div class="mpack__bar${over ? ' is-over' : ''}" role="img" aria-label="${U.fmt(total)} de ${U.fmt(cap)}"><i style="width:${Math.min(100, Math.round((total / cap) * 100))}%"></i></div>
+          <p class="mpack__sum"><b>${U.fmt(total)}</b> <span>de ${U.fmt(cap)}</span></p>${over ? `<p class="mpack__over">Te pasas por ${U.fmt(total - cap)}</p>` : ''}`
+          : `<p class="mpack__sum"><b>${U.fmt(total)}</b></p>`}</div>
+      </div>
+      <div class="mpack__learn"><span class="mpack__k">Lo que aprendí</span>
+        ${chips.length ? chips.map((c) => `<span class="mlearn ${c.up ? 'is-up' : 'is-down'}"><button type="button" data-m="flip" data-k="${esc(c.k)}" title="Invertir">${esc(c.label)}</button><button type="button" data-m="unlearn" data-k="${esc(c.k)}" aria-label="Quitar: ${esc(c.label)}">×</button></span>`).join('')
+          : '<span class="mpack__none">Todavía nada. Responde con “Me gusta” o “Descartar”.</span>'}
+        ${chips.length ? '<span class="mpack__note">Toca para invertir o quita con ×. Se aplica desde la próxima carta.</span>' : ''}</div></section>`;
+  };
+  const redrawPack = () => { const el = $('#mPack'); if (!el) return; el.outerHTML = packBox(); I.apply($('#mPack')); persistDraft(); };
 
   const next = () => {
     const list = pool();
@@ -172,10 +211,10 @@
     const p = x.p;
     const m = (p.d || '').match(/\d+(?:[.,]\d+)?\s?(?:x\s?\d+(?:[.,]\d+)?\s?)*(?:cm|mm|ml|g|kg)\b/i);
     const note = `${st.widened ? '<p class="snote snote--in">Ampliamos un poco el presupuesto para tener más opciones.</p>' : ''}${st.sosRelaxed ? '<p class="snote snote--in">Hoy quedan pocas piezas que lleguen hoy: te mostramos lo más cercano y avisamos cuándo llega.</p>' : ''}`;
-    shell(`${steps(3)}
+    shell(`${steps(3)}${packBox()}
       <div class="mdeck__bar"><span>Carta ${st.seen.length + 1} de ${DECK}</span><span>${st.likes.length} ${st.likes.length === 1 ? 'me gusta' : 'me gusta'}</span></div>
       <article class="mcard" aria-live="polite">
-        <div class="mcard__photo"><div class="ph ph--product" data-ph="${esc(p.v)}" data-img="${esc(p.h)}" data-img-w="900"></div>${S.tag('Match', pct(x.v) + '%', { pos: 'photo', hang: true })}</div>
+        <div class="mcard__photo"><span class="mcard__stamp mcard__stamp--yes" aria-hidden="true"><i>♥</i> Me gusta</span><span class="mcard__stamp mcard__stamp--no" aria-hidden="true"><i>✕</i> Descartar</span><div class="ph ph--product" data-ph="${esc(p.v)}" data-img="${esc(p.h)}" data-img-w="900"></div>${S.tag('Match', pct(x.v) + '%', { pos: 'photo', hang: true })}</div>
         <div class="mcard__body">
           <p class="mcard__brand">${esc(p.v || '')}</p>${I.lang() !== 'es' ? `<p class="mcard__origin">Hecho en Chile por ${esc(p.v || 'una marca chilena')}</p>` : ''}
           <h2 class="mcard__title">${esc(p.t)}</h2>
@@ -186,10 +225,44 @@
           ${st.details ? `<div class="mcard__more"><p>${esc(p.d || 'Una pieza de diseño chileno.')}</p>${m ? `<p><b>Medidas:</b> ${esc(m[0])}</p>` : ''}<a class="link-underline" href="${window.CEC.url.product(p.h)}" target="_blank" rel="noopener">Abrir la ficha</a></div>` : ''}
           ${note}
           <div class="mdeck__btns"><button class="btn btn--outline btn--md" type="button" data-m="no"><span aria-hidden="true">✕</span> Descartar</button><button class="btn btn--solid btn--md" type="button" data-m="yes"><span aria-hidden="true">♥</span> Me gusta</button></div>
+          <p class="mdeck__foot mdeck__hint">Arrastra la carta o usa las flechas ← →</p>
           ${st.likes.length ? '<p class="mdeck__foot"><button class="link-underline" type="button" data-m="enough">Ya tengo suficientes, ver mi lista</button></p>' : ''}
         </div>
       </article>`, true, keep);
+    bindDrag();
   };
+
+  // La carta se inclina al arrastrarla: a la derecha es "me gusta", a la izquierda "descartar"
+  const bindDrag = () => {
+    const c = $('.mcard');
+    if (!c) return;
+    let x0 = null; let dx = 0;
+    const setV = (y, n) => { c.style.setProperty('--yes', y); c.style.setProperty('--no', n); };
+    c.addEventListener('dragstart', (e) => e.preventDefault()); // la foto no se arrastra como imagen
+    c.addEventListener('pointerdown', (e) => {
+      if (e.button || e.target.closest('button, a, input, select')) return;
+      x0 = e.clientX; dx = 0; c.setPointerCapture(e.pointerId); c.classList.add('is-drag');
+    });
+    c.addEventListener('pointermove', (e) => {
+      if (x0 === null) return;
+      dx = e.clientX - x0;
+      c.style.transform = `translateX(${dx}px) rotate(${Math.max(-9, Math.min(9, dx / 40))}deg)`;
+      setV(Math.max(0, Math.min(1, dx / 140)), Math.max(0, Math.min(1, -dx / 140)));
+    });
+    const end = () => {
+      if (x0 === null) return;
+      const d = dx; x0 = null; dx = 0; c.classList.remove('is-drag');
+      if (Math.abs(d) > 130) { c.classList.add('is-gone'); c.style.transform = `translateX(${d > 0 ? 900 : -900}px) rotate(${d > 0 ? 12 : -12}deg)`; setTimeout(() => react(d > 0), 220); return; }
+      c.style.transform = ''; setV(0, 0);
+    };
+    c.addEventListener('pointerup', end);
+    c.addEventListener('pointercancel', end);
+  };
+  document.addEventListener('keydown', (e) => {
+    if (st.step !== 'deck' || !st.current || e.target.closest('input, select, textarea') || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); react(true); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); react(false); }
+  });
 
   const empty = () => {
     shell(`${steps(3)}${head('Match', 'Ya viste todo lo que calza', st.likes.length ? 'Cerremos con lo que te gustó.' : 'Prueba con otro momento o un presupuesto más amplio.')}
@@ -206,7 +279,31 @@
     return pl.map((p) => ({ p, v: sim(p) + score(p).v * 0.2 })).sort((a, b) => b.v - a.v).slice(0, n).map((x) => x.p.h);
   };
   const stockLine = (p) => (isSos(p) ? '<span class="schip is-ok">Llega hoy</span>' : '<span class="schip">2 a 5 días hábiles</span>');
-  const list = () => {
+  // Mesa para comparar: dos zonas donde se arrastran (o se tocan con "Comparar") dos cartas de la lista
+  const measure = (p) => { const m = (p.d || '').match(/\d+(?:[.,]\d+)?\s?(?:x\s?\d+(?:[.,]\d+)?\s?)*(?:cm|mm|ml|g|kg)\b/i); return m ? m[0] : '—'; };
+  const cmpPanel = () => {
+    const [a, b] = (st.cmp || []).map((h) => U.byHandle[h]);
+    const zone = (p, i) => (p
+      ? `<div class="mcmp__zone has" data-zone="${i}"><div class="ph ph--product mcmp__img" data-ph="${esc(p.v)}" data-img="${esc(p.h)}" data-img-w="200"></div><div class="mcmp__txt"><b>${esc(p.t)}</b><span>${U.fmt(p.p)}</span><button class="link-underline" type="button" data-m="uncmp" data-id="${esc(p.h)}">Quitar</button></div></div>`
+      : `<div class="mcmp__zone" data-zone="${i}"><span class="mcmp__ab">${i ? 'B' : 'A'}</span><p>Arrastra una carta aquí o toca “Comparar”</p></div>`);
+    const cell = (v, best) => `<td class="${best ? 'is-best' : ''}">${v}${best ? ' <span class="mcmp__best">Mejor</span>' : ''}</td>`;
+    const table = a && b ? `<table class="mcmp__table"><tbody>
+      <tr><th>Precio</th>${cell(U.fmt(a.p), a.p < b.p)}${cell(U.fmt(b.p), b.p < a.p)}</tr>
+      <tr><th>Marca</th><td>${esc(a.v || '—')}</td><td>${esc(b.v || '—')}</td></tr>
+      <tr><th>Llegada</th>${cell(isSos(a) ? 'Hoy · Express 3 horas' : '2 a 5 días hábiles', isSos(a) && !isSos(b))}${cell(isSos(b) ? 'Hoy · Express 3 horas' : '2 a 5 días hábiles', isSos(b) && !isSos(a))}</tr>
+      <tr><th>Medidas</th><td>${esc(measure(a))}</td><td>${esc(measure(b))}</td></tr>
+      <tr><th></th><td><button class="btn btn--solid btn--md" type="button" data-m="addcart" data-id="${esc(a.h)}">Al carro</button></td><td><button class="btn btn--solid btn--md" type="button" data-m="addcart" data-id="${esc(b.h)}">Al carro</button></td></tr></tbody></table>` : '';
+    return `<section class="mcmp" aria-label="Comparar"><h2 class="mh">Compara dos regalos</h2><div class="mcmp__zones">${zone(a, 0)}${zone(b, 1)}</div>${table}</section>`;
+  };
+  const putCmp = (h, zone) => {
+    const c = (st.cmp || []).slice();
+    const at = c.indexOf(h);
+    if (at >= 0) c[at] = '';
+    c[zone] = h;
+    st.cmp = [c[0] || '', c[1] || ''];
+    list(true);
+  };
+  const list = (keep = false) => {
     if (!st.similar) st.similar = similar(Math.max(2, LIST - Math.min(st.likes.length, LIST - 2)));
     const likes = st.likes.slice(0, LIST - 2);
     const sims = st.similar.filter((h) => !likes.includes(h)).slice(0, LIST - likes.length);
@@ -214,18 +311,22 @@
     const items = likes.map((h) => U.byHandle[h]).filter(Boolean);
     const total = items.reduce((a, p) => a + p.p, 0);
     const forOther = st.who && st.who.kind !== 'me';
+    const voteUrl = new URL(`votar.html?${new URLSearchParams({ l: rows.map(([h]) => h).join(','), ...(st.from || (s.user && s.user.name) ? { de: st.from || s.user.name.split(' ')[0] } : {}), ...(person() ? { p: person().name } : {}), lang: I.lang() })}`, location.href).href;
     const per = Math.ceil(total / Math.max(2, st.share));
     const user = s.user;
     shell(`${steps(4)}<div class="mlisthead"><h1 class="sform__title">${rows.length ? `Tu lista corta${person() ? ` para ${esc(person().name)}` : ''}` : 'Aún no elegiste ninguno'}</h1><p class="sform__lead">${rows.length ? 'Lo que te gustó y algunas parecidas. Compara precio, stock y despacho.' : 'Vuelve a las cartas y toca “Me gusta”.'}</p></div>
-      ${rows.length ? `<ul class="mlist">${rows.map(([h, sim]) => { const p = U.byHandle[h]; return `<li class="mrow ${sim ? 'is-sim' : ''}"><a class="mrow__img" href="${window.CEC.url.product(p.h)}"><div class="ph ph--product" data-ph="${esc(p.v)}" data-img="${esc(p.h)}" data-img-w="300"></div></a>
+      ${rows.length > 1 ? cmpPanel() : ''}
+      ${rows.length ? `<ul class="mlist">${rows.map(([h, sim]) => { const p = U.byHandle[h]; return `<li class="mrow ${sim ? 'is-sim' : ''}" draggable="true" data-h="${esc(p.h)}"><a class="mrow__img" href="${window.CEC.url.product(p.h)}"><div class="ph ph--product" data-ph="${esc(p.v)}" data-img="${esc(p.h)}" data-img-w="300"></div></a>
         <div class="mrow__info">${sim ? S.tag('Parecido', '', { small: true }) : S.tag('♥ Te gustó', '', { small: true })}<a class="mrow__t" href="${window.CEC.url.product(p.h)}">${esc(p.t)}</a><p>${esc(p.v || '')}</p><p class="mrow__p">${U.fmt(p.p)} ${stockLine(p)}</p>
-        <div class="mrow__act"><button class="btn btn--solid btn--md" type="button" data-m="addcart" data-id="${esc(p.h)}">Al carro</button><button class="link-underline" type="button" data-m="${sim ? 'dropsim' : 'drop'}" data-id="${esc(p.h)}">Quitar</button></div></div></li>`; }).join('')}</ul>` : ''}
+        <div class="mrow__act"><button class="btn btn--solid btn--md" type="button" data-m="addcart" data-id="${esc(p.h)}">Al carro</button><button class="link-underline" type="button" data-m="cmp" data-id="${esc(p.h)}" aria-pressed="${(st.cmp || []).includes(p.h)}">${(st.cmp || []).includes(p.h) ? 'Comparando' : 'Comparar'}</button><button class="link-underline" type="button" data-m="${sim ? 'dropsim' : 'drop'}" data-id="${esc(p.h)}">Quitar</button></div></div></li>`; }).join('')}</ul>` : ''}
       <div class="sacct__actions mact"><button class="btn btn--outline btn--md" type="button" data-m="more" ${st.seen.length >= DECK ? 'disabled' : ''}>Seguir viendo cartas</button><button class="btn btn--outline btn--md" type="button" data-m="again">Empezar otro Match</button></div>
       ${items.length ? `<div class="mextras">
         <fieldset class="sfs"><legend>Pago compartido</legend><p class="sform__fine">Reúne a más personas para un mismo regalo (“hacer una vaca”).</p>
           <label class="sfield"><span>¿Entre cuántas personas?</span><select id="mShare">${[2, 3, 4, 5, 6, 8, 10].map((n) => `<option ${st.share === n ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
           <p>Si eliges todo lo que te gustó (${U.fmt(total)}), cada persona aporta <b>${U.fmt(per)}</b>.</p>
           <a class="btn btn--outline btn--md" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(`Hagamos una vaca por un regalo en Creado en Chile: ${U.fmt(per)} por persona (somos ${st.share}). Mira las opciones: ${items.map((p) => p.t).join(', ')}`)}">Invitar por WhatsApp</a></fieldset>
+        <fieldset class="sfs"><legend>Que otros voten</legend><p class="sform__fine">Manda la lista corta y quienes la reciban marcan cuáles les gustan. Sirve para decidir entre varios.</p>
+          <div class="sacct__actions"><button class="btn btn--outline btn--md" type="button" data-m="copyvote" data-url="${esc(voteUrl)}">Copiar enlace para votar</button><a class="btn btn--outline btn--md" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(`${I.tr('Ayúdame a elegir un regalo en Creado en Chile')}: ${voteUrl}`)}">Enviar por WhatsApp</a><a class="link-underline" target="_blank" rel="noopener" href="${esc(voteUrl)}">Ver cómo lo verán</a></div></fieldset>
         ${forOther ? `<fieldset class="sfs"><legend>Teaser digital</legend><p class="sform__fine">Un aviso para que ${esc(forName())} sepa que viene un regalo, sin revelar qué es.</p>
           <label class="sfield"><span>Tu nombre (opcional)</span><input id="mFrom" type="text" autocomplete="off" value="${esc(st.from || (user ? user.name.split(' ')[0] : ''))}"></label>
           <p class="mteaser">“Alguien está preparando un regalo para ti en Creado en Chile. Pronto sabrás qué es.”</p>
@@ -234,13 +335,13 @@
           ${st.savedId ? `<p class="schip is-ok">Guardado en Mi Creado</p> <a class="link-underline" href="mi-creado.html?s=guardados">Ver Mis Match</a>`
             : user ? '<button class="btn btn--solid btn--md" type="button" data-m="save">Guardar en Mi Creado</button>'
             : '<p class="sform__fine">Si no quieres, Match funciona completo igual: solo no se guarda. Con Google es un toque.</p><div id="mLogin"></div>'}</fieldset></div>` : ''}
-      <p class="sform__msg" role="status">${esc(st.msg)}</p>`, true);
+      <p class="sform__msg" role="status">${esc(st.msg)}</p>`, true, keep);
     const lb = $('#mLogin');
     if (lb) { S.loginBox(lb, () => { s = S.load(); saveMatch(); list(); }); I.apply(lb); }
     const fr = $('#mFrom');
     if (fr) { const upd = () => { st.from = fr.value.trim(); const l = teaserLink(); $('#mTeaserSee').href = l; $('#mTeaserWa').href = `https://wa.me/?text=${encodeURIComponent(`${I.tr('“Alguien está preparando un regalo para ti en Creado en Chile. Pronto sabrás qué es.”').replace(/[“”]/g, '')} ${l}`)}`; }; fr.addEventListener('input', upd); upd(); }
     const sh = $('#mShare');
-    if (sh) sh.addEventListener('change', () => { st.share = +sh.value; list(); });
+    if (sh) sh.addEventListener('change', () => { st.share = +sh.value; list(true); });
   };
 
   const teaserLink = () => new URL(`regalo.html?${new URLSearchParams({ ...(st.from ? { de: st.from } : {}), ...(st.ctx ? { m: st.ctx } : {}), l: I.lang() })}`, location.href).href;
@@ -281,6 +382,8 @@
     relskip: () => { st.who = { kind: 'other' }; st.step = 'ask'; ask(); },
     start: () => { st.sos = $('#mSos').checked; deal(); },
     surprise: () => { st.ctx = ''; st.range = ''; st.sos = false; deal(); },
+    flip: (b) => { const k = b.dataset.k; const w = st.w[k] || 0; st.w[k] = w === 0 ? 1 : -w; redrawPack(); },
+    unlearn: (b) => { delete st.w[b.dataset.k]; redrawPack(); },
     details: () => { st.details = !st.details; card(true); },
     yes: () => react(true),
     no: () => react(false),
@@ -293,6 +396,9 @@
       const p = U.byHandle[b.dataset.id];
       window.CEC.addToCart({ handle: p.h, title: p.t, price: p.p, express: isSos(p) });
     },
+    cmp: (b) => { const h = b.dataset.id; const c = (st.cmp || []).slice(); const at = c.indexOf(h); if (at >= 0) { c[at] = ''; st.cmp = c; list(true); return; } const free = c[0] ? (c[1] ? -1 : 1) : 0; putCmp(h, free < 0 ? 0 : free); },
+    uncmp: (b) => { st.cmp = (st.cmp || []).map((h) => (h === b.dataset.id ? '' : h)); list(true); },
+    copyvote: (b) => { (navigator.clipboard ? navigator.clipboard.writeText(b.dataset.url) : Promise.reject()).then(() => { b.textContent = I.tr('Enlace copiado'); }, () => { b.textContent = I.tr('No se pudo copiar'); }); },
     save: () => { saveMatch(); list(); },
     copyteaser: (b) => {
       (navigator.clipboard ? navigator.clipboard.writeText(teaserLink()) : Promise.reject()).then(() => { b.textContent = I.tr('Enlace copiado'); }, () => { b.textContent = I.tr('No se pudo copiar'); });
@@ -301,6 +407,11 @@
     resume: () => { st = { ...fresh(), ...draft, current: null, step: 'list', savedId: '' }; list(); },
     dropdraft: () => { clearDraft(); draft = null; entry(); },
   };
+  // arrastrar una carta de la lista a la mesa de comparar
+  app.addEventListener('dragstart', (e) => { const li = e.target.closest('.mrow[data-h]'); if (li) { e.dataTransfer.setData('text/plain', li.dataset.h); e.dataTransfer.effectAllowed = 'copy'; } });
+  app.addEventListener('dragover', (e) => { if (e.target.closest('.mcmp__zone')) { e.preventDefault(); e.target.closest('.mcmp__zone').classList.add('is-over'); } });
+  app.addEventListener('dragleave', (e) => { const z = e.target.closest('.mcmp__zone'); if (z) z.classList.remove('is-over'); });
+  app.addEventListener('drop', (e) => { const z = e.target.closest('.mcmp__zone'); if (!z) return; e.preventDefault(); const h = e.dataTransfer.getData('text/plain'); if (h && U.byHandle[h]) putCmp(h, +z.dataset.zone); });
   app.addEventListener('click', (e) => {
     const b = e.target.closest('[data-m]');
     if (b && go[b.dataset.m] && !b.closest('#mLogin')) go[b.dataset.m](b);
