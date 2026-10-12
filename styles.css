@@ -1474,3 +1474,13 @@ a.page:hover { border-bottom-color: #0b0b0b; }
 .scost__note { margin-bottom: 18px; font-size: 14px; line-height: 20px; color: #555; }
 @media (max-width: 1023px) { .sopts { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 599px) { .sopts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Contextos: hero con la escena + listado de colección */
+.page-ctx .cban__text { max-width: 560px; padding: calc(90px * var(--sp)) 0 calc(36px * var(--sp)); }
+.page-ctx .cban { min-height: calc(480px * var(--sp)); display: flex; align-items: flex-end; }
+.page-ctx .cban .wrapper { width: 100%; }
+.cban__others { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 34px; font-size: 14px; }
+.cban__others span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase; color: #6b6b6b; align-self: center; }
+.cban__others a { color: #000; text-decoration: underline; text-underline-offset: 3px; }
+.ctxmore { padding: calc(20px * var(--sp)) 0 calc(70px * var(--sp)); }
+.ctxmore .ch:first-child { margin-top: 20px; }

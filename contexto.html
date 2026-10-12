@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Rubik:wght@500;600&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="styles.css?v=20261012c">
+<link rel="stylesheet" href="styles.css?v=20261012d">
 
 </head>
 <body class="page-sub">
@@ -103,8 +103,34 @@
 </div>
 <div class="scrim" id="scrim" hidden></div>
 
-<main id="main" class="page-sub page-ctx">
-<div id="subApp"></div>
+<main id="main" class="page-collection page-ctx">
+<div id="ctxHero"></div>
+<div class="collection">
+  <div class="wrapper">
+    <div class="collection__inner">
+      <div class="collection__bar" id="colBar">
+        <div class="collection__sort" id="sortWrap">
+          <button class="collection__sort-btn" type="button" id="sortBtn" aria-expanded="false" aria-haspopup="true">Ordenar por <svg aria-hidden="true"><use href="#i-chev"/></svg></button>
+          <div class="collection__sort-pop" id="sortPop" hidden></div>
+        </div>
+        <button class="collection__filter-open" type="button" id="filterOpen" aria-label="Filtrar y ordenar"><svg viewBox="0 0 26 26" aria-hidden="true"><path d="M2 8h22M2 18h22" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/><circle cx="9" cy="8" r="2.6" fill="#fff" stroke="currentColor" stroke-width="1.6"/><circle cx="17" cy="18" r="2.6" fill="#fff" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        <p class="collection__count" id="colCount" aria-live="polite"></p>
+      </div>
+      <aside class="collection__filters" id="filters" aria-label="Filtros">
+        <div class="filters__head"><p class="filters__title">Filtrar y ordenar</p><button class="drawer__close" type="button" id="filterClose" aria-label="Cerrar filtros"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+        <div class="filters__sort" id="filtersSort"></div>
+        <div class="filters__list" id="filtersList"></div>
+        <div class="filters__foot"><button class="btn btn--solid btn--block btn--md" type="button" id="filterApply">Ver productos</button><button class="filters__clear" type="button" id="filterClear">Quitar filtros</button></div>
+      </aside>
+      <div class="collection__products">
+        <div class="cgrid" id="cgrid" aria-live="polite"></div>
+        <p class="collection__empty" id="colEmpty" hidden>No encontramos productos con esos filtros. <button type="button" id="emptyClear">Quitar filtros</button></p>
+        <nav class="pagination" id="pager" aria-label="Paginación"></nav>
+      </div>
+    </div>
+  </div>
+</div>
+<section class="ctxmore" id="ctxMore"></section>
 </main>
 
 <!-- Footer -->
@@ -177,5 +203,6 @@
 <script src="ctx-data.js" defer></script>
 <script src="data/ctx-packs.js" defer></script>
 <script src="contexto.js" defer></script>
+<script src="collection.js" defer></script>
 </body>
 </html>

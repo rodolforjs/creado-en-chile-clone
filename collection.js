@@ -1,5 +1,6 @@
 // Plantilla de colección: filtros, orden, paginación y grilla de 48.
 (() => {
+  if (window.CEC_NO_COLLECTION) return; // contexto.html sin momento elegido
   const { D, esc, card, colorOf } = window.CEC_UI;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -23,21 +24,26 @@
   const qs = new URLSearchParams(location.search);
   const query = (qs.get('q') || '').trim();
   const isSearch = location.pathname.endsWith('search.html');
-  const SORTS = isSearch ? SORTS_SEARCH : SORTS_ALL;
+  const ctx = location.pathname.endsWith('contexto.html') ? window.CEC_CTX.byId(qs.get('c')) : null; // contextos: mismo listado y filtros, con productos etiquetados
+  const SORTS = isSearch ? SORTS_SEARCH : ctx ? SORTS_ALL.map(([v, l]) => [v, v === 'features' ? 'Más afín al momento' : l]) : SORTS_ALL;
   const handle = qs.get('c') || 'mujer';
   const norm = (s) => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   const tokens = norm(query).split(/\s+/).filter(Boolean);
   const all = isSearch
     ? D.products.filter((p) => { const hay = norm(`${p.t} ${p.v} ${p.ty || ''} ${(p.tg || []).join(' ')}`); return tokens.every((t) => hay.includes(t)); }).map((p) => p.i)
-    : (D.collections[handle] || D.products.map((p) => p.i));
+    : ctx
+      ? D.products.map((p) => ({ p, w: window.CEC_CTX.weight(p, ctx) })).filter((x) => x.w > 0).sort((a, b) => b.w - a.w || a.p.i - b.p.i).map((x) => x.p.i)
+      : (D.collections[handle] || D.products.map((p) => p.i));
   const info = (D.titles || {})[handle];
   const pretty = (h) => h.replace(/-\d+$/, '').replace(/-/g, ' ').replace(/^./, (c) => c.toUpperCase());
-  const title = isSearch ? (query ? `Resultados para "${query}"` : 'Búsqueda') : (info ? info.t : pretty(handle));
+  const title = ctx ? ctx.label : isSearch ? (query ? `Resultados para "${query}"` : 'Búsqueda') : (info ? info.t : pretty(handle));
 
   document.title = `${isSearch ? 'Búsqueda' : title} | Creado en Chile`;
   if (isSearch) {
     $('#colTitle').textContent = title;
     $('#spInput').value = query;
+  } else if (ctx) {
+    // el título vive en el hero de la escena
   } else {
     $('#colCrumb').textContent = title;
     $('#colTitle').textContent = title.toUpperCase();
@@ -45,14 +51,14 @@
 
   // ---- estado (en la URL) ----
   const state = {
-    sort: qs.get('sort') || (isSearch ? 'relevant' : 'best'),
+    sort: qs.get('sort') || (isSearch ? 'relevant' : ctx ? 'features' : 'best'),
     page: Math.max(1, parseInt(qs.get('page'), 10) || 1),
     f: { marca: qs.getAll('marca'), color: qs.getAll('color'), talla: qs.getAll('talla'), tipo: qs.getAll('tipo'), precio: qs.getAll('precio') },
   };
   const sync = () => {
     const u = new URLSearchParams();
     if (isSearch) u.set('q', query); else u.set('c', handle);
-    if (state.sort !== (isSearch ? 'relevant' : 'best')) u.set('sort', state.sort);
+    if (state.sort !== (isSearch ? 'relevant' : ctx ? 'features' : 'best')) u.set('sort', state.sort);
     Object.entries(state.f).forEach(([k, arr]) => arr.forEach((v) => u.append(k, v)));
     if (state.page > 1) u.set('page', state.page);
     history.replaceState(null, '', `?${u}`);

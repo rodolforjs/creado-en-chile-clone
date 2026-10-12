@@ -67,3 +67,5 @@ Este repo se publica vía GitHub Pages desde la rama `main`.
 
 
 Suscripción: plan anual prepago, sin cuota aparte. Se pagan por adelantado los regalos del año (valor por rango: $20.000, $30.000 o $50.000, en cuotas sin interés). En cada fecha se elige entre 6 opciones del rango (la diferencia de precio se cobra o queda de crédito) y se puede pedir otras 6 una vez. Lo no usado queda en crédito o se devuelve. Valores de ejemplo en `sub.js` (`PLAN`, `RANGES`).
+
+Contextos: `contexto.html?c=<momento>` reutiliza la plantilla de colección (filtros, orden, grilla de 48 y paginación, armada por `collection.js` con productos etiquetados). Arriba va solo el hero con la escena; los mini paquetes y el aviso de fecha van después del listado.
