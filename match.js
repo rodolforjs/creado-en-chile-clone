@@ -175,7 +175,7 @@
     shell(`${steps(3)}
       <div class="mdeck__bar"><span>Carta ${st.seen.length + 1} de ${DECK}</span><span>${st.likes.length} ${st.likes.length === 1 ? 'me gusta' : 'me gusta'}</span></div>
       <article class="mcard" aria-live="polite">
-        <div class="mcard__photo"><div class="ph ph--product" data-ph="${esc(p.v)}"></div><span class="mcard__pct">${pct(x.v)}% match</span></div>
+        <div class="mcard__photo"><div class="ph ph--product" data-ph="${esc(p.v)}" data-img="${esc(p.h)}" data-img-w="900"></div><span class="mcard__pct">${pct(x.v)}% match</span></div>
         <div class="mcard__body">
           <p class="mcard__brand">${esc(p.v || '')}</p>${I.lang() !== 'es' ? `<p class="mcard__origin">Hecho en Chile por ${esc(p.v || 'una marca chilena')}</p>` : ''}
           <h2 class="mcard__title">${esc(p.t)}</h2>

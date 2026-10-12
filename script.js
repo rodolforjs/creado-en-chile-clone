@@ -147,6 +147,8 @@
       const img = document.createElement('div');
       img.className = 'ph ph--product cartd__img';
       img.dataset.ph = '100×100';
+      img.dataset.img = it.handle || '';
+      img.dataset.imgW = '200';
       const info = document.createElement('div');
       info.className = 'cartd__info';
       const row = document.createElement('div');

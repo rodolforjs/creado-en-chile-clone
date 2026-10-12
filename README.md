@@ -70,3 +70,5 @@ Suscripción: plan anual prepago, sin cuota aparte. Se pagan por adelantado los 
 
 Contextos: `contexto.html?c=<momento>` reutiliza la plantilla de colección (filtros, orden, grilla de 48 y paginación, armada por `collection.js` con productos etiquetados). Arriba va solo el hero con la escena; los mini paquetes y el aviso de fecha van después del listado.
 Contextos, referencia IKEA: puntos sobre la escena que abren el producto (con "Llevar la escena") y fila de tipos de producto con miniatura que filtra el listado (`?tipo=`).
+
+Fotos: los productos usan sus fotos reales, enlazadas desde el CDN de Shopify de la tienda (`data/images.js` con la principal y `data/images-extra.js` con la galería de la ficha; se regeneran con `node tools/gen-images.js`). `img-enhance.js` pone la foto sobre cualquier `.ph[data-img="<handle>"]`, carga perezosa, y deja el placeholder si falta o falla. Las escenas (heros, banners) siguen en placeholder.

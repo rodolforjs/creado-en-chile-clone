@@ -54,12 +54,12 @@
   }
 
   // galería (placeholders 630×945)
-  const n = Math.max(1, Math.min(p.im || 1, 15));
+  const n = Math.max(1, Math.min(1 + ((window.CEC_IMG_X || {})[p.h] || []).length || p.im || 1, 15));
   const track = $('#pdpTrack');
   const thumbs = $('#pdpThumbs');
   for (let i = 0; i < n; i++) {
-    track.insertAdjacentHTML('beforeend', `<div class="pdp__slide" aria-label="Imagen ${i + 1} de ${n}"><div class="ph ph--product" data-ph="Imagen ${i + 1} · 630×945"></div></div>`);
-    thumbs.insertAdjacentHTML('beforeend', `<button class="pdp__thumb${i ? '' : ' is-selected'}" type="button" aria-label="Ver imagen ${i + 1}"><div class="ph ph--product" data-ph="${i + 1}"></div></button>`);
+    track.insertAdjacentHTML('beforeend', `<div class="pdp__slide" aria-label="Imagen ${i + 1} de ${n}"><div class="ph ph--product" data-ph="Imagen ${i + 1} · 630×945" data-img="${esc(p.h)}" data-img-n="${i}" data-img-w="1000"></div></div>`);
+    thumbs.insertAdjacentHTML('beforeend', `<button class="pdp__thumb${i ? '' : ' is-selected'}" type="button" aria-label="Ver imagen ${i + 1}"><div class="ph ph--product" data-ph="${i + 1}" data-img="${esc(p.h)}" data-img-n="${i}" data-img-w="150"></div></button>`);
   }
   let cur = 0;
   const go = (i) => {

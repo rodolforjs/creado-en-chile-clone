@@ -58,7 +58,7 @@
 
   // ---------- después del listado: paquetes y aviso de fecha ----------
   const packs = (window.CEC_PACKS || {})[ctx.id] || [];
-  const packHtml = (pk) => `<article class="cpack"><div class="cpack__thumbs">${pk.items.map((i) => `<div class="ph ph--product" data-ph="${esc(i.v)}"></div>`).join('')}</div>
+  const packHtml = (pk) => `<article class="cpack"><div class="cpack__thumbs">${pk.items.map((i) => `<div class="ph ph--product" data-ph="${esc(i.v)}" data-img="${esc(i.h)}" data-img-w="300"></div>`).join('')}</div>
     <div class="cpack__body"><p class="cpack__label">Mini paquete</p><h3 class="cpack__name">${esc(pk.name)}</h3>
     <ul class="cpack__items">${pk.items.map((i) => `<li><a href="${window.CEC.url.product(i.h)}">${esc(i.t)}</a> <span>${U.fmt(i.p)}</span></li>`).join('')}</ul>
     <div class="cpack__foot"><b>${U.fmt(pk.total)}</b><button class="btn btn--solid btn--md" type="button" data-pack="${pk.id}">Agregar la escena al carro</button></div></div></article>`;

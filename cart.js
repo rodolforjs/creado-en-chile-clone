@@ -10,7 +10,7 @@
     cart.forEach((it, i) => {
       const li = document.createElement('li');
       li.className = 'cartpg__item';
-      li.innerHTML = `<div class="ph ph--product cartpg__img" data-ph="100×150"></div>
+      li.innerHTML = `<div class="ph ph--product cartpg__img" data-ph="100×150" data-img="${esc(it.handle)}" data-img-w="200"></div>
         <div class="cartpg__info"><a class="cartpg__name" href="${it.handle === 'gift-wrapping' ? '#' : `product.html?p=${encodeURIComponent(it.handle)}`}">${esc(it.title)}</a>
         ${it.variant ? `<p class="cartpg__variant">${esc(it.variant)}</p>` : ''}<p class="cartpg__price">${fmt(it.price)}</p></div>
         <div class="cartpg__qty"><div class="qty"><button type="button" data-d="-1" aria-label="Menos">−</button><input type="text" inputmode="numeric" readonly value="${it.qty}" aria-label="Cantidad"><button type="button" data-d="1" aria-label="Más">+</button></div><p class="cartpg__line">${fmt(it.price * it.qty)}</p></div>`;

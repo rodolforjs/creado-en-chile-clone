@@ -105,7 +105,7 @@
   // `link: false` para tarjetas que se eligen (dentro de un label): sin enlace al producto
   const giftCard = (p, extra = '', link = true) => {
     const href = window.CEC.url.product(p.h);
-    const media = `<div class="ph ph--product" data-ph="${esc(p.v)}"></div>`;
+    const media = `<div class="ph ph--product" data-ph="${esc(p.v)}" data-img="${esc(p.h)}" data-img-w="400"></div>`;
     return `<article class="sgift">${link ? `<a class="sgift__media" href="${href}" aria-label="${esc(p.t)}">${media}</a>` : `<span class="sgift__media">${media}</span>`}<div class="sgift__info">${link ? `<a class="sgift__title" href="${href}">${esc(p.t)}</a>` : `<span class="sgift__title">${esc(p.t)}</span>`}<p class="sgift__price">${fmt(p.p)}</p>${extra}</div></article>`;
   };
 

@@ -17,7 +17,7 @@
   };
   const draw = () => {
     const { cart, total, allExpress, ship, cost } = compute();
-    $('#oItems').innerHTML = cart.map((it) => `<li><div class="ph ph--product o-items__img" data-ph="Prod"></div><div class="o-items__info"><p>${esc(it.title)}</p><small>${it.variant ? `${esc(it.variant)} · ` : ''}Cant. ${it.qty}</small></div><span>${fmt(it.price * it.qty)}</span></li>`).join('') || '<li class="o-items__empty">Tu carrito está vacío. <a href="index.html">Volver a la tienda</a></li>';
+    $('#oItems').innerHTML = cart.map((it) => `<li><div class="ph ph--product o-items__img" data-ph="Prod" data-img="${esc(it.handle || '')}" data-img-w="200"></div><div class="o-items__info"><p>${esc(it.title)}</p><small>${it.variant ? `${esc(it.variant)} · ` : ''}Cant. ${it.qty}</small></div><span>${fmt(it.price * it.qty)}</span></li>`).join('') || '<li class="o-items__empty">Tu carrito está vacío. <a href="index.html">Volver a la tienda</a></li>';
     $('#oSub').textContent = fmt(total);
     $('#oShip').textContent = cost === 0 ? 'Gratis' : fmt(cost);
     $('#oTotal').textContent = fmt(total + cost);
