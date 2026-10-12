@@ -1,4 +1,4 @@
-// Inicio: los 6 contextos y tres mini paquetes (sin cargar el catálogo completo).
+// Inicio: los contextos y tres mini paquetes (sin cargar el catálogo completo).
 (() => {
   const X = window.CEC_CTX;
   const P = window.CEC_PACKS || {};

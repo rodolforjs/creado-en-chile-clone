@@ -53,13 +53,14 @@
   const state = {
     sort: qs.get('sort') || (isSearch ? 'relevant' : ctx ? 'features' : 'best'),
     page: Math.max(1, parseInt(qs.get('page'), 10) || 1),
-    f: { marca: qs.getAll('marca'), color: qs.getAll('color'), talla: qs.getAll('talla'), tipo: qs.getAll('tipo'), precio: qs.getAll('precio') },
+    f: { marca: qs.getAll('marca'), color: qs.getAll('color'), talla: qs.getAll('talla'), tipo: qs.getAll('tipo'), precio: qs.getAll('precio'), maleta: ctx && ctx.carry && !qs.has('m') ? ['1'] : qs.getAll('maleta') }, // en "Para llevar a casa" el filtro de maleta parte activo
   };
   const sync = () => {
     const u = new URLSearchParams();
     if (isSearch) u.set('q', query); else u.set('c', handle);
     if (state.sort !== (isSearch ? 'relevant' : ctx ? 'features' : 'best')) u.set('sort', state.sort);
     Object.entries(state.f).forEach(([k, arr]) => arr.forEach((v) => u.append(k, v)));
+    if (ctx && ctx.carry && !state.f.maleta.length) u.set('m', '0');
     if (state.page > 1) u.set('page', state.page);
     history.replaceState(null, '', `?${u}`);
   };
@@ -76,6 +77,7 @@
     { key: 'talla', label: 'Talla', opts: uniq(prods.flatMap(sizeOf)).sort((a, b) => a.localeCompare(b, 'es', { numeric: true })).map((v) => [v, v]) },
     { key: 'tipo', label: 'Tipo', opts: uniq(prods.map((p) => p.ty).filter(Boolean)).sort((a, b) => a.localeCompare(b, 'es')).map((v) => [v, v]) },
     { key: 'precio', label: 'Precio', opts: PRICES },
+    ...(ctx ? [{ key: 'maleta', label: 'Viaje', opts: [['1', 'Cabe en maleta de mano (estimado)']] }] : []),
   ];
 
   const match = (p) => {
@@ -84,6 +86,7 @@
     if (f.color.length && !colorOf(p).some((c) => f.color.includes(c))) return false;
     if (f.talla.length && !sizeOf(p).some((t) => f.talla.includes(t))) return false;
     if (f.tipo.length && !f.tipo.includes(p.ty)) return false;
+    if (f.maleta.length && !window.CEC_CTX.fitsCarryOn(p)) return false;
     if (f.precio.length && !f.precio.some((r) => { const [a, b] = r.split('-'); return p.p >= +a && (!b || p.p < +b); })) return false;
     return true;
   };
@@ -106,7 +109,7 @@
 
   const moreOpen = {}; // grupos de la búsqueda con "Ver más" desplegado
   const renderFilters = () => {
-    $('#filtersList').innerHTML = groups.filter((g) => g.opts.length > (isSearch ? 0 : 1) || g.key === 'precio').map((g) => {
+    $('#filtersList').innerHTML = groups.filter((g) => g.opts.length > (isSearch ? 0 : 1) || g.key === 'precio' || g.key === 'maleta').map((g) => {
       // en la búsqueda del original los filtros parten abiertos (en móvil, cerrados)
       const open = state.f[g.key].length > 0 || (isSearch && !mobile.matches);
       const capped = isSearch && g.key !== 'color' && g.opts.length > MORE_AFTER;

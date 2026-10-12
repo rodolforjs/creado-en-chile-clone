@@ -21,7 +21,7 @@ Incluye barra de anuncios con ticker, header con desplegables, header compacto a
 | `recordatorio.html` | Recordatorio gratis: guarda persona y fecha, muestra el aviso de ejemplo |
 | `reserva.html` | Reserva de la próxima fecha (sin plan, sin pago hasta activarla) |
 | `suscribirse.html` | Alta del plan anual en 5 pasos (plan, cuenta, personas y fechas, rango, pago demo) |
-| `contexto.html?c=<id>` | Contextos: una plantilla para las 6 escenas (banner, mini paquetes, aviso de próxima fecha, listado etiquetado con filtro de precio, orden y paginación de 48, Match del contexto). Sin `c`, elige momento |
+| `contexto.html?c=<id>` | Contextos: una plantilla para las 7 escenas (banner, mini paquetes, aviso de próxima fecha, listado etiquetado con filtro de precio, orden y paginación de 48, Match del contexto). Sin `c`, elige momento |
 | `regalo.html?de=&m=&l=` | Teaser digital: lo que ve quien recibe el aviso de un regalo (no revela el producto) |
 | `match.html` | Match: ¿para quién?, momento/presupuesto/SOS, mazo de cartas que aprende (pesos de ejemplo), Mis Match (máx. 8), pago compartido y teaser digital. Botón flotante en todas las páginas |
 | `mi-creado.html?s=<sección>` | Mi Creado: acceso (Google, shop o correo con código, demo), inicio, personas y gustos, fechas, guardados, pedidos, direcciones y perfil |
@@ -72,3 +72,8 @@ Contextos: `contexto.html?c=<momento>` reutiliza la plantilla de colección (fil
 Contextos, referencia IKEA: puntos sobre la escena que abren el producto (con "Llevar la escena") y fila de tipos de producto con miniatura que filtra el listado (`?tipo=`).
 
 Fotos: los productos usan sus fotos reales, enlazadas desde el CDN de Shopify de la tienda (`data/images.js` con la principal y `data/images-extra.js` con la galería de la ficha; se regeneran con `node tools/gen-images.js`). `img-enhance.js` pone la foto sobre cualquier `.ph[data-img="<handle>"]`, carga perezosa, y deja el placeholder si falta o falla. Las escenas (heros, banners) siguen en placeholder.
+
+Etiqueta de regalo (`.gtag`, helper `CEC_SUB.tag`): cartón con hoyito y cordel en Space Mono; es el sello visual de lo nuevo (Match, fechas guardadas, reservas) y cae con una animación al guardar una fecha.
+Mini paquetes como caja (`box.js`): caja abierta con 3 espacios, pestañas por paquete y "Cambiar" por producto (alternativas del mismo tipo y precio parecido; en el inicio el catálogo se carga recién al primer clic).
+Match: paquete que se arma mientras juegas (termómetro de presupuesto y chips de lo aprendido, que se invierten o se quitan), carta que se inclina al arrastrar (o flechas ← →), mesa para comparar dos cartas (arrastrar o "Comparar") y `votar.html` para que otros marquen cuáles les gustan (sin servidor: los votos salen por WhatsApp).
+Contexto "Para llevar a casa" (`turista`): filtro "cabe en maleta de mano" estimado a partir de las medidas de la descripción o del tipo de producto (`fitsCarryOn` en `ctx-data.js`; los líquidos grandes y muebles quedan fuera) y `match.html?ctx=turista&q=1`, souvenir en tres toques. Es una estimación, no un dato real de la tienda.

@@ -14,7 +14,7 @@
   if (!ctx) {
     window.CEC_NO_COLLECTION = true;
     main.className = 'page-sub page-ctx';
-    main.innerHTML = `<section class="ctxpick"><div class="wrapper"><p class="seyebrow">Contextos</p><h1 class="sform__title">Elige tu momento</h1><p class="sform__lead">Seis escenas para encontrar regalos según el momento que quieres crear.</p>
+    main.innerHTML = `<section class="ctxpick"><div class="wrapper"><p class="seyebrow">Contextos</p><h1 class="sform__title">Elige tu momento</h1><p class="sform__lead">Siete escenas para encontrar regalos según el momento que quieres crear.</p>
       <div class="mtiles mtiles--6 ctxpick__tiles">${X.LIST.map((c) => `<a class="mtile mtile--sm" href="${href(c)}"><span class="mtile__img ph ph--product" data-ph="${esc(c.label)}"></span><span class="mtile__t">${esc(c.label)}</span><span class="mtile__s">${esc(c.scene)}</span></a>`).join('')}</div></div></section>`;
     return;
   }
@@ -24,9 +24,20 @@
   // ---------- hero con la escena ----------
   $('#ctxHero').innerHTML = `<section class="cban"><div class="cban__img ph ph--product" data-ph="Escena: ${esc(ctx.scene)}"></div><div class="wrapper"><div class="cban__text">
     <p class="seyebrow">Contexto</p><h1 class="cban__title">${esc(ctx.label)}</h1><p class="cban__scene">${esc(ctx.scene)}</p><p class="cban__tag">${esc(ctx.tagline)}</p>
-    <div class="cban__btns"><a class="btn btn--solid btn--md" href="match.html?ctx=${ctx.id}">Hacer un Match de este momento</a></div>
+    <div class="cban__btns"><a class="btn btn--solid btn--md" href="match.html?ctx=${ctx.id}">Hacer un Match de este momento</a>${ctx.carry ? '<a class="btn btn--white btn--md" href="match.html?ctx=turista&q=1">Souvenir en 3 toques</a>' : ''}</div>
+    ${ctx.carry ? '<button class="ctog is-on" type="button" id="ctxCarry" aria-pressed="true"><span class="ctog__box" aria-hidden="true"></span>Solo lo que cabe en maleta de mano <small>(estimado)</small></button>' : ''}
     <nav class="cban__others" aria-label="Otros momentos"><span>Otros momentos</span>${X.LIST.filter((c) => c.id !== ctx.id).map((c) => `<a href="${href(c)}">${esc(c.label)}</a>`).join('')}</nav>
   </div></div></section>`;
+
+  // la pastilla de maleta de mano y el filtro de la barra lateral son la misma opción
+  const carry = $('#ctxCarry');
+  if (carry) {
+    const box = () => $('input[data-k=maleta]');
+    const sync = () => { const b = box(); const on = b ? b.checked : true; carry.classList.toggle('is-on', on); carry.setAttribute('aria-pressed', String(on)); };
+    carry.addEventListener('click', () => { const b = box(); if (b) b.click(); sync(); });
+    document.addEventListener('change', (e) => { if (e.target.matches && e.target.matches('input[data-k=maleta]')) sync(); });
+    window.addEventListener('load', sync);
+  }
 
   // ---------- puntos sobre la escena (como IKEA): cada uno abre el producto; hay un botón para llevar todo ----------
   const scenePack = ((window.CEC_PACKS || {})[ctx.id] || [])[1];

@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 global.window = {};
 require(path.join(__dirname, '../data/catalog.js'));
-const { LIST, weight } = require('../ctx-data.js');
+const { LIST, weight, fitsCarryOn } = require('../ctx-data.js');
 const D = window.CEC_DATA;
 const express = new Set(D.collections['express-en-3-horas'] || []);
 const cat = (p) => (p.ty || 'otro').toLowerCase().replace(/s$/, '');
@@ -12,7 +12,7 @@ const TARGETS = [20000, 40000, 65000];
 const out = {};
 LIST.forEach((c) => {
   const used = new Set();
-  const cand = D.products.map((p, i) => ({ p, i, w: weight(p, c) })).filter((x) => x.w >= 3 && x.p.p >= 3000 && x.p.p <= 40000).sort((a, b) => b.w - a.w || a.i - b.i).slice(0, 70);
+  const cand = D.products.map((p, i) => ({ p, i, w: weight(p, c) })).filter((x) => x.w >= 3 && x.p.p >= 3000 && x.p.p <= 40000 && (!c.carry || fitsCarryOn(x.p))).sort((a, b) => b.w - a.w || a.i - b.i).slice(0, 70);
   out[c.id] = TARGETS.map((target, k) => {
     let best = null;
     for (let a = 0; a < cand.length; a++) for (let b = a + 1; b < cand.length; b++) for (let d = b + 1; d < cand.length; d++) {

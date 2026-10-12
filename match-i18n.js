@@ -4,6 +4,13 @@
   const KEY = 'cec_lang';
   // [español, inglés, portugués]
   const T = [
+    ['Para llevar a casa', 'To take home', 'Para levar para casa'], ['Cabe en maleta de mano (estimado)', 'Fits in a carry-on (estimate)', 'Cabe na mala de mão (estimativa)'],
+    ['Souvenir en tres toques', 'Souvenir in three taps', 'Lembrança em três toques'], ['Viaje', 'Travel', 'Viagem'],
+    ['Para quien visita Chile y quiere llevarse algo con identidad, liviano y sin trámites en el aeropuerto.', 'For visitors to Chile who want to take home something with identity, light and hassle-free at the airport.', 'Para quem visita o Chile e quer levar algo com identidade, leve e sem complicações no aeroporto.'],
+    ['Un pedazo de Chile que cabe en la maleta', 'A piece of Chile that fits in your suitcase', 'Um pedaço do Chile que cabe na mala'],
+    ['1. ¿Para quién?', '1. Who for?', '1. Para quem?'], ['2. ¿Cuánto quieres gastar?', '2. How much to spend?', '2. Quanto quer gastar?'], ['3. Listo', '3. Done', '3. Pronto'],
+    ['Alguien en casa', 'Someone back home', 'Alguém em casa'], ['Ver souvenirs', 'See souvenirs', 'Ver lembranças'],
+    ['Solo mostramos piezas que caben en una maleta de mano. Tres toques y empezamos.', 'We only show pieces that fit in a carry-on. Three taps and we start.', 'Só mostramos peças que cabem em uma mala de mão. Três toques e começamos.'],
     ['Necesitamos tu ayuda para elegir un regalo', 'We need your help picking a gift', 'Precisamos da sua ajuda para escolher um presente'],
     ['Ayúdame a elegir un regalo en Creado en Chile', 'Help me pick a gift at Creado en Chile', 'Me ajude a escolher um presente na Creado en Chile'],
     ['Que otros voten', 'Let others vote', 'Deixe outros votarem'], ['Compara dos regalos', 'Compare two gifts', 'Compare dois presentes'], ['Comparar', 'Compare', 'Comparar'], ['Comparando', 'Comparing', 'Comparando'],

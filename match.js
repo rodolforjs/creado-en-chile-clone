@@ -41,7 +41,7 @@
 
   const qs = new URLSearchParams(location.search);
   let s = S.load();
-  const fresh = () => ({ step: 'entry', who: null, ctx: qs.get('ctx') && ctxOf(qs.get('ctx')) ? qs.get('ctx') : '', range: '', sos: false, seen: [], likes: [], w: {}, current: null, widened: false, sosRelaxed: false, details: false, msg: '', savedId: '', share: 3, cmp: [] });
+  const fresh = () => ({ step: 'entry', who: null, ctx: qs.get('ctx') && ctxOf(qs.get('ctx')) ? qs.get('ctx') : '', range: '', sos: false, seen: [], likes: [], w: {}, current: null, widened: false, sosRelaxed: false, details: false, msg: '', savedId: '', share: 3, cmp: [], carry: false });
   let st = fresh();
   let draft = null;
   try { draft = JSON.parse(localStorage.getItem(DRAFT)); } catch { draft = null; }
@@ -56,7 +56,7 @@
   const keysOf = (p) => [`c:${cat(p)}`, `v:${(p.v || '').toLowerCase()}`, `b:${BUDGETS.find((b) => p.p >= b.min && p.p < b.max).id}`];
   const pool = () => {
     const b = budgetOf(st.range);
-    let list = D.products.filter((p) => p.p > 0 && !st.seen.includes(p.h));
+    let list = D.products.filter((p) => p.p > 0 && !st.seen.includes(p.h) && (!st.carry || window.CEC_CTX.fitsCarryOn(p)));
     st.widened = false; st.sosRelaxed = false;
     if (b) {
       const i = BUDGETS.indexOf(b);
@@ -184,6 +184,19 @@
     }
   };
 
+  // Souvenir en tres toques (para quien visita Chile): para quién, cuánto y listo. Solo piezas que caben en maleta de mano.
+  const quick = (keep = false) => {
+    const q = st.quick || {};
+    const ready = q.who && q.range;
+    const opt = (k, id, label, on) => `<button class="mchip ${on ? 'is-on' : ''}" type="button" data-m="${k}" data-id="${id}" aria-pressed="${on}">${label}</button>`;
+    shell(`${head('Match', 'Souvenir en tres toques', 'Solo mostramos piezas que caben en una maleta de mano. Tres toques y empezamos.')}
+      <div class="mask">
+        <div><h2 class="mh">1. ¿Para quién?</h2><div class="chips">${opt('qwho', 'me', 'Para mí', q.who === 'me')}${opt('qwho', 'other', 'Alguien en casa', q.who === 'other')}</div></div>
+        <div><h2 class="mh">2. ¿Cuánto quieres gastar?</h2><div class="chips">${BUDGETS.slice(0, 3).map((b) => opt('qrange', b.id, b.label, q.range === b.id)).join('')}</div></div>
+        <div><h2 class="mh">3. Listo</h2><button class="btn btn--solid btn--md" type="button" data-m="qgo" ${ready ? '' : 'disabled'}>Ver souvenirs</button></div>
+      </div>`, false, keep);
+  };
+
   const relStep = () => {
     const groups = ['Cercano', 'Compromiso', 'Otro'];
     shell(`${steps(1)}${head('Match', '¿Quién es esa persona?', 'Elige el vínculo y afinamos las ideas. Puedes saltarlo.')}
@@ -220,6 +233,7 @@
           <h2 class="mcard__title">${esc(p.t)}</h2>
           <p class="mcard__price">${U.fmt(p.p)}</p>
           <p class="mcard__stock ${isSos(p) ? 'is-now' : ''}">${isSos(p) ? '⚡ Llega hoy · Express 3 horas' : st.sos ? 'No llega hoy · llega en 1 a 2 días hábiles' : 'En stock · despacho en 2 a 5 días hábiles'}</p>
+          ${st.carry ? '<p class="mcard__carry">Cabe en maleta de mano (estimado)</p>' : ''}
           <p class="mcard__why">${esc(phrase(p, x.why))}</p>
           <button class="link-underline" type="button" data-m="details" aria-expanded="${st.details}">${st.details ? 'Ver menos' : 'Ver historia y detalles'}</button>
           ${st.details ? `<div class="mcard__more"><p>${esc(p.d || 'Una pieza de diseño chileno.')}</p>${m ? `<p><b>Medidas:</b> ${esc(m[0])}</p>` : ''}<a class="link-underline" href="${window.CEC.url.product(p.h)}" target="_blank" rel="noopener">Abrir la ficha</a></div>` : ''}
@@ -275,7 +289,7 @@
     if (!liked.length) return [];
     const sim = (p) => liked.reduce((a, l) => a + (cat(l) === cat(p) ? 2 : 0) + ((l.v || '') === (p.v || '') ? 1 : 0) + (keysOf(l)[2] === keysOf(p)[2] ? 0.5 : 0), 0);
     const seen = new Set([...st.seen, ...st.likes]);
-    const pl = D.products.filter((p) => p.p > 0 && !seen.has(p.h));
+    const pl = D.products.filter((p) => p.p > 0 && !seen.has(p.h) && (!st.carry || window.CEC_CTX.fitsCarryOn(p)));
     return pl.map((p) => ({ p, v: sim(p) + score(p).v * 0.2 })).sort((a, b) => b.v - a.v).slice(0, n).map((x) => x.p.h);
   };
   const stockLine = (p) => (isSos(p) ? '<span class="schip is-ok">Llega hoy</span>' : '<span class="schip">2 a 5 días hábiles</span>');
@@ -358,7 +372,7 @@
   };
 
   // ---------- flujo ----------
-  const redraw = () => { const f = { entry, rel: relStep, ask, deck: () => card(true), list }[st.step] || entry; f(); };
+  const redraw = () => { const f = { entry, rel: relStep, quick, ask, deck: () => card(true), list }[st.step] || entry; f(); };
   const deal = () => { st.current = next(); st.details = false; st.step = 'deck'; persistDraft(); card(); };
   const react = (liked) => {
     const x = st.current;
@@ -384,6 +398,9 @@
     surprise: () => { st.ctx = ''; st.range = ''; st.sos = false; deal(); },
     flip: (b) => { const k = b.dataset.k; const w = st.w[k] || 0; st.w[k] = w === 0 ? 1 : -w; redrawPack(); },
     unlearn: (b) => { delete st.w[b.dataset.k]; redrawPack(); },
+    qwho: (b) => { st.quick = { ...(st.quick || {}), who: b.dataset.id }; quick(true); },
+    qrange: (b) => { st.quick = { ...(st.quick || {}), range: b.dataset.id }; quick(true); },
+    qgo: () => { const q = st.quick; st.who = { kind: q.who === 'me' ? 'me' : 'other' }; st.range = q.range; st.ctx = 'turista'; st.carry = true; deal(); },
     details: () => { st.details = !st.details; card(true); },
     yes: () => react(true),
     no: () => react(false),
@@ -419,5 +436,5 @@
 
   // ---------- entrada ----------
   const pid = qs.get('p');
-  if (pid && s.user && S.personOf(s, pid)) { st.who = { kind: 'person', person: pid }; st.step = 'ask'; ask(); } else entry();
+  if (qs.get('q') === '1' && ctxOf(qs.get('ctx') || 'turista')) { st.step = 'quick'; st.ctx = 'turista'; st.carry = true; quick(); } else if (pid && s.user && S.personOf(s, pid)) { st.who = { kind: 'person', person: pid }; st.step = 'ask'; ask(); } else entry();
 })();

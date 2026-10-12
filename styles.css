@@ -1326,7 +1326,7 @@ a.page:hover { border-bottom-color: #0b0b0b; }
 .mask { display: grid; gap: 4px; margin-top: 8px; }
 .mask__row { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; }
 .mask .mh { margin: 16px 0 10px; font-size: 17px; }
-.mtiles--6 { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin-top: 0; }
+.mtiles--6 { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px; margin-top: 0; }
 .mtiles--6 .mtile__img { aspect-ratio: 1 / 1; }
 .mtiles--6 .mtile__t { font-size: 13px; line-height: 17px; }
 .mask + .mact { margin-top: 20px; }
@@ -1650,3 +1650,9 @@ a.page:hover { border-bottom-color: #0b0b0b; }
 .vsend__sum { margin: 0 0 12px; font-family: var(--font-mono); font-size: 18px; }
 @media (max-width: 1023px) { .vgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1024px) { .mrow__img .ph { height: 150px; } }
+.mcard__carry { margin: 0 0 10px; padding: 4px 10px; border-radius: 999px; background: #eadcc3; font-family: var(--font-mono); font-size: 12px; color: #3a2d1f; }
+.ctog { display: inline-flex; align-items: center; gap: 10px; margin-top: 18px; padding: 8px 16px 8px 10px; border: 1px solid #0b0b0b; border-radius: 999px; background: #fff; font: inherit; font-size: 14px; cursor: pointer; }
+.ctog small { color: #6b6b6b; }
+.ctog__box { display: grid; place-items: center; width: 18px; height: 18px; border: 1.5px solid #0b0b0b; border-radius: 4px; }
+.ctog.is-on .ctog__box { background: #000; }
+.ctog.is-on .ctog__box::after { content: "✓"; color: #fff; font-size: 12px; line-height: 1; }
