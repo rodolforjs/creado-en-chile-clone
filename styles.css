@@ -1484,3 +1484,24 @@ a.page:hover { border-bottom-color: #0b0b0b; }
 .cban__others a { color: #000; text-decoration: underline; text-underline-offset: 3px; }
 .ctxmore { padding: calc(20px * var(--sp)) 0 calc(70px * var(--sp)); }
 .ctxmore .ch:first-child { margin-top: 20px; }
+
+/* Contextos: puntos sobre la escena y tipos de producto (referencia: IKEA) */
+.cspots { position: absolute; inset: 0; pointer-events: none; }
+.cspot { position: absolute; pointer-events: auto; }
+.cspot__dot { width: 30px; height: 30px; margin: -15px 0 0 -15px; border: 3px solid #fff; border-radius: 50%; background: rgba(0,0,0,.55); box-shadow: 0 0 0 1px rgba(0,0,0,.25); cursor: pointer; position: relative; }
+.cspot__dot::after { content: ""; position: absolute; inset: 7px; border-radius: 50%; background: #fff; }
+.cspot__dot:hover, .cspot__dot[aria-expanded="true"] { background: #000; }
+.cspot__pop { position: absolute; left: 22px; top: -20px; z-index: 5; width: 210px; padding: 14px 16px; border-radius: var(--radius); background: #fff; box-shadow: 0 6px 24px rgba(0,0,0,.18); display: grid; gap: 6px; font-size: 14px; line-height: 19px; }
+.cspot__pop[hidden] { display: none; }
+.cspot__t { font-weight: 500; }
+.cspot__p { color: #555; }
+.cspot .btn--sm { padding: 8px 12px; font-size: 12px; }
+.cspots__all { position: absolute; right: 40px; bottom: 28px; pointer-events: auto; box-shadow: 0 2px 10px rgba(0,0,0,.15); }
+.ctypes { display: flex; gap: 12px; margin: 22px 0 6px; overflow-x: auto; padding-bottom: 6px; }
+.ctype { flex: none; width: 112px; display: grid; gap: 8px; text-align: center; font-size: 13px; line-height: 17px; text-decoration: none; }
+.ctype__img { width: 112px; height: 112px; border-radius: var(--radius); font-size: 10px; }
+.ctype.is-on span:last-child { font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.ctype.is-on .ctype__img { outline: 2px solid #000; outline-offset: 2px; }
+@media (max-width: 767px) { .cspots { display: none; } .ctype, .ctype__img { width: 88px; } .ctype__img { height: 88px; } }
+.ctypes { padding: 4px 4px 6px; margin-left: -4px; }
+.cspots__all.btn--white { padding: 12px 16px; font-size: 12px; }

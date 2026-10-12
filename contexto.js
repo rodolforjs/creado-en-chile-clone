@@ -28,6 +28,34 @@
     <nav class="cban__others" aria-label="Otros momentos"><span>Otros momentos</span>${X.LIST.filter((c) => c.id !== ctx.id).map((c) => `<a href="${href(c)}">${esc(c.label)}</a>`).join('')}</nav>
   </div></div></section>`;
 
+  // ---------- puntos sobre la escena (como IKEA): cada uno abre el producto; hay un botón para llevar todo ----------
+  const scenePack = ((window.CEC_PACKS || {})[ctx.id] || [])[1];
+  const SPOTS = [[64, 34], [80, 58], [70, 74]];
+  if (scenePack) {
+    const total = scenePack.items.reduce((a, i) => a + i.p, 0);
+    $('.cban').insertAdjacentHTML('beforeend', `<div class="cspots" id="cSpots">${scenePack.items.map((i, k) => `<div class="cspot" style="left:${SPOTS[k][0]}%;top:${SPOTS[k][1]}%">
+        <button class="cspot__dot" type="button" aria-label="${esc(i.t)}" aria-expanded="false" data-spot="${k}"></button>
+        <div class="cspot__pop" hidden><p class="cspot__t">${esc(i.t)}</p><p class="cspot__p">${U.fmt(i.p)}</p><a class="link-underline" href="${window.CEC.url.product(i.h)}">Ver producto</a><button class="btn btn--solid btn--sm" type="button" data-add="${k}">Agregar</button></div></div>`).join('')}
+      <button class="cspots__all btn btn--white btn--md" type="button" data-all>Llevar la escena · ${U.fmt(total)}</button></div>`);
+    const close = () => document.querySelectorAll('.cspot__pop').forEach((p) => { p.hidden = true; p.previousElementSibling.setAttribute('aria-expanded', 'false'); });
+    $('#cSpots').addEventListener('click', (e) => {
+      const dot = e.target.closest('[data-spot]');
+      const add = e.target.closest('[data-add]');
+      if (dot) { const pop = dot.nextElementSibling; const open = pop.hidden; close(); pop.hidden = !open; dot.setAttribute('aria-expanded', String(open)); return; }
+      const toCart = (i) => window.CEC.addToCart({ handle: i.h, title: i.t, price: i.p, express: !!i.x }, false);
+      if (add) { toCart(scenePack.items[+add.dataset.add]); close(); window.CEC.openCart(); return; }
+      if (e.target.closest('[data-all]')) { scenePack.items.forEach(toCart); window.CEC.openCart(); }
+    });
+    document.addEventListener('click', (e) => { if (!e.target.closest('.cspot')) close(); });
+  }
+
+  // ---------- tipos de producto del momento (como las categorías con foto de IKEA): filtran el listado ----------
+  const counts = {};
+  U.D.products.forEach((p) => { if (p.ty && X.weight(p, ctx) > 0) counts[p.ty] = (counts[p.ty] || 0) + 1; });
+  const types = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  const cur = new URLSearchParams(location.search).getAll('tipo');
+  $('#ctxTypes').innerHTML = types.length ? `<div class="wrapper"><nav class="ctypes" aria-label="Tipos de producto"><a class="ctype ${cur.length ? '' : 'is-on'}" href="${href(ctx)}"><span class="ph ph--product ctype__img" data-ph="Todo"></span><span>Todo</span></a>${types.map(([t]) => `<a class="ctype ${cur.includes(t) ? 'is-on' : ''}" href="${href(ctx)}&tipo=${encodeURIComponent(t)}"><span class="ph ph--product ctype__img" data-ph="${esc(t)}"></span><span>${esc(t)}</span></a>`).join('')}</nav></div>` : '';
+
   // ---------- después del listado: paquetes y aviso de fecha ----------
   const packs = (window.CEC_PACKS || {})[ctx.id] || [];
   const packHtml = (pk) => `<article class="cpack"><div class="cpack__thumbs">${pk.items.map((i) => `<div class="ph ph--product" data-ph="${esc(i.v)}"></div>`).join('')}</div>
