@@ -64,3 +64,6 @@ python3 -m http.server 8000
 ## Publicado con GitHub Pages
 
 Este repo se publica vía GitHub Pages desde la rama `main`.
+
+
+Suscripción: el plan ($29.990) es el servicio; los regalos no están incluidos y se pagan al aceptarlos. La landing tiene calculadora del total del año y el alta muestra "hoy pagas / después pagas" en el plan, el rango y el pago.

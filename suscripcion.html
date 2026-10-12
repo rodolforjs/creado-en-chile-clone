@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Rubik:wght@500;600&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="styles.css?v=20261011c">
+<link rel="stylesheet" href="styles.css?v=20261012b">
 
 </head>
 <body class="page-sub">
@@ -164,6 +164,7 @@
         <p class="splan__tag">Pago anual</p>
         <h3 class="splan__name">Plan premium</h3>
         <p class="splan__price" id="planPrice">$29,990 <small>al año</small></p>
+        <p class="splan__what">Es el servicio: curaduría, avisos, cambios y envío. <b>No incluye los regalos</b>, que se pagan aparte.</p>
         <ul class="splan__list">
           <li>Regalo pre-curado dentro del rango de precio que elijas.</li>
           <li>Hasta <b id="planDates">4</b> fechas al año, con aviso del regalo propuesto.</li>
@@ -172,8 +173,22 @@
           <li>Tres salidas en cada aviso: aceptar, cambiar o pausar.</li>
         </ul>
         <a class="btn btn--solid btn--lg btn--block" href="suscribirse.html">Suscribirme al plan anual</a>
-        <p class="splan__fine">Cada regalo se paga al aceptarlo, dentro de tu rango.</p>
+        <p class="splan__fine">Cada regalo se paga solo cuando lo aceptas.</p>
       </article>
+    </div>
+  </div>
+</section>
+
+<section class="ssec">
+  <div class="wrapper wrapper--narrow">
+    <h2 class="ssec__title">¿Cuánto es en total?</h2>
+    <p class="ssec__lead">El plan anual son dos pagos distintos: el servicio, hoy, y cada regalo, cuando lo aceptas. Calcula tu año.</p>
+    <div class="scalc" id="calc">
+      <div class="scalc__ctl">
+        <div class="sfield"><span>Fechas al año</span><div class="qty qty--sm"><button type="button" data-n="-1" aria-label="Menos">−</button><input id="calcN" type="text" value="4" readonly aria-label="Fechas"><button type="button" data-n="1" aria-label="Más">+</button></div></div>
+        <div class="sfield"><span>Rango por regalo</span><div class="sranges" id="calcR"></div></div>
+      </div>
+      <div class="scalc__out" id="calcOut" aria-live="polite"></div>
     </div>
   </div>
 </section>
@@ -190,7 +205,7 @@
   <div class="wrapper wrapper--narrow">
     <h2 class="ssec__title">Preguntas frecuentes</h2>
     <div class="sfaq">
-      <details><summary>¿Cuándo se cobra?</summary><p>El plan anual se paga al suscribirte. Cada regalo se cobra cuando lo aceptas, dentro del rango que elegiste. En la reserva sin plan no se cobra nada hasta que la activas.</p></details>
+      <details><summary>¿Cuándo se cobra?</summary><p>Hoy pagas solo el plan anual ($29.990). Los regalos no están pagados de antemano: cada uno se cobra cuando lo aceptas, dentro del rango que elegiste. En la reserva sin plan no se cobra nada hasta que la activas.</p></details>
       <details><summary>¿Puedo cambiar el regalo?</summary><p>Sí. Cada fecha del plan incluye un cambio. Si ninguna propuesta te convence, puedes pausar esa fecha.</p></details>
       <details><summary>¿Qué pasa si cancelo a mitad de año?</summary><p>El plan sigue activo hasta el final del período pagado. Las fechas ya entregadas no se reembolsan y las que no alcanzaste a usar quedan disponibles hasta el término del plan.</p></details>
       <details><summary>¿Despacho o retiro?</summary><p>Ambos valen. En cada fecha eliges cómo lo recibes, y el envío es gratis para quienes tienen el plan.</p></details>

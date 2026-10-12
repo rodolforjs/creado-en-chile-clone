@@ -21,4 +21,22 @@
     <p class="scal__in">${S.inDays(S.daysTo(o.date))}</p>
     <a class="scal__link link-underline" href="recordatorio.html?oc=${o.id}">Guardar</a>
   </li>`).join('');
+
+  // calculadora: servicio hoy + regalos después
+  const cs = { n: S.PLAN.dates, r: 'r2' };
+  const drawCalc = () => {
+    $('#calcN').value = cs.n;
+    $('#calcR').innerHTML = S.RANGES.map((r) => `<label class="srange ${cs.r === r.id ? 'is-on' : ''}"><input type="radio" name="cr" value="${r.id}" ${cs.r === r.id ? 'checked' : ''}><b>${r.label}</b></label>`).join('');
+    const c = S.cost(Array(cs.n).fill(cs.r));
+    $('#calcOut').innerHTML = `<div class="scalc__row"><span>Hoy pagas el plan</span><b>${S.fmt(S.PLAN.price)}</b></div>
+      <div class="scalc__row scalc__row--later"><span>Después, ${cs.n} regalos <small>(uno por fecha, al aceptarlo)</small></span><b>${S.fmt(c.min)} a ${S.fmt(c.max)}</b></div>
+      <div class="scalc__row scalc__row--total"><span>Total del año</span><b>${S.fmt(c.planMin)} a ${S.fmt(c.planMax)}</b></div>
+      <p class="scalc__fine">Con el plan te ahorras el despacho de cada fecha (unos ${S.fmt(c.ship)} en total, de ejemplo). Si pausas una fecha, ese regalo no se cobra.</p>`;
+  };
+  $('#calc').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-n]');
+    if (b) { cs.n = Math.min(S.PLAN.dates, Math.max(1, cs.n + +b.dataset.n)); drawCalc(); }
+  });
+  $('#calc').addEventListener('change', (e) => { if (e.target.name === 'cr') { cs.r = e.target.value; drawCalc(); } });
+  drawCalc();
 })();

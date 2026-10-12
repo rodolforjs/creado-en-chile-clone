@@ -19,21 +19,24 @@
 
   const stepper = () => `<ol class="sstepper">${STEPS.map((n, i) => `<li class="${i === st.step ? 'is-now' : i < st.step ? 'is-done' : ''}"><span>${i + 1}</span><b>${n}</b></li>`).join('')}</ol>`;
   const nav = (next = 'Continuar') => `<p class="sform__msg" role="alert">${st.msg}</p><div class="sform__actions sform__actions--split">${st.step ? '<button class="btn btn--outline btn--lg" type="button" data-back>Volver</button>' : '<a class="btn btn--outline btn--lg" href="suscripcion.html#planes">Cancelar</a>'}<button class="btn btn--solid btn--lg" type="button" data-next>${next}</button></div>`;
+  const costOf = () => S.cost(st.items.map((i) => st.ranges[i.personId] || 'r2'));
+  const drawCost = () => { const b = $('#costBox'); if (!b) return; const c = costOf(); b.innerHTML = `<div><span>Hoy pagas el plan</span><b>${S.fmt(S.PLAN.price)}</b></div><div><span>Después, ${c.n} ${c.n === 1 ? 'regalo' : 'regalos'} (al aceptarlos)</span><b>${S.fmt(c.min)} a ${S.fmt(c.max)}</b></div>`; };
   const itemInfo = (it) => { const p = st.people.find((x) => x.id === it.personId); return { p, ...S.info(it) }; };
 
   const views = [
     // 1 · Plan
     () => `<h1 class="sform__title">Plan anual</h1>
-      <p class="sform__lead">Un regalo pre-curado para cada fecha importante, dentro del rango que elijas.</p>
+      <p class="sform__lead">Pagas el servicio una vez al año. Los regalos, pre-curados dentro del rango que elijas, se pagan aparte.</p>
       <div class="splan splan--main splan--flat">
         <p class="splan__price">${S.fmt(S.PLAN.price)} <small>al año</small></p>
+        <div class="stwo"><div><b>Hoy pagas</b><span>El plan: ${S.fmt(S.PLAN.price)}</span></div><div><b>Después pagas</b><span>Cada regalo, solo cuando lo aceptas</span></div></div>
         <ul class="splan__list">
           <li>Hasta ${S.PLAN.dates} fechas al año, con aviso del regalo propuesto.</li>
           <li>${S.PLAN.changes} cambio de regalo por fecha.</li>
           <li>Envío gratis en cada fecha, con despacho o retiro.</li>
           <li>Aceptar, cambiar o pausar en cada aviso.</li>
         </ul>
-        <p class="splan__fine">Cada regalo se paga al aceptarlo, dentro de tu rango. Si cancelas, el plan sigue hasta el final del período.</p>
+        <p class="splan__fine">El plan no incluye los regalos. Si cancelas, el plan sigue hasta el final del período.</p>
       </div>${nav()}`,
     // 2 · Cuenta
     () => `<h1 class="sform__title">Tu cuenta</h1>
@@ -66,14 +69,16 @@
     () => {
       const ids = [...new Set(st.items.map((i) => i.personId))];
       return `<h1 class="sform__title">Rango de precio</h1>
-      <p class="sform__lead">Elige cuánto quieres gastar por regalo en cada persona. Cada regalo se paga al aceptarlo.</p>
+      <p class="sform__lead">Elige cuánto quieres gastar por regalo en cada persona. Los regalos no están pagados: cada uno se cobra solo cuando lo aceptas.</p>
+      <div class="scost" id="costBox"></div>
       ${ids.map((id) => { const p = st.people.find((x) => x.id === id); const cur = st.ranges[id] || 'r2'; return `<fieldset class="sfs"><legend>${S.esc(p.name)} <span>${S.esc(p.rel)}</span></legend><div class="sranges">${S.RANGES.map((r) => `<label class="srange ${cur === r.id ? 'is-on' : ''}"><input type="radio" name="rg-${id}" value="${r.id}" ${cur === r.id ? 'checked' : ''}><b>${r.label}</b></label>`).join('')}</div></fieldset>`; }).join('')}
       ${nav()}`;
     },
     // 5 · Pago
     () => `<h1 class="sform__title">Pago</h1>
       <p class="sform__lead">Revisa el resumen y confirma. Es una demostración: no se cobra nada.</p>
-      <div class="ssum"><div><span>Plan anual</span><b>${S.fmt(S.PLAN.price)}</b></div><div><span>Fechas</span><b>${st.items.length} de ${S.PLAN.dates}</b></div><div><span>Envío</span><b>Gratis en cada fecha</b></div></div>
+      ${(() => { const c = costOf(); return `<div class="ssum"><div><span>Plan anual (servicio)</span><b>${S.fmt(S.PLAN.price)}</b></div><div><span>Fechas incluidas</span><b>${st.items.length} de ${S.PLAN.dates}</b></div><div><span>Envío</span><b>Gratis en cada fecha</b></div><div class="ssum__tot"><span>Pagas hoy</span><b>${S.fmt(S.PLAN.price)}</b></div></div>
+      <div class="ssum ssum--later"><p><b>Los regalos se pagan después.</b> Cuando se acerque cada fecha te proponemos un regalo y solo lo cobramos si lo aceptas.</p><div><span>${c.n} ${c.n === 1 ? 'regalo' : 'regalos'}, estimado</span><b>${S.fmt(c.min)} a ${S.fmt(c.max)}</b></div></div>`; })()}
       <fieldset class="sfs"><legend>Medio de pago</legend><div class="sranges">${[['webpay', 'Webpay'], ['card', 'Tarjeta de crédito'], ['mp', 'Mercado Pago']].map(([v, l]) => `<label class="srange ${st.method === v ? 'is-on' : ''}"><input type="radio" name="pay" value="${v}" ${st.method === v ? 'checked' : ''}><b>${l}</b></label>`).join('')}</div></fieldset>
       <label class="check check--block"><input type="checkbox" id="terms" ${st.terms ? 'checked' : ''}><span class="check__box"></span><span class="check__label">Acepto las condiciones del plan (ejemplo para la práctica).</span></label>
       ${nav(`Pagar ${S.fmt(S.PLAN.price)} (demo)`)}`,
@@ -100,7 +105,8 @@
         $('#aAdd').addEventListener('click', addItem);
       }
     }
-    if (st.step === 3) app.querySelectorAll('.srange input').forEach((i) => i.addEventListener('change', () => { st.ranges[i.name.slice(3)] = i.value; app.querySelectorAll(`input[name="${i.name}"]`).forEach((x) => x.closest('.srange').classList.toggle('is-on', x.checked)); }));
+    if (st.step === 3) drawCost();
+    if (st.step === 3) app.querySelectorAll('.srange input').forEach((i) => i.addEventListener('change', () => { st.ranges[i.name.slice(3)] = i.value; drawCost(); app.querySelectorAll(`input[name="${i.name}"]`).forEach((x) => x.closest('.srange').classList.toggle('is-on', x.checked)); }));
     if (st.step === 4) {
       app.querySelectorAll('input[name=pay]').forEach((i) => i.addEventListener('change', () => { st.method = i.value; app.querySelectorAll('input[name=pay]').forEach((x) => x.closest('.srange').classList.toggle('is-on', x.checked)); }));
       $('#terms').addEventListener('change', (e) => { st.terms = e.target.checked; });

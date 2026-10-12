@@ -11,6 +11,14 @@
     { id: 'r2', min: 25000, max: 40000, label: '$25.000 a $40.000' },
     { id: 'r3', min: 40000, max: 60000, label: '$40.000 a $60.000' },
   ];
+  // Lo que cuesta de verdad: el plan es el servicio; cada regalo se paga aparte, al aceptarlo.
+  const SHIP = 4990; // despacho de ejemplo que el plan ahorra en cada fecha
+  const cost = (rangeIds) => {
+    const rs = rangeIds.map((id) => RANGES.find((r) => r.id === id) || RANGES[1]);
+    const min = rs.reduce((a, r) => a + r.min, 0);
+    const max = rs.reduce((a, r) => a + r.max, 0);
+    return { n: rs.length, min, max, planMin: PLAN.price + min, planMax: PLAN.price + max, ship: SHIP * rs.length };
+  };
   const RELS = ['Mamá', 'Papá', 'Pareja', 'Hijo/a', 'Abuelo/a', 'Amigo/a', 'Hermano/a', 'Colega', 'Otra persona'];
   const TASTES = [
     { id: 'gourmet', label: 'Gourmet', re: /gourmet|manjar|miel|merqu|infusi|snack|dulce|salado|aperitivo/i },
@@ -162,7 +170,7 @@
   const accountNav = (active) => `<nav class="anav" aria-label="Mi Creado">${NAV.map(([k, l, h]) => `<a href="${h}" class="${k === active ? 'is-on' : ''}" ${k === active ? 'aria-current="page"' : ''}>${l}</a>`).join('')}</nav>`;
 
   window.CEC_SUB = {
-    PLAN, RANGES, RELS, TASTES, OCCASIONS, fmt, esc, load, save, uid, personOf, occ, info, upcoming, nextDate, daysTo, fmtDate, fmtShort, inDays,
+    PLAN, SHIP, cost, RANGES, RELS, TASTES, OCCASIONS, fmt, esc, load, save, uid, personOf, occ, info, upcoming, nextDate, daysTo, fmtDate, fmtShort, inDays,
     suggest, product, giftCard, setUser, logout, loginBox, accountNav, nameFromEmail, tasteChips, readChecks, occOptions, tasteLabels,
   };
 })();
