@@ -7,20 +7,14 @@
   const esc = S.esc;
   const $ = (s, r = document) => r.querySelector(s);
   const app = $('#subApp');
+  const I = window.CEC_I18N;
   const DECK = 10; // cartas por Match
   const LIKE_MAX = 6; // me gusta que caben en la lista
   const LIST = 8; // opciones en Mis Match: tus me gusta + parecidas
   const DRAFT = 'cec_match_draft';
 
-  // Momentos (contextos): se reconocen por el texto, el tipo y las etiquetas del producto
-  const CONTEXTS = [
-    { id: 'desayuno', label: 'Desayuno y sobremesa', re: /desayuno|taza|taz[oó]n|infusi|\bt[eé]\b|caf[eé]|miel|manjar|mermelada|individual|servilleta|posavaso|mesa y cocina/i },
-    { id: 'casa-nueva', label: 'Casa nueva', re: /casa|deco|cuadro|vela|florero|coj[ií]n|textil|ilumin|aroma|jard[ií]n|macetero|espejo|ilustraci/i },
-    { id: 'ritual', label: 'Ritual personal', re: /belleza|bienestar|jab[oó]n|crema|facial|perfume|sahumerio|relaj|masaje|vela|infusi/i },
-    { id: 'escritorio', label: 'Escritorio', re: /escritorio|oficina|papeler|cuaderno|libro|l[aá]piz|agenda|organiz|estuche|libreta/i },
-    { id: 'familia', label: 'Tiempo en familia', re: /juego|puzzle|infantil|cuento|quincho|parrilla|familia|juguet|libros infantiles/i },
-    { id: 'viaje', label: 'Recuerdo de viaje', re: /souvenir|recuerdo|chile|im[aá]n|postal|artesan|extranjero|llavero|mapa|regalos para/i },
-  ];
+  // Momentos (contextos): vienen de ctx-data.js, los mismos de las pestañas
+  const CONTEXTS = window.CEC_CTX.LIST;
   const BUDGETS = [
     { id: 'm1', min: 0, max: 15000, label: 'Hasta $15.000' },
     { id: 'm2', min: 15000, max: 30000, label: '$15.000 a $30.000' },
@@ -90,8 +84,8 @@
     const b = budgetOf(st.range);
     if (b && p.p >= b.min && p.p < b.max) v += 1.2;
     if (st.sos && isSos(p)) { v += 1.5; why.push({ k: 'sos' }); }
-    if (S.load().profile.lang === 'en' && /artesan|autor|origen|hecho a mano/i.test(h)) v += 0.8;
-    if (S.load().profile.lang === 'pt' && /chile/i.test(h)) v += 0.8;
+    if (I.lang() === 'en' && /artesan|autor|origen|hecho a mano/i.test(h)) v += 0.8;
+    if (I.lang() === 'pt' && /chile/i.test(h)) v += 0.8;
     keysOf(p).forEach((k) => {
       const w = st.w[k] || 0; v += w;
       if (k.startsWith('v:') && w > 0.5) why.push({ k: 'vendor', t: p.v });
@@ -132,7 +126,8 @@
 
   // ---------- pantallas ----------
   const head = (eyebrow, title, lead) => `<p class="seyebrow">${eyebrow}</p><h1 class="sform__title">${title}</h1>${lead ? `<p class="sform__lead">${lead}</p>` : ''}`;
-  const shell = (inner, wide = false, keep = false) => { const y = window.scrollY; app.innerHTML = `<section class="mt"><div class="wrapper${wide ? '' : ' wrapper--narrow'}">${inner}</div></section>`; window.scrollTo({ top: keep ? y : 0 }); };
+  const langBar = () => `<div class="mlang" data-nt role="group" aria-label="Idioma">${I.LANGS.map(([k, l]) => `<button type="button" class="${I.lang() === k ? 'is-on' : ''}" data-m="lang" data-id="${k}" aria-pressed="${I.lang() === k}">${l}</button>`).join('')}</div>`;
+  const shell = (inner, wide = false, keep = false) => { const y = window.scrollY; app.innerHTML = `<section class="mt"><div class="wrapper${wide ? '' : ' wrapper--narrow'}">${langBar()}${inner}</div></section>`; I.apply(app); window.scrollTo({ top: keep ? y : 0 }); };
   const steps = (n) => `<ol class="msteps" aria-label="Pasos">${['Para quién', 'Tu momento', 'Cartas', 'Mis Match'].map((l, i) => `<li class="${i + 1 === n ? 'is-on' : i + 1 < n ? 'is-done' : ''}">${l}</li>`).join('')}</ol>`;
 
   const entry = () => {
@@ -182,7 +177,7 @@
       <article class="mcard" aria-live="polite">
         <div class="mcard__photo"><div class="ph ph--product" data-ph="${esc(p.v)}"></div><span class="mcard__pct">${pct(x.v)}% match</span></div>
         <div class="mcard__body">
-          <p class="mcard__brand">${esc(p.v || '')}</p>
+          <p class="mcard__brand">${esc(p.v || '')}</p>${I.lang() !== 'es' ? `<p class="mcard__origin">Hecho en Chile por ${esc(p.v || 'una marca chilena')}</p>` : ''}
           <h2 class="mcard__title">${esc(p.t)}</h2>
           <p class="mcard__price">${U.fmt(p.p)}</p>
           <p class="mcard__stock ${isSos(p) ? 'is-now' : ''}">${isSos(p) ? '⚡ Llega hoy · Express 3 horas' : st.sos ? 'No llega hoy · llega en 1 a 2 días hábiles' : 'En stock · despacho en 2 a 5 días hábiles'}</p>
@@ -232,19 +227,23 @@
           <p>Si eliges todo lo que te gustó (${U.fmt(total)}), cada persona aporta <b>${U.fmt(per)}</b>.</p>
           <a class="btn btn--outline btn--md" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(`Hagamos una vaca por un regalo en Creado en Chile: ${U.fmt(per)} por persona (somos ${st.share}). Mira las opciones: ${items.map((p) => p.t).join(', ')}`)}">Invitar por WhatsApp</a></fieldset>
         ${forOther ? `<fieldset class="sfs"><legend>Teaser digital</legend><p class="sform__fine">Un aviso para que ${esc(forName())} sepa que viene un regalo, sin revelar qué es.</p>
+          <label class="sfield"><span>Tu nombre (opcional)</span><input id="mFrom" type="text" autocomplete="off" value="${esc(st.from || (user ? user.name.split(' ')[0] : ''))}"></label>
           <p class="mteaser">“Alguien está preparando un regalo para ti en Creado en Chile. Pronto sabrás qué es.”</p>
-          <button class="btn btn--outline btn--md" type="button" data-m="copyteaser">Copiar mensaje</button></fieldset>` : ''}
+          <div class="sacct__actions"><button class="btn btn--outline btn--md" type="button" data-m="copyteaser">Copiar enlace del teaser</button><a class="btn btn--outline btn--md" id="mTeaserWa" target="_blank" rel="noopener" href="#">Enviar por WhatsApp</a><a class="link-underline" id="mTeaserSee" target="_blank" rel="noopener" href="#">Ver cómo lo verá</a></div></fieldset>` : ''}
         <fieldset class="sfs"><legend>Guardar este Match</legend>
           ${st.savedId ? `<p class="schip is-ok">Guardado en Mi Creado</p> <a class="link-underline" href="mi-creado.html?s=guardados">Ver Mis Match</a>`
             : user ? '<button class="btn btn--solid btn--md" type="button" data-m="save">Guardar en Mi Creado</button>'
             : '<p class="sform__fine">Si no quieres, Match funciona completo igual: solo no se guarda. Con Google es un toque.</p><div id="mLogin"></div>'}</fieldset></div>` : ''}
       <p class="sform__msg" role="status">${esc(st.msg)}</p>`, true);
     const lb = $('#mLogin');
-    if (lb) S.loginBox(lb, () => { s = S.load(); saveMatch(); list(); });
+    if (lb) { S.loginBox(lb, () => { s = S.load(); saveMatch(); list(); }); I.apply(lb); }
+    const fr = $('#mFrom');
+    if (fr) { const upd = () => { st.from = fr.value.trim(); const l = teaserLink(); $('#mTeaserSee').href = l; $('#mTeaserWa').href = `https://wa.me/?text=${encodeURIComponent(`${I.tr('“Alguien está preparando un regalo para ti en Creado en Chile. Pronto sabrás qué es.”').replace(/[“”]/g, '')} ${l}`)}`; }; fr.addEventListener('input', upd); upd(); }
     const sh = $('#mShare');
     if (sh) sh.addEventListener('change', () => { st.share = +sh.value; list(); });
   };
 
+  const teaserLink = () => new URL(`regalo.html?${new URLSearchParams({ ...(st.from ? { de: st.from } : {}), ...(st.ctx ? { m: st.ctx } : {}), l: I.lang() })}`, location.href).href;
   const saveMatch = () => {
     s = S.load();
     if (!s.user) return;
@@ -258,6 +257,7 @@
   };
 
   // ---------- flujo ----------
+  const redraw = () => { const f = { entry, rel: relStep, ask, deck: () => card(true), list }[st.step] || entry; f(); };
   const deal = () => { st.current = next(); st.details = false; st.step = 'deck'; persistDraft(); card(); };
   const react = (liked) => {
     const x = st.current;
@@ -295,9 +295,9 @@
     },
     save: () => { saveMatch(); list(); },
     copyteaser: (b) => {
-      const t = 'Alguien está preparando un regalo para ti en Creado en Chile. Pronto sabrás qué es.';
-      (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => { b.textContent = 'Mensaje copiado'; }, () => { b.textContent = 'No se pudo copiar'; });
+      (navigator.clipboard ? navigator.clipboard.writeText(teaserLink()) : Promise.reject()).then(() => { b.textContent = I.tr('Enlace copiado'); }, () => { b.textContent = I.tr('No se pudo copiar'); });
     },
+    lang: (b) => { I.setLang(b.dataset.id); s = S.load(); redraw(); },
     resume: () => { st = { ...fresh(), ...draft, current: null, step: 'list', savedId: '' }; list(); },
     dropdraft: () => { clearDraft(); draft = null; entry(); },
   };

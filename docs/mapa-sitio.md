@@ -86,4 +86,6 @@ Mi Creado (propuesta nueva): acceso, inicio, personas, fechas, guardados, pedido
 
 Match (propuesta nueva): botón flotante sobre WhatsApp, `match.html` (para quién, momento/presupuesto/SOS, mazo de cartas que aprende, Mis Match máx. 8, pago compartido, teaser digital) y Mis Match guardados en Mi Creado > Guardados.
 
-Pendiente: contextos y mini paquetes, páginas de contenido (hoy `page.html` es un comodín), blog, y los widgets de terceros de la ficha (reseñas, "comprados juntos", stock por tienda).
+Contextos (6 pestañas con una plantilla), mini paquetes, teaser digital y Match en es/en/pt: hechos, con menú, pie e inicio.
+
+Pendiente: páginas de contenido (hoy `page.html` es un comodín), blog, y los widgets de terceros de la ficha (reseñas, "comprados juntos", stock por tienda).

@@ -144,7 +144,7 @@
     return `<h3 class="sacct__h2">Perfil</h3>
       <div class="sform__row"><label class="sfield"><span>Nombre</span><input id="pName" type="text" value="${esc(s.user.name)}"></label>
       <label class="sfield"><span>Correo</span><input id="pEmail" type="email" value="${esc(s.user.email)}"></label>
-      <label class="sfield"><span>Idioma</span><select id="pLang"><option value="es" ${pr.lang === 'es' ? 'selected' : ''}>Español</option><option value="en" ${pr.lang === 'en' ? 'selected' : ''}>English</option></select></label></div>
+      <label class="sfield"><span>Idioma</span><select id="pLang"><option value="es" ${pr.lang === 'es' ? 'selected' : ''}>Español</option><option value="en" ${pr.lang === 'en' ? 'selected' : ''}>English</option><option value="pt" ${pr.lang === 'pt' ? 'selected' : ''}>Português</option></select></label></div>
       <fieldset class="sfs"><legend>Avisos</legend>
         <label class="check check--block"><input type="checkbox" id="pEmailN" ${pr.notify.email ? 'checked' : ''}><span class="check__box"></span><span class="check__label">Avisos de mis fechas por correo</span></label>
         <label class="check check--block"><input type="checkbox" id="pWa" ${pr.notify.wa ? 'checked' : ''}><span class="check__box"></span><span class="check__label">Avisos de mis fechas por WhatsApp</span></label>
@@ -227,6 +227,7 @@
       if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { ui.msg = 'Revisa tu nombre y un correo válido.'; return; }
       s.user.name = name; s.user.email = email;
       s.profile.lang = $('#pLang').value;
+      try { localStorage.setItem('cec_lang', s.profile.lang); } catch { /* sin storage */ }
       s.profile.notify = { email: $('#pEmailN').checked, wa: $('#pWa').checked, news: $('#pNews').checked };
       persist();
       ui.msg = 'Cambios guardados.';
