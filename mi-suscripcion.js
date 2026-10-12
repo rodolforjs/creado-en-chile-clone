@@ -5,23 +5,20 @@
   const esc = S.esc;
   const app = $('#subApp');
   let s = S.load();
-  const ui = { tab: 'resumen', open: null, show: null, msg: '', confirmCancel: false };
+  const ui = { tab: 'resumen', open: null, show: null, msg: '', confirmCancel: false, pick: {} };
   const PLACES = ['Tienda Santiago', 'Tienda Concepción', 'Tienda Valparaíso'];
   const persist = () => S.save(s);
   const chip = (st) => ({ pending: ['Pendiente', 'is-pending'], accepted: ['Confirmada', 'is-ok'], paused: ['Pausada', 'is-off'] }[st] || ['', '']);
   const planOn = () => s.plan && s.plan.status !== 'cancelled';
 
-  // ---------- regalo propuesto por fecha ----------
-  const giftFor = (it) => {
-    let p = it.handle ? S.product(it.handle) : null;
-    if (!p) {
-      const person = S.personOf(s, it.personId) || { tastes: [] };
-      const taken = s.plan.items.map((x) => x.handle).filter(Boolean);
-      p = S.suggest({ tastes: person.tastes, range: s.plan.ranges[it.personId] || 'r2', seed: `${it.id}-${it.round}`, n: 1, exclude: taken })[0];
-      if (p) { it.handle = p.h; persist(); }
-    }
-    return p;
+  // ---------- opciones de regalo por fecha: el usuario elige una de varias del rango ----------
+  const valueOf = (it) => it.value || S.rangeOf(s.plan.ranges[it.personId]).value;
+  const optionsFor = (it) => {
+    const person = S.personOf(s, it.personId) || { tastes: [] };
+    const taken = s.plan.items.map((x) => x.status === 'accepted' && x.handle).filter(Boolean);
+    return S.suggest({ tastes: person.tastes, range: s.plan.ranges[it.personId] || 'r2', seed: `${it.id}-${it.round}`, n: S.PLAN.options, exclude: taken });
   };
+  const diffNote = (diff) => (diff > 0 ? `Pagas ${S.fmt(diff)} más` : diff < 0 ? `Te quedan ${S.fmt(-diff)} de crédito` : 'Sin diferencia');
   const sorted = () => s.plan.items.map((it) => ({ it, ...S.info(it) })).sort((a, b) => a.date - b.date);
 
   const deliveryBlock = (id) => `<div class="sdeliv" data-for="${id}">
@@ -41,29 +38,39 @@
     if (!cur) return `<div class="snotice">No hay fechas activas. Agrega una en “Fechas y personas”.</div>`;
     const { it, name, date } = cur;
     const person = S.personOf(s, it.personId);
-    const p = giftFor(it);
     const days = S.daysTo(date);
     const left = S.PLAN.changes - it.changes;
     const nextOne = list.find((x) => x.it !== it && x.it.status === 'pending');
+    const value = valueOf(it);
+    const chosen = it.status === 'accepted' ? S.product(it.handle) : null;
+    const opts = it.status === 'accepted' ? [] : optionsFor(it);
+    const pickId = ui.pick[it.id];
+    const pickP = opts.find((o) => o.h === pickId);
     let body = '';
     if (it.status === 'accepted') {
-      body = `<p class="snotice snotice--ok">Confirmado. ${it.delivery.mode === 'retiro' ? `Retiro en ${esc(it.delivery.place)}` : `Despacho a ${esc(it.delivery.place || 'tu dirección')}`}, envío gratis. Cobro del regalo (demo): ${S.fmt(p.p)}.</p>
+      body = `<p class="snotice snotice--ok">Confirmado. ${it.delivery.mode === 'retiro' ? `Retiro en ${esc(it.delivery.place)}` : `Despacho a ${esc(it.delivery.place || 'tu dirección')}`}, envío gratis y bolsa de regalo. Ya está pagado (${S.fmt(value)})${chosen ? `. ${diffNote(chosen.p - value)} (demo)` : ''}.</p>
         ${nextOne ? `<p class="sacct__next">Siguiente fecha: <b>${esc(nextOne.name)}</b> (${S.inDays(S.daysTo(nextOne.date))}). <button class="link-underline" type="button" data-act="focus" data-id="${nextOne.it.id}">Prepararla</button></p>` : '<p class="sacct__next">Con esto cierras tus fechas activas.</p>'}`;
     } else if (ui.open === it.id) {
       body = deliveryBlock(it.id);
     } else {
       body = `<div class="sacct__actions">
-        <button class="btn btn--solid btn--md" type="button" data-act="accept" data-id="${it.id}">Aceptar</button>
-        <button class="btn btn--outline btn--md" type="button" data-act="change" data-id="${it.id}" ${left > 0 ? '' : 'disabled'}>Cambiar${left > 0 ? '' : ' (sin cambios)'}</button>
+        <button class="btn btn--solid btn--md" type="button" data-act="accept" data-id="${it.id}" id="pickBtn" ${pickP ? '' : 'disabled'}>Elegir este regalo</button>
+        <button class="btn btn--outline btn--md" type="button" data-act="change" data-id="${it.id}" ${left > 0 ? '' : 'disabled'}>Ver otras ${S.PLAN.options}${left > 0 ? '' : ' (ya las viste)'}</button>
         <button class="btn btn--outline btn--md" type="button" data-act="pause" data-id="${it.id}">Pausar</button></div>
-        <p class="sform__fine">${left > 0 ? `Te queda ${left} cambio para esta fecha.` : 'Ya usaste el cambio de esta fecha.'}</p>`;
+        <p class="sform__fine" id="pickNote">${pickP ? diffNote(pickP.p - value) : 'Elige uno de los regalos de arriba.'}</p>`;
     }
-    return `<article class="sacct__card" id="item-${it.id}">
+    const gift = it.status === 'accepted'
+      ? `<p class="sacct__label">Tu regalo</p><div class="sacct__gift">${chosen ? S.giftCard(chosen) : ''}</div>`
+      : ui.open === it.id && pickP
+        ? `<p class="sacct__label">Elegiste</p><div class="sacct__gift">${S.giftCard(pickP)}</div>`
+        : `<p class="sacct__label">Elige uno de estos ${opts.length} regalos${person && person.tastes.length ? ` (gustos: ${esc(S.tasteLabels(person.tastes))})` : ''}</p>
+      <p class="sacct__prepaid">Tu regalo está prepagado: <b>${S.fmt(value)}</b>. Si eliges uno más caro, pagas la diferencia; si es más barato, queda de crédito.</p>
+      ${opts.length ? `<div class="sopts" role="radiogroup">${opts.map((o) => `<label class="sopt ${o.h === pickId ? 'is-on' : ''}"><input type="radio" name="pick-${it.id}" value="${esc(o.h)}" ${o.h === pickId ? 'checked' : ''}>${S.giftCard(o, '', false)}<span class="sopt__diff">${diffNote(o.p - value)}</span></label>`).join('')}</div>` : '<p>No encontramos regalos en tu rango. Prueba cambiar el rango.</p>'}`;
+    return `<article class="sacct__card sacct__card--wide" id="item-${it.id}">
       <p class="sacct__label">Próxima fecha</p>
       <h3 class="sacct__h">${esc(name)} · ${person ? esc(person.name) : ''}</h3>
       <p class="sacct__when">${S.fmtDate(date)} · ${S.inDays(days)}</p>
-      <p class="sacct__label">Regalo propuesto${person && person.tastes.length ? ` (gustos: ${esc(S.tasteLabels(person.tastes))})` : ''}</p>
-      <div class="sacct__gift">${p ? S.giftCard(p) : '<p>No encontramos un regalo en tu rango. Prueba cambiar el rango.</p>'}</div>
+      ${gift}
       ${body}</article>`;
   };
 
@@ -74,7 +81,7 @@
       <article class="sacct__card">
         <p class="sacct__label">Plan</p>
         <h3 class="sacct__h">Plan anual <span class="schip ${paused ? 'is-off' : 'is-ok'}">${paused ? 'Pausado' : 'Activo'}</span></h3>
-        <dl class="sdl"><div><dt>Desde</dt><dd>${S.fmtDate(new Date(s.plan.since))}</dd></div><div><dt>Renueva</dt><dd>${S.fmtDate(new Date(s.plan.renews))}</dd></div><div><dt>Pagado</dt><dd>${S.fmt(s.plan.price)}</dd></div><div><dt>Medio de pago</dt><dd>${({ webpay: 'Webpay', card: 'Tarjeta de crédito', mp: 'Mercado Pago' })[s.plan.method] || 'Demo'}</dd></div><div><dt>Fechas usadas</dt><dd>${used} de ${S.PLAN.dates}</dd></div></dl>
+        <dl class="sdl"><div><dt>Desde</dt><dd>${S.fmtDate(new Date(s.plan.since))}</dd></div><div><dt>Renueva</dt><dd>${S.fmtDate(new Date(s.plan.renews))}</dd></div><div><dt>Prepagado</dt><dd>${S.fmt(s.plan.price)}${s.plan.quotas > 1 ? ` en ${s.plan.quotas} cuotas` : ''}</dd></div><div><dt>Medio de pago</dt><dd>${({ webpay: 'Webpay', card: 'Tarjeta de crédito', mp: 'Mercado Pago' })[s.plan.method] || 'Demo'}</dd></div><div><dt>Fechas usadas</dt><dd>${used} de ${S.PLAN.dates}</dd></div></dl>
       </article>
       ${paused ? '<div class="snotice">Tu plan está en pausa: no te enviamos avisos. Retómalo en “Despacho y avisos”.</div>' : upcomingCard()}</div>`;
   };
@@ -112,7 +119,7 @@
       <p>${paused ? 'El plan está en pausa y no enviamos avisos.' : 'Pausa los avisos cuando quieras, sin perder tus fechas.'}</p>
       <div class="sacct__actions"><button class="btn btn--outline btn--md" type="button" data-act="${paused ? 'unpause' : 'pausePlan'}">${paused ? 'Retomar el plan' : 'Pausar el plan'}</button>
       <button class="btn btn--outline btn--md" type="button" data-act="cancelAsk">Cancelar el plan</button></div>
-      ${ui.confirmCancel ? `<div class="snotice">Si cancelas, el plan sigue activo hasta el ${S.fmtDate(new Date(s.plan.renews))}. Las fechas ya entregadas no se reembolsan y las que no alcances a usar quedan disponibles hasta esa fecha. <div class="sacct__actions"><button class="btn btn--solid btn--md" type="button" data-act="cancelYes">Sí, cancelar</button><button class="btn btn--outline btn--md" type="button" data-act="cancelNo">Mantener mi plan</button></div></div>` : ''}`;
+      ${ui.confirmCancel ? `<div class="snotice">Si cancelas, las fechas ya entregadas no se reembolsan. El valor de las que no alcanzaste a usar se te devuelve o queda como crédito en la tienda (demo). <div class="sacct__actions"><button class="btn btn--solid btn--md" type="button" data-act="cancelYes">Sí, cancelar</button><button class="btn btn--outline btn--md" type="button" data-act="cancelNo">Mantener mi plan</button></div></div>` : ''}`;
   };
 
   // ---------- sin plan: recordatorios y reserva ----------
@@ -162,10 +169,10 @@
   // ---------- acciones ----------
   const item = (id) => s.plan && s.plan.items.find((i) => i.id === id);
   const act = {
-    accept: (id) => { ui.open = id; },
+    accept: (id) => { if (!ui.pick[id]) { ui.msg = 'Elige uno de los regalos.'; return; } ui.open = id; },
     close: () => { ui.open = null; },
     focus: () => { ui.tab = 'resumen'; ui.open = null; ui.show = null; },
-    change: (id) => { const it = item(id); if (it && it.changes < S.PLAN.changes) { it.changes += 1; it.round += 1; it.handle = null; persist(); } },
+    change: (id) => { const it = item(id); if (it && it.changes < S.PLAN.changes) { it.changes += 1; it.round += 1; it.handle = null; delete ui.pick[id]; persist(); } },
     pause: (id) => { const it = item(id); if (it) { it.status = 'paused'; it.handle = it.handle; persist(); } },
     resume: (id) => { const it = item(id); if (it) { it.status = 'pending'; persist(); } },
     remove: (id) => { s.plan.items = s.plan.items.filter((i) => i.id !== id); persist(); },
@@ -185,8 +192,10 @@
         pid = S.uid('p');
         s.people.push({ id: pid, name, rel: 'Otra persona', tastes: [] });
       }
-      s.plan.items.push({ id: S.uid('i'), personId: pid, occId: $('#nOcc').value, custom: null, status: 'pending', handle: null, changes: 0, delivery: null, round: 0 });
       s.plan.ranges[pid] = s.plan.ranges[pid] || 'r2';
+      s.plan.items.push({ id: S.uid('i'), personId: pid, occId: $('#nOcc').value, custom: null, status: 'pending', handle: null, changes: 0, delivery: null, round: 0, value: S.rangeOf(s.plan.ranges[pid]).value });
+      s.plan.price += S.rangeOf(s.plan.ranges[pid]).value;
+      ui.msg = `Se suma esta fecha a tu plan: ${S.fmt(S.rangeOf(s.plan.ranges[pid]).value)} (demo).`;
       persist();
     },
     confirm: (id) => {
@@ -195,7 +204,7 @@
       const place = box.querySelector('[data-place]').value.trim();
       if (mode === 'envio' && !place) { ui.msg = 'Escribe la dirección de despacho.'; return; }
       if (s.reservation && s.reservation.id === id) { s.reservation.status = 'active'; s.reservation.delivery = { mode, place }; }
-      else { const it = item(id); if (it) { it.status = 'accepted'; it.delivery = { mode, place }; ui.show = id; } }
+      else { const it = item(id); if (it) { it.status = 'accepted'; it.handle = ui.pick[id] || it.handle; it.delivery = { mode, place }; ui.show = id; } }
       ui.open = null;
       persist();
     },
@@ -212,6 +221,17 @@
   });
   app.addEventListener('change', (e) => {
     const t = e.target;
+    if (t.matches('input[name^="pick-"]')) {
+      const id = t.name.slice(5);
+      ui.pick[id] = t.value;
+      app.querySelectorAll(`input[name="${t.name}"]`).forEach((x) => x.closest('.sopt').classList.toggle('is-on', x.checked));
+      const it = item(id);
+      const p = optionsFor(it).find((o) => o.h === t.value);
+      const btn = $('#pickBtn');
+      if (btn) btn.disabled = false;
+      if (p && $('#pickNote')) $('#pickNote').textContent = diffNote(p.p - valueOf(it));
+      return;
+    }
     if (t.matches('input[name^="dm-"]')) {
       const box = t.closest('.sdeliv');
       const retiro = t.value === 'retiro';
@@ -221,7 +241,13 @@
       inp.placeholder = retiro ? PLACES.join(' / ') : 'Calle y número, comuna';
       return;
     }
-    if (t.matches('select[data-act="range"]')) { s.plan.ranges[t.dataset.person] = t.value; s.plan.items.filter((i) => i.personId === t.dataset.person && i.status === 'pending').forEach((i) => { i.handle = null; }); persist(); return; }
+    if (t.matches('select[data-act="range"]')) {
+      s.plan.ranges[t.dataset.person] = t.value;
+      s.plan.items.filter((i) => i.personId === t.dataset.person && i.status === 'pending').forEach((i) => { i.handle = null; i.value = S.rangeOf(t.value).value; delete ui.pick[i.id]; });
+      s.plan.price = s.plan.items.reduce((a, i) => a + valueOf(i), 0);
+      ui.msg = `Cada regalo de esta persona ahora vale ${S.fmt(S.rangeOf(t.value).value)}. Se cobra o abona la diferencia (demo).`;
+      persist(); draw(); return;
+    }
     if (t.matches('[data-pref]')) { s.plan.prefs[t.dataset.pref] = t.value; persist(); return; }
     const chips = t.closest('.chips[data-person]');
     if (chips) { const p = S.personOf(s, chips.dataset.person); p.tastes = S.readChecks(chips, t.name); s.plan.items.filter((i) => i.personId === p.id && i.status === 'pending').forEach((i) => { i.handle = null; }); persist(); }

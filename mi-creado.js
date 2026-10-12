@@ -54,9 +54,8 @@
       let gifts = [];
       let cta = '';
       if (nx.kind === 'plan') {
-        const p = nx.it.handle ? S.product(nx.it.handle) : S.suggest({ tastes: (S.personOf(s, nx.personId) || { tastes: [] }).tastes, range: s.plan.ranges[nx.personId] || 'r2', seed: `${nx.it.id}-${nx.it.round}`, n: 1 })[0];
-        gifts = p ? [p] : [];
-        cta = '<a class="btn btn--solid btn--md" href="mi-suscripcion.html">Aceptar, cambiar o pausar</a>';
+        gifts = nx.it.status === 'accepted' && nx.it.handle ? [S.product(nx.it.handle)].filter(Boolean) : S.suggest({ tastes: (S.personOf(s, nx.personId) || { tastes: [] }).tastes, range: s.plan.ranges[nx.personId] || 'r2', seed: `${nx.it.id}-${nx.it.round}`, n: 3 });
+        cta = `<a class="btn btn--solid btn--md" href="mi-suscripcion.html">${nx.it.status === 'accepted' ? 'Ver mi regalo' : `Elegir entre ${S.PLAN.options} opciones`}</a>`;
       } else if (nx.kind === 'res') {
         const p = S.product(nx.it.handle);
         gifts = p ? [p] : [];

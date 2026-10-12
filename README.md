@@ -66,4 +66,4 @@ python3 -m http.server 8000
 Este repo se publica vía GitHub Pages desde la rama `main`.
 
 
-Suscripción: el plan ($29.990) es el servicio; los regalos no están incluidos y se pagan al aceptarlos. La landing tiene calculadora del total del año y el alta muestra "hoy pagas / después pagas" en el plan, el rango y el pago.
+Suscripción: plan anual prepago, sin cuota aparte. Se pagan por adelantado los regalos del año (valor por rango: $20.000, $30.000 o $50.000, en cuotas sin interés). En cada fecha se elige entre 6 opciones del rango (la diferencia de precio se cobra o queda de crédito) y se puede pedir otras 6 una vez. Lo no usado queda en crédito o se devuelve. Valores de ejemplo en `sub.js` (`PLAN`, `RANGES`).

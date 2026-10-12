@@ -5,7 +5,7 @@
   const up = S.upcoming();
   const first = up[0];
 
-  $('#planPrice').innerHTML = `${S.fmt(S.PLAN.price)} <small>al año</small>`;
+  $('#planPrice').innerHTML = `Desde ${S.fmt(S.cost(Array(S.PLAN.dates).fill('r1')).total)} <small>al año</small>`;
   $('#planDates').textContent = S.PLAN.dates;
 
   const gifts = S.suggest({ tastes: ['casa', 'mesa', 'gourmet'], range: 'r2', seed: `hero-${first.id}`, n: 3 });
@@ -28,10 +28,11 @@
     $('#calcN').value = cs.n;
     $('#calcR').innerHTML = S.RANGES.map((r) => `<label class="srange ${cs.r === r.id ? 'is-on' : ''}"><input type="radio" name="cr" value="${r.id}" ${cs.r === r.id ? 'checked' : ''}><b>${r.label}</b></label>`).join('');
     const c = S.cost(Array(cs.n).fill(cs.r));
-    $('#calcOut').innerHTML = `<div class="scalc__row"><span>Hoy pagas el plan</span><b>${S.fmt(S.PLAN.price)}</b></div>
-      <div class="scalc__row scalc__row--later"><span>Después, ${cs.n} regalos <small>(uno por fecha, al aceptarlo)</small></span><b>${S.fmt(c.min)} a ${S.fmt(c.max)}</b></div>
-      <div class="scalc__row scalc__row--total"><span>Total del año</span><b>${S.fmt(c.planMin)} a ${S.fmt(c.planMax)}</b></div>
-      <p class="scalc__fine">Con el plan te ahorras el despacho de cada fecha (unos ${S.fmt(c.ship)} en total, de ejemplo). Si pausas una fecha, ese regalo no se cobra.</p>`;
+    const r = S.rangeOf(cs.r);
+    $('#calcOut').innerHTML = `<div class="scalc__row"><span>${cs.n} ${cs.n === 1 ? 'regalo' : 'regalos'} de ${S.fmt(r.value)} <small>(eliges entre 6 opciones de ${r.label})</small></span><b>${S.fmt(c.total)}</b></div>
+      <div class="scalc__row"><span>Recargo por el plan</span><b>$0</b></div>
+      <div class="scalc__row scalc__row--total"><span>Pagas hoy</span><b>${S.fmt(c.total)}</b></div>
+      <p class="scalc__fine">O en 6 cuotas sin interés de ${S.fmt(c.total / 6)}. Incluye envío gratis y bolsa de regalo en cada fecha (te ahorras unos ${S.fmt(c.ship)} de despacho, de ejemplo).</p>`;
   };
   $('#calc').addEventListener('click', (e) => {
     const b = e.target.closest('[data-n]');

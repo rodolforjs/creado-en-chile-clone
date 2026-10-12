@@ -12,6 +12,7 @@
     items: s.reminders.slice(0, S.PLAN.dates).map((r) => ({ id: S.uid('i'), personId: r.personId, occId: r.occId, custom: r.custom })),
     ranges: {},
     method: 'webpay',
+    quotas: 6,
     terms: false,
     msg: '',
   };
@@ -20,23 +21,22 @@
   const stepper = () => `<ol class="sstepper">${STEPS.map((n, i) => `<li class="${i === st.step ? 'is-now' : i < st.step ? 'is-done' : ''}"><span>${i + 1}</span><b>${n}</b></li>`).join('')}</ol>`;
   const nav = (next = 'Continuar') => `<p class="sform__msg" role="alert">${st.msg}</p><div class="sform__actions sform__actions--split">${st.step ? '<button class="btn btn--outline btn--lg" type="button" data-back>Volver</button>' : '<a class="btn btn--outline btn--lg" href="suscripcion.html#planes">Cancelar</a>'}<button class="btn btn--solid btn--lg" type="button" data-next>${next}</button></div>`;
   const costOf = () => S.cost(st.items.map((i) => st.ranges[i.personId] || 'r2'));
-  const drawCost = () => { const b = $('#costBox'); if (!b) return; const c = costOf(); b.innerHTML = `<div><span>Hoy pagas el plan</span><b>${S.fmt(S.PLAN.price)}</b></div><div><span>Después, ${c.n} ${c.n === 1 ? 'regalo' : 'regalos'} (al aceptarlos)</span><b>${S.fmt(c.min)} a ${S.fmt(c.max)}</b></div>`; };
+  const drawCost = () => { const b = $('#costBox'); if (!b) return; const c = costOf(); b.innerHTML = `<div><span>${c.n} ${c.n === 1 ? 'regalo' : 'regalos'} prepagados</span><b>${S.fmt(c.total)}</b></div><div><span>Recargo por el plan</span><b>$0</b></div>`; };
   const itemInfo = (it) => { const p = st.people.find((x) => x.id === it.personId); return { p, ...S.info(it) }; };
 
   const views = [
     // 1 · Plan
     () => `<h1 class="sform__title">Plan anual</h1>
-      <p class="sform__lead">Pagas el servicio una vez al año. Los regalos, pre-curados dentro del rango que elijas, se pagan aparte.</p>
+      <p class="sform__lead">Pagas por adelantado los regalos del año. Después, en cada fecha, eliges el que más le guste entre varias opciones.</p>
       <div class="splan splan--main splan--flat">
-        <p class="splan__price">${S.fmt(S.PLAN.price)} <small>al año</small></p>
-        <div class="stwo"><div><b>Hoy pagas</b><span>El plan: ${S.fmt(S.PLAN.price)}</span></div><div><b>Después pagas</b><span>Cada regalo, solo cuando lo aceptas</span></div></div>
+        <p class="splan__price">Pagas tus regalos del año <small>sin recargo</small></p>
         <ul class="splan__list">
-          <li>Hasta ${S.PLAN.dates} fechas al año, con aviso del regalo propuesto.</li>
-          <li>${S.PLAN.changes} cambio de regalo por fecha.</li>
-          <li>Envío gratis en cada fecha, con despacho o retiro.</li>
-          <li>Aceptar, cambiar o pausar en cada aviso.</li>
+          <li>Hasta ${S.PLAN.dates} fechas al año, con aviso a tiempo.</li>
+          <li>En cada fecha eliges entre ${S.PLAN.options} regalos de tu rango de precio, y puedes pedir otras ${S.PLAN.options} ${S.PLAN.changes} vez.</li>
+          <li>Envío gratis y bolsa de regalo en cada fecha.</li>
+          <li>Pago en cuotas sin interés.</li>
         </ul>
-        <p class="splan__fine">El plan no incluye los regalos. Si cancelas, el plan sigue hasta el final del período.</p>
+        <p class="splan__fine">Si una fecha no se usa, queda en crédito o te la devolvemos. Si eliges un regalo más caro o más barato dentro del rango, se ajusta la diferencia.</p>
       </div>${nav()}`,
     // 2 · Cuenta
     () => `<h1 class="sform__title">Tu cuenta</h1>
@@ -69,7 +69,7 @@
     () => {
       const ids = [...new Set(st.items.map((i) => i.personId))];
       return `<h1 class="sform__title">Rango de precio</h1>
-      <p class="sform__lead">Elige cuánto quieres gastar por regalo en cada persona. Los regalos no están pagados: cada uno se cobra solo cuando lo aceptas.</p>
+      <p class="sform__lead">Elige cuánto quieres gastar por regalo en cada persona. En cada fecha verás 6 opciones de ese rango para elegir.</p>
       <div class="scost" id="costBox"></div>
       ${ids.map((id) => { const p = st.people.find((x) => x.id === id); const cur = st.ranges[id] || 'r2'; return `<fieldset class="sfs"><legend>${S.esc(p.name)} <span>${S.esc(p.rel)}</span></legend><div class="sranges">${S.RANGES.map((r) => `<label class="srange ${cur === r.id ? 'is-on' : ''}"><input type="radio" name="rg-${id}" value="${r.id}" ${cur === r.id ? 'checked' : ''}><b>${r.label}</b></label>`).join('')}</div></fieldset>`; }).join('')}
       ${nav()}`;
@@ -77,11 +77,12 @@
     // 5 · Pago
     () => `<h1 class="sform__title">Pago</h1>
       <p class="sform__lead">Revisa el resumen y confirma. Es una demostración: no se cobra nada.</p>
-      ${(() => { const c = costOf(); return `<div class="ssum"><div><span>Plan anual (servicio)</span><b>${S.fmt(S.PLAN.price)}</b></div><div><span>Fechas incluidas</span><b>${st.items.length} de ${S.PLAN.dates}</b></div><div><span>Envío</span><b>Gratis en cada fecha</b></div><div class="ssum__tot"><span>Pagas hoy</span><b>${S.fmt(S.PLAN.price)}</b></div></div>
-      <div class="ssum ssum--later"><p><b>Los regalos se pagan después.</b> Cuando se acerque cada fecha te proponemos un regalo y solo lo cobramos si lo aceptas.</p><div><span>${c.n} ${c.n === 1 ? 'regalo' : 'regalos'}, estimado</span><b>${S.fmt(c.min)} a ${S.fmt(c.max)}</b></div></div>`; })()}
+      ${(() => { const c = costOf(); return `<div class="ssum">${st.items.map((i) => { const x = itemInfo(i); return `<div><span>${S.esc(x.p ? x.p.name : '')} · ${S.esc(x.name)}</span><b>${S.fmt(S.rangeOf(st.ranges[i.personId] || 'r2').value)}</b></div>`; }).join('')}<div><span>Envío y bolsa de regalo</span><b>Incluidos</b></div><div class="ssum__tot"><span>Pagas hoy</span><b>${S.fmt(c.total)}</b></div></div>
+      <p class="scost__note">Por cada fecha elegirás entre ${S.PLAN.options} regalos de tu rango. Lo que no uses queda en crédito o te lo devolvemos.</p>`; })()}
+      <label class="sfield"><span>Cuotas</span><select id="quotas">${[1, 3, 6, 12].map((n) => `<option value="${n}" ${st.quotas === n ? 'selected' : ''}>${n === 1 ? 'Un pago' : `${n} cuotas sin interés`}${n > 1 ? ` de ${S.fmt(costOf().total / n)}` : ''}</option>`).join('')}</select></label>
       <fieldset class="sfs"><legend>Medio de pago</legend><div class="sranges">${[['webpay', 'Webpay'], ['card', 'Tarjeta de crédito'], ['mp', 'Mercado Pago']].map(([v, l]) => `<label class="srange ${st.method === v ? 'is-on' : ''}"><input type="radio" name="pay" value="${v}" ${st.method === v ? 'checked' : ''}><b>${l}</b></label>`).join('')}</div></fieldset>
       <label class="check check--block"><input type="checkbox" id="terms" ${st.terms ? 'checked' : ''}><span class="check__box"></span><span class="check__label">Acepto las condiciones del plan (ejemplo para la práctica).</span></label>
-      ${nav(`Pagar ${S.fmt(S.PLAN.price)} (demo)`)}`,
+      ${nav(`Pagar ${S.fmt(costOf().total)} (demo)`)}`,
   ];
 
   const bind = () => {
@@ -109,6 +110,7 @@
     if (st.step === 3) app.querySelectorAll('.srange input').forEach((i) => i.addEventListener('change', () => { st.ranges[i.name.slice(3)] = i.value; drawCost(); app.querySelectorAll(`input[name="${i.name}"]`).forEach((x) => x.closest('.srange').classList.toggle('is-on', x.checked)); }));
     if (st.step === 4) {
       app.querySelectorAll('input[name=pay]').forEach((i) => i.addEventListener('change', () => { st.method = i.value; app.querySelectorAll('input[name=pay]').forEach((x) => x.closest('.srange').classList.toggle('is-on', x.checked)); }));
+      $('#quotas').addEventListener('change', (e) => { st.quotas = +e.target.value; });
       $('#terms').addEventListener('change', (e) => { st.terms = e.target.checked; });
     }
   };
@@ -158,16 +160,16 @@
     s.people = people;
     s.reminders = s.reminders.filter((r) => !st.items.some((i) => i.personId === r.personId && i.occId === r.occId && !r.custom));
     s.plan = {
-      status: 'active', price: S.PLAN.price, since: now.toISOString(), renews: renews.toISOString(), method: st.method,
+      status: 'active', price: costOf().total, quotas: st.quotas, since: now.toISOString(), renews: renews.toISOString(), method: st.method,
       prefs: { delivery: 'envio', lead: 7, channel: 'email' },
       ranges: { ...Object.fromEntries([...used].map((id) => [id, st.ranges[id] || 'r2'])) },
-      items: st.items.map((i) => ({ id: i.id, personId: i.personId, occId: i.occId, custom: i.custom, status: 'pending', handle: null, changes: 0, delivery: null, round: 0 })),
+      items: st.items.map((i) => ({ id: i.id, personId: i.personId, occId: i.occId, custom: i.custom, status: 'pending', handle: null, changes: 0, delivery: null, round: 0, value: S.rangeOf(st.ranges[i.personId] || 'r2').value })),
     };
     S.save(s);
     app.innerHTML = `<section class="sform"><div class="wrapper wrapper--narrow">
       <p class="seyebrow">Listo</p>
-      <h1 class="sform__title">Bienvenido al plan anual</h1>
-      <p class="sform__lead">Tu plan está activo hasta el ${S.fmtDate(renews)}. Te avisaremos antes de cada fecha con el regalo propuesto, y ahí aceptas, cambias o pausas.</p>
+      <h1 class="sform__title">Tus regalos del año están pagados</h1>
+      <p class="sform__lead">Tu plan está activo hasta el ${S.fmtDate(renews)}. Te avisaremos antes de cada fecha con 6 opciones de tu rango, y ahí eliges la que más te guste.</p>
       <div class="sform__actions"><a class="btn btn--solid btn--lg" href="mi-suscripcion.html">Ir a Mi suscripción</a><a class="btn btn--outline btn--lg" href="index.html">Seguir comprando</a></div>
       <p class="sform__fine">Demostración: no se cobró nada.</p></div></section>`;
     window.scrollTo({ top: 0 });
