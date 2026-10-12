@@ -58,20 +58,10 @@
 
   // ---------- después del listado: paquetes y aviso de fecha ----------
   const packs = (window.CEC_PACKS || {})[ctx.id] || [];
-  const packHtml = (pk) => `<article class="cpack"><div class="cpack__thumbs">${pk.items.map((i) => `<div class="ph ph--product" data-ph="${esc(i.v)}" data-img="${esc(i.h)}" data-img-w="300"></div>`).join('')}</div>
-    <div class="cpack__body"><p class="cpack__label">Mini paquete</p><h3 class="cpack__name">${esc(pk.name)}</h3>
-    <ul class="cpack__items">${pk.items.map((i) => `<li><a href="${window.CEC.url.product(i.h)}">${esc(i.t)}</a> <span>${U.fmt(i.p)}</span></li>`).join('')}</ul>
-    <div class="cpack__foot"><b>${U.fmt(pk.total)}</b><button class="btn btn--solid btn--md" type="button" data-pack="${pk.id}">Agregar la escena al carro</button></div></div></article>`;
   const o = S.occ(ctx.occ);
   const nd = o ? S.nextDate(o) : null;
   const dateNote = o ? `<aside class="cdate"><p><b>Se viene ${esc(o.name)}</b> · ${S.fmtDate(nd)} (${S.inDays(S.daysTo(nd))}). Guarda a quién se lo regalas y te avisamos con ideas.</p><a class="btn btn--outline btn--md" href="recordatorio.html?oc=${o.id}">Guardar esta fecha</a></aside>` : '';
-  $('#ctxMore').innerHTML = `<div class="wrapper">${packs.length ? `<h2 class="ch">¿Prefieres la escena lista?</h2><p class="sform__lead">Tres piezas que van juntas, en un solo clic.</p><div class="cpacks">${packs.map(packHtml).join('')}</div>` : ''}${dateNote}</div>`;
+  $('#ctxMore').innerHTML = `<div class="wrapper">${packs.length ? `<h2 class="ch">¿Prefieres la escena lista?</h2><p class="sform__lead">Una caja con tres piezas que van juntas, en un solo envío. Cambia lo que quieras.</p><div id="ctxBox"></div>` : ''}${dateNote}</div>`;
+  if (packs.length) window.CEC_BOX.mount($('#ctxBox'), packs, { ctx: ctx.id });
 
-  $('#ctxMore').addEventListener('click', (e) => {
-    const pk = e.target.closest('[data-pack]');
-    if (!pk) return;
-    const pack = packs.find((x) => x.id === pk.dataset.pack);
-    pack.items.forEach((i) => window.CEC.addToCart({ handle: i.h, title: i.t, price: i.p, express: !!i.x }, false));
-    window.CEC.openCart();
-  });
 })();

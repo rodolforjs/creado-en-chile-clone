@@ -1538,3 +1538,33 @@ a.page:hover { border-bottom-color: #0b0b0b; }
 .sform__tag { margin: 4px 0 14px; }
 .sacct__card .gtags { margin: 0 0 10px; }
 .mrow__info .gtag-wrap { margin-bottom: 4px; }
+
+/* Mini paquete como caja abierta */
+.gbox { margin-top: 18px; }
+.gbox__tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.gbox__tabs button { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 8px 16px; border: 1px solid #d6d6d6; border-radius: var(--radius); background: #fff; font-family: var(--font-body); font-size: 14px; font-weight: 500; text-align: left; cursor: pointer; }
+.gbox__tabs button small { font-family: var(--font-mono); font-size: 12px; color: #6b6b6b; }
+.gbox__tabs button.is-on { border-color: #000; background: #000; color: #fff; }
+.gbox__tabs button.is-on small { color: #e0e0e0; }
+.gbox__box { position: relative; max-width: 980px; }
+.gbox__lid { position: relative; display: flex; align-items: center; justify-content: center; height: 40px; margin: 0 -8px; border-radius: 8px 8px 0 0; background: #cdb88f; box-shadow: 0 3px 0 rgba(58, 45, 31, .18); }
+.gbox__ribbon { position: absolute; top: 0; bottom: 0; left: 50%; width: 28px; margin-left: -14px; background: #a1431f; }
+.gbox__label { position: relative; z-index: 1; padding: 3px 14px; background: #f5efe7; font-family: var(--font-mono); font-size: 12px; letter-spacing: 1.4px; text-transform: uppercase; color: #3a2d1f; }
+.gbox__tray { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding: 16px; background: #dccaa4; box-shadow: inset 0 8px 14px rgba(58, 45, 31, .28); }
+.gbox__slot { display: flex; flex-direction: column; overflow: hidden; border-radius: 6px; background: #fff; box-shadow: 0 2px 0 rgba(58, 45, 31, .2); }
+.gbox__slot.is-new { animation: gbox-in .45s cubic-bezier(.3, .7, .3, 1); }
+@keyframes gbox-in { from { opacity: 0; transform: translateY(-14px) scale(.96); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .gbox__slot.is-new { animation: none; } }
+.gbox__ph { display: block; width: 100%; aspect-ratio: 1 / 1; border-radius: 0; }
+.gbox__info { display: flex; flex: 1; flex-direction: column; gap: 2px; padding: 10px 12px 12px; }
+.gbox__t { font-size: 14px; line-height: 19px; font-weight: 500; text-decoration: none; color: #000; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 38px; }
+.gbox__v { font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #6b6b6b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gbox__p { font-size: 15px; }
+.gbox__swap { align-self: flex-start; margin-top: 4px; font-size: 12px; }
+.gbox__front { display: flex; justify-content: space-between; gap: 10px; padding: 10px 16px; margin: 0 -8px; border-radius: 0 0 10px 10px; background: #cdb88f; box-shadow: 0 4px 0 rgba(58, 45, 31, .18); font-family: var(--font-mono); font-size: 11px; letter-spacing: 1.2px; color: #3a2d1f; }
+.gbox__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; max-width: 980px; margin-top: 22px; }
+.gbox__hint { margin: 0; font-size: 14px; color: #6b6b6b; }
+.gbox__buy { display: flex; align-items: center; gap: 16px; }
+.gbox__buy b { font-size: 22px; }
+@media (max-width: 767px) { .gbox__tray { gap: 8px; padding: 10px; } .gbox__info { padding: 8px; } .gbox__t { font-size: 12.5px; line-height: 16px; min-height: 32px; } .gbox__p { font-size: 13.5px; } .gbox__front { flex-direction: column; gap: 2px; } .gbox__tabs button { padding: 6px 12px; } }
+.gbox__swap { padding: 0 0 2px; border: 0; border-bottom: 1px solid currentColor; border-radius: 0; background: none; color: #000; cursor: pointer; }
